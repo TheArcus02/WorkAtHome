@@ -1,6 +1,12 @@
 import './App.css'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { CssBaseline, Typography } from '@mui/material'
+import { CssBaseline } from '@mui/material'
+import { Navbar } from './components/Navbar'
+import {
+  Routes,
+  Route,
+} from "react-router-dom";
+import { Home } from './pages/Home';
 
 const Darktheme = createTheme({
   palette:{
@@ -14,7 +20,10 @@ const App:React.FC = () => {
   return (
     <ThemeProvider theme={Darktheme}>
       <CssBaseline>
-        <Typography>App</Typography>
+        <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+          </Routes>
       </CssBaseline>
     </ThemeProvider>
   )
