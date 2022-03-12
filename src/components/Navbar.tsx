@@ -1,6 +1,7 @@
-import { AppBar, Container, Toolbar, Typography, Box, IconButton, Menu, MenuItem, Button, Tooltip, Avatar } from '@mui/material';
+import { AppBar, Toolbar, Typography, Box, IconButton, Menu, MenuItem, Button, Tooltip, Avatar, Link as MuiLink} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 
 const pages = ['Products', 'Pricing', 'Blog'];
@@ -29,14 +30,17 @@ export const Navbar:React.FC = () => {
   return (
     <AppBar position="static">
         <Toolbar>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-          >
-            Work At Home
-          </Typography>
+          <MuiLink component={Link} to="/" underline="none" color="inherit">
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+            >
+              Work At Home
+            </Typography>
+          </MuiLink>
+          
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -74,14 +78,18 @@ export const Navbar:React.FC = () => {
               ))}
             </Menu>
           </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-          >
-            Work At Home
-          </Typography>
+          {/* <MuiLink component={Link} to="/" color="inherit"> */}
+            <Typography
+              variant="h6"
+              noWrap
+              component={Link}
+              to="/"
+              color="inherit"
+              sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none', textDecoration: 'none' } }}
+            >
+              Work At Home
+            </Typography>
+          {/* </MuiLink> */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
             {pages.map((page) => (
               <Button
@@ -126,7 +134,9 @@ export const Navbar:React.FC = () => {
                 </Menu>
               </>
             ) : (
-              <Button color="inherit">Login</Button>
+              <MuiLink component={Link} to="/login" underline='none' color="inherit">
+                <Button color="inherit">Login</Button>
+              </MuiLink>
             )}
             
           </Box>
