@@ -1,14 +1,12 @@
-import { GoogleAuthProvider, signInWithPopup, User } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import { GoogleAuthProvider, signInWithPopup, TwitterAuthProvider, User } from "firebase/auth";
+import React, { useContext, useEffect, useState } from "react";
 import { auth } from "../firebase/firebase.config";
 import { AuthContextItf } from "../utils/interfaces";
 
 
 export const AuthContext = React.createContext<AuthContextItf | null>(null);
 
-export function useAuth() {
-
-}
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
 
@@ -20,7 +18,16 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
     
     const signupGoogle = () => {
         const provider = new GoogleAuthProvider();
-        signInWithPopup(auth, provider)
+        return signInWithPopup(auth, provider);
+    }
+
+    const signupTwitter = () => {
+        const provider = new TwitterAuthProvider();
+        return signInWithPopup(auth, provider);
+    } 
+
+    const logout = () => {
+        return auth.signOut()
     }
 
     useEffect(() => {
@@ -34,7 +41,9 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const value:AuthContextItf = {
         currentUser,
-        signupGoogle
+        signupGoogle,
+        signupTwitter,
+        logout
     }
 
     return (

@@ -2,15 +2,20 @@ import { AppBar, Toolbar, Typography, Box, IconButton, Menu, MenuItem, Button, T
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { AuthContextItf, currentUser } from '../utils/interfaces';
 
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard'];
 
 export const Navbar:React.FC = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [logedIn, setLogedIn] = useState(false);
+
+  const { currentUser, logout } = useAuth() as AuthContextItf
+
+  console.log(currentUser);
 
   const handleOpenNavMenu = (event: any) => {
     setAnchorElNav(event.currentTarget);
@@ -19,13 +24,14 @@ export const Navbar:React.FC = () => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const handleLogut = () => {
+    setAnchorElUser(null)
+    try {
+      logout()
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <AppBar position="static">
@@ -66,19 +72,18 @@ export const Navbar:React.FC = () => {
                 horizontal: 'left',
               }}
               open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              onClose={() => setAnchorElNav(null)}
               sx={{
                 display: { xs: 'block', md: 'none' },
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={() => setAnchorElNav(null)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          {/* <MuiLink component={Link} to="/" color="inherit"> */}
             <Typography
               variant="h6"
               noWrap
@@ -89,12 +94,11 @@ export const Navbar:React.FC = () => {
             >
               Work At Home
             </Typography>
-          {/* </MuiLink> */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => setAnchorElNav(null)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -103,7 +107,7 @@ export const Navbar:React.FC = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            {logedIn ? (
+            {currentUser ? (
               <>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -124,13 +128,16 @@ export const Navbar:React.FC = () => {
                     horizontal: 'right',
                   }}
                   open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
+                  onClose={() => setAnchorElUser(null)}
                 >
                   {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <MenuItem key={setting} onClick={() => setAnchorElUser(null)}>
                       <Typography textAlign="center">{setting}</Typography>
                     </MenuItem>
                   ))}
+                  <MenuItem onClick={() => handleLogut()}>
+                      <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
                 </Menu>
               </>
             ) : (

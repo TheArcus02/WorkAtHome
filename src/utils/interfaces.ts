@@ -1,6 +1,10 @@
-import { User } from "firebase/auth";
+import { User, UserCredential } from "firebase/auth";
+
+export type currentUser = User | null
 
 export interface AuthContextItf {
-    currentUser: User | null;
-    signupGoogle: () => void;
+    currentUser: currentUser
+    signupGoogle: () => Promise<UserCredential>;
+    signupTwitter: () => Promise<UserCredential>;
+    logout: () => Promise<void>
 }
