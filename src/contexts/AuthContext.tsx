@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, TwitterAuthProvider, updateProfile, User } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, TwitterAuthProvider, updateProfile, User } from "firebase/auth";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { auth } from "../firebase/firebase.config";
@@ -13,10 +13,12 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const [currentUser, setCurrentUser] = useState<User | null>(null)
 
-    // TODO LOGIN
-    // const login = (email, password) => {
-
-    // }
+    
+    const login = (email: string, password: string) => {
+        return signInWithEmailAndPassword(auth, email, password)
+                .then(() => toast.success("Logged in Succesfully"))
+                .catch(() => toast.error("Failed to login"));
+    }
 
     const EandPSignup = (email: string, password: string, name: string, surname: string) => {
         return createUserWithEmailAndPassword(auth, email, password)
@@ -34,7 +36,7 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
         const provider = new GoogleAuthProvider();
         return signInWithPopup(auth, provider)
             .then(() => toast.success("Logged in Succesfully"))
-            .catch(() => toast.error("Failed to login"))
+            .catch(() => toast.error("Failed to login"));
     }
 
     const signupTwitter = () => {
@@ -46,7 +48,7 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const logout = () => {
         return auth.signOut()
-        .then(() => toast.success("Logged out Succesfully"))
+        .then(() => toast.success("Logged out Succesfully"));
     }
 
     useEffect(() => {
@@ -59,6 +61,7 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
     
 
     const value:AuthContextItf = {
+        login,
         EandPSignup,
         currentUser,
         signupGoogle,

@@ -23,11 +23,16 @@ export const useValidateInputs = () => {
       
   ];
 
+  const dontTost: string[] = [
+    "loginEmail",
+    "loginPassword",
+  ]
+
   useEffect(() => {
     if(inputErrors){
-      Object.values(inputErrors)
-      .filter((f) => f.error === true)
-      .map((field) => toast.warning(field.text));
+      Object.entries(inputErrors)
+      .filter((f) => !dontTost.includes(f[0]) && f[1].error === true)
+      .map((field) => toast.warning(field[1].text));
     }
   }, [inputErrors]);
 

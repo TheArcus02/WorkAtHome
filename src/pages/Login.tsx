@@ -1,25 +1,56 @@
-import * as React from 'react';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Avatar, Box, Button, Checkbox, Container, FormControlLabel, Grid, Link as MuiLink, Stack, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Container, Grid, Link as MuiLink, Stack, TextField, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Google, Twitter } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { AuthContextItf } from '../utils/interfaces';
 import { toast } from 'react-toastify';
+import { useValidateInputs } from '../hooks/useValidateInputs';
+import { useEffect, useState } from 'react';
 
 
 
 export const Login = () => {
-  
-    const { signupGoogle, signupTwitter } = useAuth() as AuthContextItf
+  type loginType = {'loginEmail': string, 'loginPassword': string}
+  const defaultFormData:loginType = {
+    loginEmail: '',
+    loginPassword: '',
+  }
+    const [formData, setFormData] = useState(defaultFormData)
+    const { signupGoogle, signupTwitter, login } = useAuth() as AuthContextItf
+    const { validateData, inputErrors, errors, validated } = useValidateInputs()
+
+    useEffect(() => {
+      if(validated){
+        if(errors){
+          toast.warning("Wrong email or password.");
+          return;
+        } 
+        
+        const {loginEmail, loginPassword} = formData 
+
+        try {
+          login(loginEmail, loginPassword);    
+        } catch (error: any) {
+            toast.error("Error during login", error);
+        }
+      }
+    
+    }, [validated, errors])
+    
+    const handleChange = (name: string, value:string) => {
+      setFormData((prev) => (
+        {
+          ...prev,
+          [name]: value
+        }
+      ))
+    }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-        email: data.get('email'),
-        password: data.get('password'),
-        });
+        validateData(formData)
+        
     };
 
     const handleSocialSignup = (type: "google" | "twitter") => {
@@ -58,31 +89,29 @@ export const Login = () => {
               margin="normal"
               required
               fullWidth
-              id="email"
+              id="loginEmail"
               label="Email Address"
-              name="email"
+              name="loginEmail"
               autoComplete="email"
               autoFocus
+              onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
+              name="loginPassword"
               label="Password"
               type="password"
-              id="password"
+              id="loginPassword"
               autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 2, mb: 2 }}
             >
               Sign In
             </Button>
