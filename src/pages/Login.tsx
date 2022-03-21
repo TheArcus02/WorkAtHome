@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Google, Twitter } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { AuthContextItf } from '../utils/interfaces';
+import { toast } from 'react-toastify';
 
 
 
@@ -26,7 +27,7 @@ export const Login = () => {
             if(type=== "google") signupGoogle()
             else signupTwitter()
         } catch (error) {
-            console.log(error);
+            toast.error("An error occured during signup proccess");
         }
     }
 

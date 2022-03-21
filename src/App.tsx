@@ -9,6 +9,8 @@ import { Signup } from './pages/Singup';
 import { Navbar } from './components/Navbar'
 import { Login } from './pages/Login';
 import { AuthProvider } from './contexts/AuthContext';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from 'react-toastify';
 
 
 const Darktheme = createTheme({
@@ -29,6 +31,11 @@ const App:React.FC = () => {
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
             </Routes>
+            <ToastContainer 
+            autoClose={2000} 
+            theme="dark" 
+            position="bottom-left"
+            />
         </CssBaseline>
       </ThemeProvider>
     </AuthProvider>

@@ -1,5 +1,6 @@
-import { GoogleAuthProvider, signInWithPopup, TwitterAuthProvider, User } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, TwitterAuthProvider, updateProfile, User } from "firebase/auth";
 import React, { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { auth } from "../firebase/firebase.config";
 import { AuthContextItf } from "../utils/interfaces";
 
@@ -12,22 +13,40 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const [currentUser, setCurrentUser] = useState<User | null>(null)
 
+    // TODO LOGIN
     // const login = (email, password) => {
 
     // }
+
+    const EandPSignup = (email: string, password: string, name: string, surname: string) => {
+        return createUserWithEmailAndPassword(auth, email, password)
+                .then((res) => (
+                    updateProfile(res.user, {
+                        displayName: name + " " + surname
+                    })
+                ))
+                .then(() => toast.success("Logged in Succesfully"))
+                .catch(() => toast.error("Failed to login"));
+        
+    }
     
     const signupGoogle = () => {
         const provider = new GoogleAuthProvider();
-        return signInWithPopup(auth, provider);
+        return signInWithPopup(auth, provider)
+            .then(() => toast.success("Logged in Succesfully"))
+            .catch(() => toast.error("Failed to login"))
     }
 
     const signupTwitter = () => {
         const provider = new TwitterAuthProvider();
-        return signInWithPopup(auth, provider);
+        return signInWithPopup(auth, provider)
+            .then(() => toast.success("Logged in Succesfully"))
+            .catch(() => toast.error("Failed to login"));
     } 
 
     const logout = () => {
         return auth.signOut()
+        .then(() => toast.success("Logged out Succesfully"))
     }
 
     useEffect(() => {
@@ -40,6 +59,7 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
     
 
     const value:AuthContextItf = {
+        EandPSignup,
         currentUser,
         signupGoogle,
         signupTwitter,

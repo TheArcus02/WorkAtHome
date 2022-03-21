@@ -1,17 +1,67 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Container, Grid, Link as MuiLink, TextField, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { useValidateInputs } from '../../hooks/useValidateInputs';
+import { AuthContextItf } from '../../utils/interfaces';
+
+interface EandPItf{
+  setEmailSignup: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export const EmailAndPassword:React.FC<EandPItf> = ({setEmailSignup}) => {
+  type signupType = {
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+  }
+  const defaultFormData:signupType = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  }
+  const [formData, setFormData] = useState<signupType>(defaultFormData)
+  const { EandPSignup } = useAuth() as AuthContextItf
+  const { validateData, inputErrors, errors, validated } = useValidateInputs()
 
 
-export const EmailAndPassword = () => {
+  useEffect(() => {
+    if(validated){
+      if(errors) return
+
+      const {firstName, lastName, email, password} = formData
+      
+      try {
+        EandPSignup(email, password,firstName,lastName);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    
+  }, [validated, errors])
+  
+
+  const handleOnChange = (name: string, value:string) => {
+    setFormData((prev) => (
+      {
+        ...prev,
+        [name]: value
+      }
+    ))
+  }
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+    
+    validateData(formData);
 
+
+    
+  };
+ 
+  // TODO Validate Inputs hook
   return (
 
       <Container component="main" maxWidth="xs">
@@ -33,6 +83,8 @@ export const EmailAndPassword = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  error={inputErrors?.firstName.error}
+                  helperText={inputErrors?.firstName.text}
                   autoComplete="given-name"
                   name="firstName"
                   required
@@ -40,30 +92,45 @@ export const EmailAndPassword = () => {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  value={formData.firstName}
+                  onChange={(e) => handleOnChange(e.target.name, e.target.value)}
+                     
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  error={inputErrors?.lastName.error}
+                  helperText={inputErrors?.lastName.text}
                   required
                   fullWidth
                   id="lastName"
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  value={formData.lastName}
+                  onChange={(e) => handleOnChange(e.target.name, e.target.value)}
+                  
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={inputErrors?.email.error}
+                  helperText={inputErrors?.email.text}
                   required
                   fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  value={formData.email}
+                  onChange={(e) => handleOnChange(e.target.name, e.target.value)}
+                  
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={inputErrors?.password.error}
+                  helperText={inputErrors?.password.text}
                   required
                   fullWidth
                   name="password"
@@ -71,7 +138,10 @@ export const EmailAndPassword = () => {
                   type="password"
                   id="password"
                   autoComplete="new-password"
-                />
+                  value={formData.password}
+                  onChange={(e) => handleOnChange(e.target.name, e.target.value)}
+
+                /> 
               </Grid>
             </Grid>
             <Button
@@ -82,11 +152,18 @@ export const EmailAndPassword = () => {
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
+            <Grid container>
+              <Grid item xs>
+                <Box onClick={() => setEmailSignup(false)}>
+                  <MuiLink variant="body2">
+                    Go back
+                  </MuiLink>
+                </Box>
+              </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <MuiLink component={Link} to="/login" variant="body2">
                   Already have an account? Sign in
-                </Link>
+                </MuiLink>
               </Grid>
             </Grid>
           </Box>

@@ -111,7 +111,9 @@ export const Navbar:React.FC = () => {
               <>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                    <Avatar alt="Remy Sharp" src={currentUser.photoURL ? currentUser.photoURL : ""}>
+                      {!currentUser.photoURL && currentUser.displayName?.slice(0,2)}
+                    </Avatar>
                   </IconButton>
                 </Tooltip>
                 <Menu
