@@ -3,7 +3,6 @@ import { getAuth } from "firebase/auth";
 import { initializeFirestore } from "firebase/firestore";
 
 type envVar = string | undefined
-
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_API_KEY as envVar,
     authDomain: import.meta.env.VITE_AUTH_DOMAIN as envVar,

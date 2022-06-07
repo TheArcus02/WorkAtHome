@@ -43,3 +43,7 @@ const App:React.FC = () => {
 }
 
 export default App
+
+// TODO
+// * Protected Routes
+// * After login redirect

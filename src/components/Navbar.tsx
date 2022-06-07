@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { AuthContextItf, currentUser } from '../utils/interfaces';
+import { useSetDoc } from '../hooks/useSetDoc';
 
 
 const pages = ['Products', 'Pricing', 'Blog'];
@@ -12,7 +13,6 @@ const settings = ['Profile', 'Account', 'Dashboard'];
 export const Navbar:React.FC = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-
   const { currentUser, logout } = useAuth() as AuthContextItf
 
   console.log(currentUser);

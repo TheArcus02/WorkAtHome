@@ -5,9 +5,9 @@ export type currentUser = User | null
 export interface AuthContextItf {
     currentUser: currentUser;
     login: (email: string, password: string) => Promise<string | number>;
-    EandPSignup: (email: string, password: string, name: string, surname: string) => Promise<string | number>;
-    signupGoogle: () => Promise<string | number>;
-    signupTwitter: () => Promise<string | number>;
+    EandPSignup: (email: string, password: string, name: string, surname: string) =>  Promise<string | number | void>
+    signupGoogle: () => Promise<string | number | void>;
+    signupTwitter: () =>  Promise<string | number | void>;
     logout: () => Promise<string | number>;
 }
 
@@ -15,4 +15,18 @@ export type ErrorObj = { error: boolean; text: string };
 
 export interface errorsInterface {
     [key: string]: ErrorObj;
+}
+type baseCompanyInfo = {name: string, uid: string}
+
+export interface firestoreUser {
+    name: string;
+    surname: string;
+    email: string;
+    displayName: string;
+    jobUid: string;
+    companies: baseCompanyInfo[];
+    description: string;
+    hired: boolean;
+    photoUrl: string;
+    active: boolean;
 }
