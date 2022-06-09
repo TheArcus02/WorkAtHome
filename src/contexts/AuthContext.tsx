@@ -13,7 +13,8 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
 
-    const [currentUser, setCurrentUser] = useState<User | null>(null)
+    const [currentUser, setCurrentUser] = useState<User | null | undefined>(undefined)
+    const [loading, setLoading] = useState(true)
     const {setDocument} = useSetDoc()
     
     const login = (email: string, password: string) => {
@@ -91,6 +92,11 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
         return unsub
     }, [])
     
+    useEffect(() => {
+        if(currentUser !== undefined){
+            setLoading(false)
+        }
+    }, [currentUser])
     
 
     const value:AuthContextItf = {
@@ -99,7 +105,8 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
         currentUser,
         signupGoogle,
         signupTwitter,
-        logout
+        logout,
+        loading
     }
 
     return (

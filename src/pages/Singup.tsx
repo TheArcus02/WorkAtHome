@@ -1,15 +1,18 @@
 import { EmailOutlined, Google, Twitter } from "@mui/icons-material"
 import { Box, Button, Container, Stack, Typography } from "@mui/material"
 import { useState } from "react"
+import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { EmailAndPassword } from "../components/signup/EmailAndPassword";
 import { useAuth } from "../contexts/AuthContext";
-import { AuthContextItf } from "../utils/interfaces";
+import { AuthContextItf, currentUser } from "../utils/interfaces";
 
-export const Signup = () => {
+type Props = { user:currentUser }
+export const Signup:React.FC = () => {
 
     const [emailSignup, setEmailSignup] = useState(false);
-    const { signupGoogle, signupTwitter } = useAuth() as AuthContextItf
+    const { signupGoogle, signupTwitter, currentUser, loading } = useAuth() as AuthContextItf
+    
     
     const handleSocialSignup = (type: "google" | "twitter") => {
         try {
@@ -19,7 +22,7 @@ export const Signup = () => {
             toast.error("An error occured during signup proccess");
         }
     }
-    return (
+    return !loading ? ( !currentUser ? (
         !emailSignup ? (
             <Container component="main" maxWidth="xs">
                 <Box
@@ -47,5 +50,9 @@ export const Signup = () => {
             <EmailAndPassword setEmailSignup={setEmailSignup} />
         )
         
+    ) : (
+        <Navigate to="/"></Navigate>
+    )) : (
+        <div>Loading</div>
     )
 }

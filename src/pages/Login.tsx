@@ -1,24 +1,25 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Button, Container, Grid, Link as MuiLink, Stack, TextField, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Google, Twitter } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
-import { AuthContextItf } from '../utils/interfaces';
+import { AuthContextItf, currentUser } from '../utils/interfaces';
 import { toast } from 'react-toastify';
 import { useValidateInputs } from '../hooks/useValidateInputs';
 import { useEffect, useState } from 'react';
 
-
-
-export const Login = () => {
+export const Login:React.FC = () => {
   type loginType = {'loginEmail': string, 'loginPassword': string}
   const defaultFormData:loginType = {
     loginEmail: '',
     loginPassword: '',
   }
     const [formData, setFormData] = useState(defaultFormData)
-    const { signupGoogle, signupTwitter, login } = useAuth() as AuthContextItf
+    const { signupGoogle, signupTwitter, login, loading, currentUser } = useAuth() as AuthContextItf
     const { validateData, inputErrors, errors, validated } = useValidateInputs()
+    
+    const navigate = useNavigate()
+    
 
     useEffect(() => {
       if(validated){
@@ -31,6 +32,7 @@ export const Login = () => {
 
         try {
           login(loginEmail, loginPassword);    
+          navigate("/")
         } catch (error: any) {
             toast.error("Error during login", error);
         }
@@ -57,12 +59,13 @@ export const Login = () => {
         try {
             if(type=== "google") signupGoogle()
             else signupTwitter()
+            navigate("/")
         } catch (error) {
             toast.error("An error occured during signup proccess");
         }
     }
 
-  return (
+  return !loading ? ( !currentUser ? (
       <Container component="main" maxWidth="xs">
         <Box
           sx={{
@@ -130,5 +133,7 @@ export const Login = () => {
           </Box>
         </Box>
       </Container>
-  );
+  ) : <Navigate to="/"></Navigate> ) : (
+    <div>Loading</div>
+  )
 }
