@@ -3,19 +3,18 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { AuthContextItf, currentUser } from '../utils/interfaces';
-import { useSetDoc } from '../hooks/useSetDoc';
+import { AuthContextItf } from '../utils/interfaces';
 
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard'];
+const menu = ['Profile', 'Account'];
 
 export const Navbar:React.FC = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const { currentUser, logout } = useAuth() as AuthContextItf
+  const { currentUser, userInfo, logout } = useAuth() as AuthContextItf
 
-  console.log(currentUser);
+  console.log({currentUser, userInfo});
 
   const handleOpenNavMenu = (event: any) => {
     setAnchorElNav(event.currentTarget);
@@ -109,9 +108,9 @@ export const Navbar:React.FC = () => {
           <Box sx={{ flexGrow: 0 }}>
             {currentUser ? (
               <>
-                <Tooltip title="Open settings">
+                <Tooltip title="Open menu">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src={currentUser.photoURL ? currentUser.photoURL : ""}>
+                    <Avatar alt="Profile Picture" src={currentUser.photoURL ? currentUser.photoURL : ""}>
                       {!currentUser.photoURL && currentUser.displayName?.slice(0,2)}
                     </Avatar>
                   </IconButton>
@@ -132,9 +131,9 @@ export const Navbar:React.FC = () => {
                   open={Boolean(anchorElUser)}
                   onClose={() => setAnchorElUser(null)}
                 >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={() => setAnchorElUser(null)}>
-                      <Typography textAlign="center">{setting}</Typography>
+                  {menu.map((menuItem) => (
+                    <MenuItem key={menuItem} onClick={() => setAnchorElUser(null)}>
+                      <MuiLink component={Link} to={menuItem.toLowerCase()} textAlign="center" underline='none' color="inherit">{menuItem}</MuiLink>
                     </MenuItem>
                   ))}
                   <MenuItem onClick={() => handleLogut()}>

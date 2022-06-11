@@ -3,8 +3,9 @@ import { doc, getDoc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { auth, db } from "../firebase/firebase.config";
+import { useGetDoc } from "../hooks/useGetDoc";
 import { useSetDoc } from "../hooks/useSetDoc";
-import { AuthContextItf, currentUser, firestoreUser } from "../utils/interfaces";
+import { AuthContextItf, currentUser, firestoreUser, userInfo } from "../utils/interfaces";
 
 
 export const AuthContext = React.createContext<AuthContextItf | null>(null);
@@ -14,8 +15,10 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const [currentUser, setCurrentUser] = useState<User | null | undefined>(undefined)
+    const [userInfo, setUserInfo] = useState<userInfo>(null)
     const [loading, setLoading] = useState(true)
     const {setDocument} = useSetDoc()
+    const {document, getDocument} = useGetDoc()
     
     const login = (email: string, password: string) => {
         return signInWithEmailAndPassword(auth, email, password)
@@ -95,8 +98,17 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
     useEffect(() => {
         if(currentUser !== undefined){
             setLoading(false)
+            if(currentUser !== null){
+                getDocument("Users", currentUser.uid)
+            }
         }
     }, [currentUser])
+
+    useEffect(() => {
+      if(document){
+        setUserInfo(document as userInfo);
+      }
+    }, [document])
     
 
     const value:AuthContextItf = {
@@ -106,7 +118,8 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
         signupGoogle,
         signupTwitter,
         logout,
-        loading
+        loading,
+        userInfo
     }
 
     return (

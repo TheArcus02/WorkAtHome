@@ -51,7 +51,7 @@ export const Signup:React.FC = () => {
         )
         
     ) : (
-        <Navigate to="/"></Navigate>
+        <Navigate to="/" />
     )) : (
         <div>Loading</div>
     )

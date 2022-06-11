@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext"
 import { AuthContextItf } from "../utils/interfaces"
 
-export const requireAuth = () => {
+export const RequireAuth = () => {
     const { currentUser } = useAuth() as AuthContextItf
     const location = useLocation()
 

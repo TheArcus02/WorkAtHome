@@ -1,12 +1,16 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Button, Container, Grid, Link as MuiLink, Stack, TextField, Typography } from '@mui/material';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Google, Twitter } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
-import { AuthContextItf, currentUser } from '../utils/interfaces';
+import { AuthContextItf } from '../utils/interfaces';
 import { toast } from 'react-toastify';
 import { useValidateInputs } from '../hooks/useValidateInputs';
 import { useEffect, useState } from 'react';
+
+interface StateType {
+  from: { pathname: string };
+}
 
 export const Login:React.FC = () => {
   type loginType = {'loginEmail': string, 'loginPassword': string}
@@ -19,7 +23,11 @@ export const Login:React.FC = () => {
     const { validateData, inputErrors, errors, validated } = useValidateInputs()
     
     const navigate = useNavigate()
-    
+    const location = useLocation()
+    const state = location.state as StateType
+    const from = state?.from?.pathname || "/"
+
+    console.log(from)
 
     useEffect(() => {
       if(validated){
@@ -32,7 +40,7 @@ export const Login:React.FC = () => {
 
         try {
           login(loginEmail, loginPassword);    
-          navigate("/")
+          navigate(from, {replace: true})
         } catch (error: any) {
             toast.error("Error during login", error);
         }
@@ -59,7 +67,7 @@ export const Login:React.FC = () => {
         try {
             if(type=== "google") signupGoogle()
             else signupTwitter()
-            navigate("/")
+            navigate(from, {replace: true})
         } catch (error) {
             toast.error("An error occured during signup proccess");
         }

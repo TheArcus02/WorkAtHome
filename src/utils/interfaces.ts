@@ -1,6 +1,8 @@
 import { User } from "firebase/auth";
 
-export type currentUser = User | null | undefined
+export type currentUser = User | null | undefined;
+
+export type collections = "Users" | "Companies" | "Offers";
 
 export interface AuthContextItf {
     currentUser: currentUser;
@@ -9,7 +11,8 @@ export interface AuthContextItf {
     signupGoogle: () => Promise<string | number | void>;
     signupTwitter: () =>  Promise<string | number | void>;
     logout: () => Promise<string | number>;
-    loading: Boolean
+    loading: Boolean;
+    userInfo: userInfo;
 }
 
 export type ErrorObj = { error: boolean; text: string };
@@ -32,3 +35,5 @@ export interface firestoreUser {
     photoUrl: string;
     active: boolean;
 }
+
+export type userInfo = firestoreUser | null;

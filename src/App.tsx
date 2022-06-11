@@ -9,6 +9,8 @@ import { Navbar } from './components/Navbar'
 import { Login } from './pages/Login';
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from 'react-toastify';
+import { Profile } from './pages/Profile';
+import { RequireAuth } from './components/RequireAuth';
 
 
 const Darktheme = createTheme({
@@ -27,6 +29,9 @@ const App:React.FC = () => {
               <Route path="/" element={<Home />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
+              <Route element={<RequireAuth />}>
+                <Route path="/profile" element={<Profile />} />
+              </Route>
             </Routes>
             <ToastContainer 
             autoClose={2000} 
@@ -42,5 +47,7 @@ const App:React.FC = () => {
 export default App
 
 // TODO
-// * Protected Routes
-// * After login redirect
+// * Sites
+// ! Profile
+// ! Companies
+// !  
