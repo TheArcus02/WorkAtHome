@@ -1,18 +1,34 @@
 import { AppBar, Toolbar, Typography, Box, IconButton, Menu, MenuItem, Button, Tooltip, Avatar, Link as MuiLink} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { AuthContextItf } from '../utils/interfaces';
+import slugify from 'react-slugify';
 
-
-const pages = ['Products', 'Pricing', 'Blog'];
-const menu = ['Profile', 'Account'];
 
 export const Navbar:React.FC = () => {
+
+  const initialMenu = ['Profile', 'Account']
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const { currentUser, userInfo, logout } = useAuth() as AuthContextItf
+  const [menu, setMenu] = useState<Array<string>>(initialMenu)
+
+  const pages = ['Products', 'Pricing', 'Blog'];
+
+  useEffect(() => {
+    if(userInfo){
+      if(userInfo.companies.length > 0){
+        setMenu([...initialMenu, 'Your Companies'])
+      } else {
+        setMenu([...initialMenu, 'Create Companies'])
+      }
+    }
+  
+  }, [userInfo])
+  
 
   console.log({currentUser, userInfo});
 
@@ -132,9 +148,11 @@ export const Navbar:React.FC = () => {
                   onClose={() => setAnchorElUser(null)}
                 >
                   {menu.map((menuItem) => (
-                    <MenuItem key={menuItem} onClick={() => setAnchorElUser(null)}>
-                      <MuiLink component={Link} to={menuItem.toLowerCase()} textAlign="center" underline='none' color="inherit">{menuItem}</MuiLink>
-                    </MenuItem>
+                    <MuiLink component={Link} to={slugify(menuItem.toLowerCase())} textAlign="center" underline='none' color="inherit">
+                      <MenuItem key={menuItem} onClick={() => setAnchorElUser(null)}>
+                        {menuItem}
+                      </MenuItem>
+                    </MuiLink>
                   ))}
                   <MenuItem onClick={() => handleLogut()}>
                       <Typography textAlign="center">Logout</Typography>

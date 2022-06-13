@@ -1,14 +1,12 @@
 import { Avatar, CircularProgress, Container, Paper, Typography, useMediaQuery } from "@mui/material"
 import { Box } from "@mui/system"
 import { useAuth } from "../contexts/AuthContext"
-import { AuthContextItf, firestoreUser, userInfo } from "../utils/interfaces"
+import { AuthContextItf } from "../utils/interfaces"
 
 export const Profile = () => {
 
     const {userInfo: user} = useAuth() as AuthContextItf
-    const matches = useMediaQuery('(min-width:900px)')
     
-
     return (
         user ? (
         <Paper sx={{display: 'flex', justifyContent:'center'}}>
@@ -18,10 +16,17 @@ export const Profile = () => {
                         <Avatar alt="Profile Picture" src={user.photoUrl ? user.photoUrl : ""} sx={{ width: 168, height: 168, m:3}}>
                             <Typography fontSize={40}>{!user.photoUrl && user.displayName?.slice(0,2)}</Typography>
                         </Avatar>
-                        <Box>
+                        <Box sx={{display: {xs: 'flex', md:'block'}, flexDirection: {xs: 'column'}, alignItems: {xs:'center'}, p:{xs:3, md:0}}}>
                             <Typography variant="h5" component="h1" gutterBottom>{user.name.length > 0 && user.surname.length > 0 ? user.name + " " + user.surname : user.displayName}</Typography>
+                            {// TODO working at when adding companies will be ready |
+                            //*                                                    v
+                            }   
                             <Typography variant="subtitle1" gutterBottom>Working at Firma</Typography>
-                            <Typography variant="body1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae expedita labore fugit praesentium commodi quas blanditiis porro obcaecati veritatis quidem recusandae, excepturi aperiam, ex eum repellendus quisquam unde, est fuga?
+                            <Typography variant="subtitle1" gutterBottom>{user.companies.length > 0 ? ("Owner of"+ user.companies.map((company, index) => (
+                                index !== 1 ? " " + company.name : ", " + company.name
+                            ))) : ("")}</Typography>
+                            
+                            <Typography variant="body1" sx={{mt:{xs: 1, md:0}}}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae expedita labore fugit praesentium commodi quas blanditiis porro obcaecati veritatis quidem recusandae, excepturi aperiam, ex eum repellendus quisquam unde, est fuga?
                             Amet quaerat officia quo quisquam ipsam voluptas soluta dolore quod culpa. Earum nulla nesciunt repellendus cumque voluptate temporibus distinctio? Expedita accusamus ea dolores minima illo a commodi optio perferendis odio.</Typography>
                         </Box>
                     </Box>

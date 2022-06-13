@@ -7,6 +7,7 @@ import { AuthContextItf } from '../utils/interfaces';
 import { toast } from 'react-toastify';
 import { useValidateInputs } from '../hooks/useValidateInputs';
 import { useEffect, useState } from 'react';
+import { Loader } from '../components/Loader';
 
 interface StateType {
   from: { pathname: string };
@@ -26,8 +27,6 @@ export const Login:React.FC = () => {
     const location = useLocation()
     const state = location.state as StateType
     const from = state?.from?.pathname || "/"
-
-    console.log(from)
 
     useEffect(() => {
       if(validated){
@@ -67,7 +66,6 @@ export const Login:React.FC = () => {
         try {
             if(type=== "google") signupGoogle()
             else signupTwitter()
-            navigate(from, {replace: true})
         } catch (error) {
             toast.error("An error occured during signup proccess");
         }
@@ -141,7 +139,7 @@ export const Login:React.FC = () => {
           </Box>
         </Box>
       </Container>
-  ) : <Navigate to="/"></Navigate> ) : (
-    <div>Loading</div>
+  ) : <Navigate to={from}></Navigate> ) : (
+    <Loader />
   )
 }

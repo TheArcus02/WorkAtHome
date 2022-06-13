@@ -11,6 +11,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from 'react-toastify';
 import { Profile } from './pages/Profile';
 import { RequireAuth } from './components/RequireAuth';
+import { YourCompanies } from './pages/YourCompanies';
+import { CreateCompanies } from './pages/CreateCompanies';
 
 
 const Darktheme = createTheme({
@@ -31,6 +33,8 @@ const App:React.FC = () => {
               <Route path="/login" element={<Login />} />
               <Route element={<RequireAuth />}>
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/your-companies" element={<YourCompanies />} />
+                <Route path="/create-companies" element={<CreateCompanies />} />
               </Route>
             </Routes>
             <ToastContainer 

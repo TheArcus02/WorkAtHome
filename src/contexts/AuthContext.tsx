@@ -19,7 +19,7 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [loading, setLoading] = useState(true)
     const {setDocument} = useSetDoc()
     const {document, getDocument} = useGetDoc()
-    
+
     const login = (email: string, password: string) => {
         return signInWithEmailAndPassword(auth, email, password)
                 .then(() => toast.success("Logged in Succesfully"))

@@ -3,6 +3,7 @@ import { Box, Button, Container, Stack, Typography } from "@mui/material"
 import { useState } from "react"
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Loader } from "../components/Loader";
 import { EmailAndPassword } from "../components/signup/EmailAndPassword";
 import { useAuth } from "../contexts/AuthContext";
 import { AuthContextItf, currentUser } from "../utils/interfaces";
@@ -53,6 +54,6 @@ export const Signup:React.FC = () => {
     ) : (
         <Navigate to="/" />
     )) : (
-        <div>Loading</div>
+        <Loader />
     )
 }
