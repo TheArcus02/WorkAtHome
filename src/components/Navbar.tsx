@@ -49,7 +49,7 @@ export const Navbar:React.FC = () => {
   }
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" enableColorOnDark color="primary">
         <Toolbar>
           <MuiLink component={Link} to="/" underline="none" color="inherit">
             <Typography
@@ -148,8 +148,8 @@ export const Navbar:React.FC = () => {
                   onClose={() => setAnchorElUser(null)}
                 >
                   {menu.map((menuItem) => (
-                    <MuiLink component={Link} to={slugify(menuItem.toLowerCase())} textAlign="center" underline='none' color="inherit">
-                      <MenuItem key={menuItem} onClick={() => setAnchorElUser(null)}>
+                    <MuiLink key={menuItem} component={Link} to={slugify(menuItem.toLowerCase())} textAlign="center" underline='none' color="inherit">
+                      <MenuItem onClick={() => setAnchorElUser(null)}>
                         {menuItem}
                       </MenuItem>
                     </MuiLink>

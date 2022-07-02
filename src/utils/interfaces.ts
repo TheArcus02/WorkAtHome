@@ -1,4 +1,5 @@
 import { User } from "firebase/auth";
+import { GeoPoint } from "firebase/firestore";
 
 export type currentUser = User | null | undefined;
 
@@ -37,3 +38,15 @@ export interface firestoreUser {
 }
 
 export type userInfo = firestoreUser | null;
+
+export interface firestoreCompany{
+    createdBy: string;
+    location: GeoPoint;
+    description: string;
+    employees: string[];
+    name: string;
+    photoUrl: string;
+    size: number;
+    websiteUrl: string;
+    active: boolean;
+}

@@ -9,9 +9,9 @@ export const Profile = () => {
     
     return (
         user ? (
-        <Paper sx={{display: 'flex', justifyContent:'center'}}>
+        <Paper sx={{display: 'flex', justifyContent:'center'}} elevation={2}>
             <Container maxWidth="lg" sx={{mt:5}}>
-                <Paper sx={{display: 'flex', justifyContent:'center'}} elevation={2}>
+                <Paper sx={{display: 'flex', justifyContent:'center'}} >
                     <Box sx={{py:5, display:'flex', width:'100%', flexDirection:{xs: 'column', md:'row'}, alignItems:{xs:'center', md:'inherit'}}}>
                         <Avatar alt="Profile Picture" src={user.photoUrl ? user.photoUrl : ""} sx={{ width: 168, height: 168, m:3}}>
                             <Typography fontSize={40}>{!user.photoUrl && user.displayName?.slice(0,2)}</Typography>

@@ -18,6 +18,18 @@ import { CreateCompanies } from './pages/CreateCompanies';
 const Darktheme = createTheme({
   palette:{
     mode: 'dark',
+    primary: {
+      light: '#7e5dc0',
+      main: '#5e35b1',
+      dark: '#41257b',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#637bfe',
+      main: '#3d5afe',
+      dark: '#2a3eb1',
+      contrastText: '#fff',
+    },
   }
 })
 

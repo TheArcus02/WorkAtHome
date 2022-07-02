@@ -2,9 +2,9 @@ import { Container,IconButton, InputAdornment, OutlinedInput, Paper, Typography 
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 export const Home:React.FC = () => {
     return(
-        <Paper sx={{display: 'flex', justifyContent:'center'}}>
+        <Paper sx={{display: 'flex', justifyContent:'center'}} elevation={2}>
             <Container sx={{m:5}}>
-                <Paper sx={{p:6, display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}} elevation={2}>
+                <Paper sx={{p:6, display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
                     <Typography variant="h4" component="h2" gutterBottom>
                         Search over 10k job offers from the entire world.
                     </Typography>
