@@ -16,21 +16,22 @@ import { CreateCompanies } from './pages/CreateCompanies';
 
 
 const Darktheme = createTheme({
-  palette:{
+  palette: {
     mode: 'dark',
     primary: {
-      light: '#7e5dc0',
-      main: '#5e35b1',
-      dark: '#41257b',
-      contrastText: '#fff',
+      main: '#8172de',
     },
     secondary: {
-      light: '#637bfe',
-      main: '#3d5afe',
-      dark: '#2a3eb1',
-      contrastText: '#fff',
+      main: '#ffae82',
     },
-  }
+    background: {
+      default: '#484656',
+      paper: '#5a5867',
+    },
+  },
+  typography: {
+    fontFamily: 'Poppins',
+  },
 })
 
 const App:React.FC = () => {

@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, CardMedia, Container, Paper, Typography } from "@mui/material"
+import { Card, CardActionArea, CardContent, CardMedia, Container, Paper, Tooltip, Typography } from "@mui/material"
 import { makeStyles } from "@mui/styles"
 import { collection, query, where } from "firebase/firestore"
 import { useEffect, useState } from "react"
@@ -7,6 +7,8 @@ import { db } from "../firebase/firebase.config"
 import useAppBarHeight from "../hooks/useAppBarHeight"
 import { useQuery } from "../hooks/useQuery"
 import { AuthContextItf, firestoreCompany } from "../utils/interfaces"
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import { flexbox } from "@mui/system"
 
 export const YourCompanies = () => {
 
@@ -48,13 +50,12 @@ export const YourCompanies = () => {
   }, [companies])
 
   return (
-    <Paper sx={{display: 'flex', justifyContent:'center'}} elevation={2} className={classes.fullscreen}>
             <Container 
              maxWidth="lg" 
              sx={{mt:5, display: 'flex', justifyContent: 'center', gap:2, flexWrap: 'wrap'}}
             >
               {companies.map((company, index) => (
-                <Card sx={{maxWidth: 345}} key={company.name + index} elevation={1} className={classes.fit}>
+                <Card sx={{maxWidth: 345, height:312}} key={company.name + index} elevation={1} className={classes.fit}>
                   <CardActionArea>
                     <CardMedia 
                      component="img"
@@ -73,8 +74,17 @@ export const YourCompanies = () => {
                   </CardActionArea>
                 </Card>
               ))}
+
+              <Card sx={{maxWidth: 345}} elevation={1} className={classes.fit}>
+                  <CardActionArea>
+                    <CardContent sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', p:0}} >
+                      <Tooltip title="Create company">
+                        <AddOutlinedIcon sx={{ height: 312, width:345}} />
+                      </Tooltip>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
             </Container>
-    </Paper>
   )
 }
 

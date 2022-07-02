@@ -1,10 +1,9 @@
-import { Container,IconButton, InputAdornment, OutlinedInput, Paper, Typography } from "@mui/material"
+import { Box, Container,IconButton, InputAdornment, OutlinedInput, Paper, Typography } from "@mui/material"
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 export const Home:React.FC = () => {
     return(
-        <Paper sx={{display: 'flex', justifyContent:'center'}} elevation={2}>
             <Container sx={{m:5}}>
-                <Paper sx={{p:6, display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+                <Paper sx={{p:6, display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}} >
                     <Typography variant="h4" component="h2" gutterBottom>
                         Search over 10k job offers from the entire world.
                     </Typography>
@@ -14,7 +13,7 @@ export const Home:React.FC = () => {
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton edge="end">
-                                    <SearchOutlinedIcon />
+                                    <SearchOutlinedIcon color="primary"/>
                                 </IconButton>
                             </InputAdornment>
                         }
@@ -26,6 +25,5 @@ export const Home:React.FC = () => {
                     />
                 </Paper>
             </Container>
-        </Paper>
     )
 }
