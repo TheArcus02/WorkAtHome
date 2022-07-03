@@ -9,25 +9,16 @@ import slugify from 'react-slugify';
 
 export const Navbar:React.FC = () => {
 
-  const initialMenu = ['Profile', 'Account']
+  const menu = ['Profile', 'Account', 'Your Companies']
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const { currentUser, userInfo, logout } = useAuth() as AuthContextItf
-  const [menu, setMenu] = useState<Array<string>>(initialMenu)
+  
 
   const pages = ['Products', 'Pricing', 'Blog'];
 
-  useEffect(() => {
-    if(userInfo){
-      if(userInfo.companies.length > 0){
-        setMenu([...initialMenu, 'Your Companies'])
-      } else {
-        setMenu([...initialMenu, 'Create Companies'])
-      }
-    }
   
-  }, [userInfo])
   
 
   console.log({currentUser, userInfo});

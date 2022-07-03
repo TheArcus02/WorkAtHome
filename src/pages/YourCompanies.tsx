@@ -30,7 +30,7 @@ export const YourCompanies = () => {
   
   useEffect(() => {
     if(companies.length === 0){
-      const q = query(collection(db, "Companies"), where("CreatedBy", "==", currentUser?.uid))    
+      const q = query(collection(db, "Companies"), where("createdBy", "==", currentUser?.uid))    
       getQuery(q)
     }
   }, [])
@@ -60,7 +60,7 @@ export const YourCompanies = () => {
                     <CardMedia 
                      component="img"
                      height="140"
-                     image={company.photoUrl ? company.photoUrl : "https://images.unsplash.com/photo-1570126618953-d437176e8c79?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=988&q=80"}
+                     image={company.photoUrl ? company.photoUrl : "https://firebasestorage.googleapis.com/v0/b/workathome-1389e.appspot.com/o/placeholders%2Fcompany_placeholder.jpg?alt=media&token=542aa3b0-4e6a-4b84-9813-f62364e0a12e"}
                      alt={company.name}
                      />
                     <CardContent>

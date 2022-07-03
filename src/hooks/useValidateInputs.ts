@@ -20,9 +20,10 @@ export const useValidateInputs = () => {
   };
 
   const skipInputs: string[] = [
-      
+      'websiteUrl',
+      'photoUrl',
   ];
-
+  
   const dontTost: string[] = [
     "loginEmail",
     "loginPassword",

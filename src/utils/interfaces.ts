@@ -41,7 +41,7 @@ export type userInfo = firestoreUser | null;
 
 export interface firestoreCompany{
     createdBy: string;
-    location: GeoPoint;
+    address: string;
     description: string;
     employees: string[];
     name: string;

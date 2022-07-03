@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { initializeFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage"
 
 type envVar = string | undefined
 const firebaseConfig = {
@@ -16,4 +17,5 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db = initializeFirestore(app, {
   ignoreUndefinedProperties: true
-})
+});
+export const storage = getStorage(app);
