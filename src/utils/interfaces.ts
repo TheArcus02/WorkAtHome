@@ -22,7 +22,7 @@ export interface errorsInterface {
     [key: string]: ErrorObj;
 }
 
-type baseCompanyInfo = {name: string, uid: string}
+export type baseCompanyInfo = {name: string, uid: string}
 
 export interface firestoreUser {
     name: string;
@@ -49,4 +49,5 @@ export interface firestoreCompany{
     size: number;
     websiteUrl: string;
     active: boolean;
+    uid: string;
 }

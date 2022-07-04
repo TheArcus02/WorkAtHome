@@ -13,6 +13,7 @@ import { Profile } from './pages/Profile';
 import { RequireAuth } from './components/RequireAuth';
 import { YourCompanies } from './pages/YourCompanies';
 import { CreateCompany } from './pages/CreateCompany';
+import { CompanyDetails } from './components/company/CompanyDetails';
 
 
 const Darktheme = createTheme({
@@ -48,6 +49,7 @@ const App:React.FC = () => {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/your-companies" element={<YourCompanies />} />
                 <Route path="/create-company" element={<CreateCompany />} />
+                <Route path="/company/:uid" element={<CompanyDetails />} />
               </Route>
             </Routes>
             <ToastContainer 

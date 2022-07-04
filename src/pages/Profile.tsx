@@ -22,7 +22,7 @@ export const Profile = () => {
                             }   
                             <Typography variant="subtitle1" gutterBottom>Working at Firma</Typography>
                             <Typography variant="subtitle1" gutterBottom>{user.companies.length > 0 ? ("Owner of"+ user.companies.map((company, index) => (
-                                index !== 1 ? " " + company.name : ", " + company.name
+                                " " + company.name
                             ))) : ("")}</Typography>
                             
                             <Typography variant="body1" sx={{mt:{xs: 1, md:0}, mr:{md:3} }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae expedita labore fugit praesentium commodi quas blanditiis porro obcaecati veritatis quidem recusandae, excepturi aperiam, ex eum repellendus quisquam unde, est fuga?

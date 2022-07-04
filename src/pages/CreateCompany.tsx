@@ -7,7 +7,7 @@ import { useValidateInputs } from '../hooks/useValidateInputs'
 import { v4 } from 'uuid'
 import { useSetDoc } from '../hooks/useSetDoc'
 import { useAuth } from '../contexts/AuthContext'
-import { AuthContextItf, firestoreCompany } from '../utils/interfaces'
+import { AuthContextItf, baseCompanyInfo, firestoreCompany } from '../utils/interfaces'
 import { toast } from 'react-toastify'
 import { arrayUnion } from 'firebase/firestore'
 
@@ -41,7 +41,8 @@ export const CreateCompany = () => {
                 createdBy: currentUser.uid,
                 employees: [],
                 active: true,
-                size: 0
+                size: 0,
+                uid:''
             }
             setDocument("Companies", documentData)
         }
@@ -55,7 +56,8 @@ export const CreateCompany = () => {
                 createdBy: currentUser.uid,
                 employees: [],
                 active: true,
-                size: 0
+                size: 0,
+                uid:''
             }
             setDocument("Companies", documentData)
         }
@@ -63,7 +65,11 @@ export const CreateCompany = () => {
 
     useEffect(() => {
         if (doc && currentUser) {
-            setDocument("Users", {companies: arrayUnion(doc.id)}, currentUser.uid).then(() =>
+            const companyInfo:baseCompanyInfo = {name:formData.name, uid:doc.id} 
+
+            setDocument("Companies", {uid:doc.id}, doc.id);
+
+            setDocument("Users", {companies: arrayUnion(companyInfo)}, currentUser.uid).then(() =>
                 toast.success("Company added successfuly")
                 // TODO navigate to company details page
             ).catch(() => toast.error("Erorr ocured when adding company."))

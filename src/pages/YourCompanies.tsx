@@ -44,7 +44,7 @@ export const YourCompanies = () => {
             >
               {companies.map((company, index) => (
                 <Card sx={{maxWidth: 345, height:312}} key={company.name + index} elevation={1} >
-                  <CardActionArea>
+                  <CardActionArea onClick={() => navigate(`/company/${company.uid}`)}>
                     <CardMedia 
                      component="img"
                      height="140"
