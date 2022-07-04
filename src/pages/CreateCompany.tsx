@@ -8,6 +8,8 @@ import { v4 } from 'uuid'
 import { useSetDoc } from '../hooks/useSetDoc'
 import { useAuth } from '../contexts/AuthContext'
 import { AuthContextItf, firestoreCompany } from '../utils/interfaces'
+import { toast } from 'react-toastify'
+import { arrayUnion } from 'firebase/firestore'
 
 export const CreateCompany = () => {
 
@@ -21,19 +23,19 @@ export const CreateCompany = () => {
     }
     const [formData, setFormData] = useState(defaultFormData)
     const [imageUpload, setImageUpload] = useState<File | null>(null)
-    
+
     const { currentUser } = useAuth() as AuthContextItf
     const { validateData, inputErrors, errors, validated } = useValidateInputs()
-    const { setDocument, document } = useSetDoc()
+    const { setDocument, firebaseDoc: doc } = useSetDoc()
 
     useEffect(() => {
         if (validated && currentUser) {
             if (errors) return
-            if(imageUpload){
+            if (imageUpload) {
                 uploadImage()
                 return
             }
-            const documentData:firestoreCompany = {
+            const documentData: firestoreCompany = {
                 ...formData,
                 photoUrl: "https://firebasestorage.googleapis.com/v0/b/workathome-1389e.appspot.com/o/placeholders%2Fcompany_placeholder.jpg?alt=media&token=542aa3b0-4e6a-4b84-9813-f62364e0a12e",
                 createdBy: currentUser.uid,
@@ -41,24 +43,34 @@ export const CreateCompany = () => {
                 active: true,
                 size: 0
             }
-            setDocument("Companies", currentUser.uid, documentData)
+            setDocument("Companies", documentData)
         }
 
     }, [validated, errors])
 
     useEffect(() => {
-        if(currentUser){
-            const documentData:firestoreCompany = {
+        if (currentUser && formData.photoUrl) {
+            const documentData: firestoreCompany = {
                 ...formData,
                 createdBy: currentUser.uid,
                 employees: [],
                 active: true,
                 size: 0
             }
-            setDocument("Companies", currentUser.uid, documentData)
+            setDocument("Companies", documentData)
         }
     }, [formData.photoUrl])
-    
+
+    useEffect(() => {
+        if (doc && currentUser) {
+            setDocument("Users", {companies: arrayUnion(doc.id)}, currentUser.uid).then(() =>
+                toast.success("Company added successfuly")
+                // TODO navigate to company details page
+            ).catch(() => toast.error("Erorr ocured when adding company."))
+        }
+    }, [doc])
+
+
 
     const handleChange = (name: string, value: string) => {
         setFormData((prev) => (
@@ -178,6 +190,7 @@ export const CreateCompany = () => {
                                     <input
                                         multiple={false}
                                         type="file"
+                                        accept='image/*'
                                         hidden
                                         onChange={(e) => setImageUpload(e.target.files ? e.target.files[0] : null)}
                                     />

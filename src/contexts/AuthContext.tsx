@@ -83,7 +83,7 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
                 active: true,
                 photoUrl: user.photoURL ? user.photoURL : ""
             }
-            setDocument("Users", user.uid, userData);
+            setDocument("Users", userData, user.uid);
         }
     }
 

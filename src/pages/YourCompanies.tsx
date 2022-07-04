@@ -1,14 +1,12 @@
-import { Card, CardActionArea, CardContent, CardMedia, Container, Paper, Tooltip, Typography } from "@mui/material"
-import { makeStyles } from "@mui/styles"
+import { Card, CardActionArea, CardContent, CardMedia, Container, Tooltip, Typography } from "@mui/material"
 import { collection, query, where } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useAuth } from "../contexts/AuthContext"
 import { db } from "../firebase/firebase.config"
-import useAppBarHeight from "../hooks/useAppBarHeight"
 import { useQuery } from "../hooks/useQuery"
 import { AuthContextItf, firestoreCompany } from "../utils/interfaces"
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import { flexbox } from "@mui/system"
+import { useNavigate } from "react-router-dom"
 
 export const YourCompanies = () => {
 
@@ -16,17 +14,7 @@ export const YourCompanies = () => {
   const [companies, setCompanies] = useState<firestoreCompany[]>([])
 
   const {getQuery, queryResult} = useQuery()
-  const appBarHeight = useAppBarHeight()
-  const useStyles = makeStyles({
-    fullscreen: {
-      minHeight: `calc(100vh - ${appBarHeight}px)`
-    },
-    fit: {
-      height: 'fit-content'
-    }
-  });
-  const classes = useStyles()
- 
+  const navigate = useNavigate()
   
   useEffect(() => {
     if(companies.length === 0){
@@ -55,12 +43,12 @@ export const YourCompanies = () => {
              sx={{mt:5, display: 'flex', justifyContent: 'center', gap:2, flexWrap: 'wrap'}}
             >
               {companies.map((company, index) => (
-                <Card sx={{maxWidth: 345, height:312}} key={company.name + index} elevation={1} className={classes.fit}>
+                <Card sx={{maxWidth: 345, height:312}} key={company.name + index} elevation={1} >
                   <CardActionArea>
                     <CardMedia 
                      component="img"
                      height="140"
-                     image={company.photoUrl ? company.photoUrl : "https://firebasestorage.googleapis.com/v0/b/workathome-1389e.appspot.com/o/placeholders%2Fcompany_placeholder.jpg?alt=media&token=542aa3b0-4e6a-4b84-9813-f62364e0a12e"}
+                     image={company.photoUrl}
                      alt={company.name}
                      />
                     <CardContent>
@@ -75,8 +63,8 @@ export const YourCompanies = () => {
                 </Card>
               ))}
 
-              <Card sx={{maxWidth: 345}} elevation={1} className={classes.fit}>
-                  <CardActionArea>
+              <Card sx={{maxWidth: 345}} elevation={1}>
+                  <CardActionArea onClick={() => navigate('/create-company')}>
                     <CardContent sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', p:0}} >
                       <Tooltip title="Create company">
                         <AddOutlinedIcon sx={{ height: 312, width:345}} />

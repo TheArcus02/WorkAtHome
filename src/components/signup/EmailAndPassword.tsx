@@ -60,8 +60,6 @@ export const EmailAndPassword:React.FC<EandPItf> = ({setEmailSignup}) => {
 
     
   };
- 
-  // TODO Validate Inputs hook
   return (
 
       <Container component="main" maxWidth="xs">
