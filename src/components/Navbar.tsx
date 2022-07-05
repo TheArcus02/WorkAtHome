@@ -1,6 +1,6 @@
 import { AppBar, Toolbar, Typography, Box, IconButton, Menu, MenuItem, Button, Tooltip, Avatar, Link as MuiLink} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { AuthContextItf } from '../utils/interfaces';

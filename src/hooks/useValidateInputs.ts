@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { errorsInterface } from "../utils/interfaces";
-import { validateEmail } from "../utils/utils";
+import { isValidHttpUrl, validateEmail } from "../utils/utils";
 
 
 export const useValidateInputs = () => {
@@ -19,6 +19,7 @@ export const useValidateInputs = () => {
     lastName: 'Last Name',
   };
 
+  // This fields lenght is not being checked
   const skipInputs: string[] = [
       'websiteUrl',
       'photoUrl',
@@ -47,8 +48,22 @@ export const useValidateInputs = () => {
       let fieldName = field[0];
       let fieldVal = field[1];
 
-      if (skipInputs.includes(fieldName)) return;
+      // if's for fields without lenght checking
+      if(fieldName === 'websiteUrl' && fieldVal.length > 0) {
+        if(!isValidHttpUrl(fieldVal)){
+          setInputErrors((prev) => ({
+            ...prev,
+            [fieldName]: {
+              error: true,
+              text: 'Enter valid website url like: https://www.google.com/',
+            },
+          }));
+          setErrors(true);
+        } 
+      }
 
+      if (skipInputs.includes(fieldName)) return;
+      
       if (!fieldVal || fieldVal.length === 0) {
         setInputErrors((prev) => ({
           ...prev,
@@ -61,6 +76,7 @@ export const useValidateInputs = () => {
         }));
         setErrors(true);
       }
+      // if's for fields with lenght checking
       if (fieldName === "email") {
         if (!validateEmail(fieldVal)) {
           setInputErrors((prev) => ({
