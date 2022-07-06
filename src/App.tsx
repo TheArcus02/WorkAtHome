@@ -14,20 +14,21 @@ import { RequireAuth } from './components/RequireAuth';
 import { YourCompanies } from './pages/YourCompanies';
 import { CreateCompany } from './pages/CreateCompany';
 import { CompanyDetails } from './components/company/CompanyDetails';
+import { background, paper, primary, secondary } from './utils/colors';
 
 
 const Darktheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#8172de',
+      main: primary,
     },
     secondary: {
-      main: '#ffae82',
+      main: secondary,
     },
     background: {
-      default: '#484656',
-      paper: '#5a5867',
+      default: background,
+      paper: paper,
     },
   },
   typography: {
@@ -46,7 +47,7 @@ const App:React.FC = () => {
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route element={<RequireAuth />}>
-                <Route path="/profile" element={<Profile />} />
+                <Route path="/profile/:uid" element={<Profile />} />
                 <Route path="/your-companies" element={<YourCompanies />} />
                 <Route path="/create-company" element={<CreateCompany />} />
                 <Route path="/company/:uid" element={<CompanyDetails />} />

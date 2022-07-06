@@ -52,6 +52,8 @@ const EmployeeCard:React.FC<EmpCardProps> = ({empUid}) => {
             </CardActionArea>
         </Card>
     ) : (
+
+        // TODO replace with skelton of card
         <Loader />
     )
   )

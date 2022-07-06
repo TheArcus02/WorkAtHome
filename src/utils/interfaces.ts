@@ -1,5 +1,4 @@
 import { User } from "firebase/auth";
-import { GeoPoint } from "firebase/firestore";
 
 export type currentUser = User | null | undefined;
 
@@ -23,13 +22,17 @@ export interface errorsInterface {
 }
 
 export type baseCompanyInfo = {name: string, uid: string}
+export type baseJobInfo = {name: string, uid: string, current:Boolean}
 
+export type socialNames = 'facebook' | 'twitter' | 'instagram' | 'website' | 'youtube' 
+export type socialsInfo = {name:socialNames, link:string}
 export interface firestoreUser {
     name: string;
     surname: string;
     email: string;
+    socials: socialsInfo[];
     displayName: string;
-    jobUid: string;
+    jobs: baseJobInfo[];
     companies: baseCompanyInfo[];
     description: string;
     hired: boolean;
@@ -51,3 +54,4 @@ export interface firestoreCompany{
     active: boolean;
     uid: string;
 }
+

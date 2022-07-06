@@ -125,6 +125,9 @@ export const CompanyDetails = () => {
                             
                         </Box>
                         }
+                        {
+                            // TODO job offers
+                        }
 
                     </Box>   
                 </Paper>

@@ -139,7 +139,14 @@ export const Navbar:React.FC = () => {
                   onClose={() => setAnchorElUser(null)}
                 >
                   {menu.map((menuItem) => (
-                    <MuiLink key={menuItem} component={Link} to={slugify(menuItem.toLowerCase())} textAlign="center" underline='none' color="inherit">
+                    <MuiLink 
+                      key={menuItem} 
+                      component={Link} 
+                      to={menuItem === 'Profile' ? slugify(menuItem.toLowerCase()) + '/' + currentUser.uid : slugify(menuItem.toLowerCase())} 
+                      textAlign="center" 
+                      underline='none' 
+                      color="inherit"
+                    >
                       <MenuItem onClick={() => setAnchorElUser(null)}>
                         {menuItem}
                       </MenuItem>

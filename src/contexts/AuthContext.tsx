@@ -74,9 +74,10 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
             const userData:firestoreUser = {
                 displayName: user.displayName as string,
                 name: name ? name : "",
+                socials: [],
                 surname: surname ? surname : "",
                 email: user.email ? user.email : "",
-                jobUid: "",
+                jobs: [],
                 companies: [],
                 description: "",
                 hired: false,
