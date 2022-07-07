@@ -1,7 +1,7 @@
 import { Box, Link as MuiLink } from "@mui/material"
 import { socialsInfo, socialNames } from "../../utils/interfaces"
 import { FacebookOutlined, Instagram, LanguageOutlined, Twitter, YouTube} from '@mui/icons-material';
-import { primary, primaryDark, secondary, secondaryDark, secondaryLight } from "../../utils/colors";
+import { useTransitionStyles } from "../../hooks/useTransitionStyles";
 interface SocialLinkProps{
     social: socialsInfo
 }
@@ -29,14 +29,17 @@ const getSocialIcon = (name: socialNames) => {
 }
 
 export const SocialLink:React.FC<SocialLinkProps> = ({social}) => {
-  return (
-    <Box sx={{display:'flex', gap:2, flexWrap:{xs:'wrap', md:'nowrap'}}} mb={1}>
-        <Box sx={{display:'flex', alignItems:'center'}}>
-            <MuiLink target='_blank' rel="noopener" href={social.link} color="secondary" underline="none" sx={{'&:hover':{color: secondaryDark}, transition:'cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms'}}>
-                {getSocialIcon(social.name)}
-            </MuiLink>
-        </Box>
-         
-    </Box>
-  )
+
+    const transitionStyles = useTransitionStyles()
+
+    return (
+        <MuiLink 
+            target='_blank' 
+            rel="noopener" 
+            href={social.link} 
+            className={transitionStyles.secondaryToDark}
+        >
+            {getSocialIcon(social.name)}
+        </MuiLink>
+    )
 }

@@ -65,3 +65,5 @@ const App:React.FC = () => {
 }
 
 export default App
+
+// TODO handle showing errors under inputs in froms 

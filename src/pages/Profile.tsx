@@ -1,10 +1,11 @@
-import { Avatar, Button, CircularProgress, Container, Paper, Typography } from "@mui/material"
+import { Avatar, Button, CircularProgress, Container, Paper, Typography, Link as MuiLink } from "@mui/material"
 import { Box } from "@mui/system"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import { SocialLink } from "../components/profile/SocialLink"
 import { useAuth } from "../contexts/AuthContext"
 import { useGetDoc } from "../hooks/useGetDoc"
+import { useTransitionStyles } from "../hooks/useTransitionStyles"
 import { AuthContextItf, firestoreUser, userInfo } from "../utils/interfaces"
 
 export const Profile = () => {
@@ -13,6 +14,7 @@ export const Profile = () => {
     const [editable, setEditable] = useState(false)
     const [user, setUser] = useState<userInfo>(null)
 
+    const transitionStyles = useTransitionStyles()
     const {currentUser, userInfo} = useAuth() as AuthContextItf
     const { getDocument, document } = useGetDoc()
     const params = useParams()
@@ -41,7 +43,7 @@ export const Profile = () => {
     return (
         user ? (
             <Container maxWidth="lg" sx={{mt:5}}>
-                <Paper sx={{display: 'flex', justifyContent:'center'}} >
+                <Paper sx={{display: 'flex', justifyContent:'center'}}>
                     <Box sx={{py:5, display:'flex', width:'100%', flexDirection:{xs: 'column', md:'row'}, alignItems:{xs:'center', md:'inherit'}}}>
                         <Avatar alt="Profile Picture" src={user.photoUrl ? user.photoUrl : ""} sx={{ width: 168, height: 168, m:3, bgcolor: '#fff'}} >
                             <Typography fontSize={40}>{!user.photoUrl && user.displayName?.slice(0,2)}</Typography>
@@ -54,13 +56,32 @@ export const Profile = () => {
                                     //* Set to current job                                   v
                                     }   
                                     <Typography variant="subtitle1" gutterBottom>Working at Firma</Typography>
-                                    <Typography variant="subtitle1" gutterBottom>{user.companies.length > 0 ? ("Owner of"+ user.companies.map((company, index) => (
-                                        " " + company.name
-                                    ))) : ("")}</Typography>
+                                   {user.companies.length > 0 ? (
+                                     <Typography variant="subtitle1" gutterBottom>
+                                        Owner of 
+                                        {user.companies.map((company) => (
+                                        <MuiLink 
+                                            key={company.uid} 
+                                            component={Link} 
+                                            to={`/company/${company.uid}`}
+                                            underline="none"
+                                            color="info"
+                                            className={transitionStyles.primaryLight}
+                                        >
+                                                {" " + company.name}
+                                        </MuiLink>
+                                        ))} 
+                                     </Typography>
+                                    ): ("")}
                                     {user.socials.length > 0 && (
-                                        user.socials.map((social) => (
-                                            <SocialLink social={social} key={social.name} />
-                                        ))
+                                        <Box sx={{display:'flex', gap:1, flexWrap:{xs:'wrap', md:'nowrap'}, alignItems:'center', justifyContent:{xs:'center', md:'inherit'} }}>
+                                                {
+                                                    user.socials.map((social) => (
+                                                        <SocialLink social={social} key={social.name} />
+                                                    ))
+                                                }
+                                        </Box>
+
                                     )}
                                 </Box>
                                 {editable && 
