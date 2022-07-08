@@ -1,4 +1,5 @@
 import { User } from "firebase/auth";
+import { Timestamp } from "firebase/firestore";
 
 export type currentUser = User | null | undefined;
 
@@ -55,3 +56,18 @@ export interface firestoreCompany{
     uid: string;
 }
 
+export type seniority = 'junior' | 'mid' | 'senior';
+
+export interface firestoreJobOffer{
+    createdBy: string;
+    createdAt: Timestamp;
+    description: string;
+    technologies: string[];
+    company: baseCompanyInfo;
+    location: string;
+    minSalary: number;
+    maxSalary: number;
+    seniority: seniority;
+    title: string;
+    entries: string[];
+}

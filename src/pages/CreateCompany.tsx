@@ -10,6 +10,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { AuthContextItf, baseCompanyInfo, firestoreCompany } from '../utils/interfaces'
 import { toast } from 'react-toastify'
 import { arrayUnion } from 'firebase/firestore'
+import { useNavigate } from 'react-router-dom'
 
 export const CreateCompany = () => {
 
@@ -27,6 +28,7 @@ export const CreateCompany = () => {
     const { currentUser } = useAuth() as AuthContextItf
     const { validateData, inputErrors, errors, validated } = useValidateInputs()
     const { setDocument, firebaseDoc: doc } = useSetDoc()
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (validated && currentUser) {
@@ -69,13 +71,13 @@ export const CreateCompany = () => {
 
             setDocument("Companies", {uid:doc.id}, doc.id);
 
-            setDocument("Users", {companies: arrayUnion(companyInfo)}, currentUser.uid).then(() =>
+            setDocument("Users", {companies: arrayUnion(companyInfo)}, currentUser.uid).then(() => {
                 toast.success("Company added successfuly")
-                // TODO navigate to company details page
+                navigate(`/company/${doc.id}`)
+            }
             ).catch(() => toast.error("Erorr ocured when adding company."))
         }
     }, [doc])
-
 
 
     const handleChange = (name: string, value: string) => {

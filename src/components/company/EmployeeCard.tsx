@@ -1,6 +1,7 @@
-import { Avatar, Card, CardActionArea, CardContent, CardMedia, Skeleton, Typography } from "@mui/material"
+import { Avatar, Card, CardActionArea, CardContent, Skeleton, Typography } from "@mui/material"
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useGetDoc } from "../../hooks/useGetDoc";
 import { firestoreUser } from "../../utils/interfaces";
 
@@ -11,6 +12,7 @@ const EmployeeCard: React.FC<EmpCardProps> = ({ empUid }) => {
 
     const [emp, setEmp] = useState<firestoreUser | null>(null)
     const { getDocument, document } = useGetDoc()
+    const navigate = useNavigate()
 
     useEffect(() => {
         getDocument('Users', empUid)
@@ -25,7 +27,7 @@ const EmployeeCard: React.FC<EmpCardProps> = ({ empUid }) => {
 
     return (
         <Card sx={{ maxWidth: 345 }} elevation={3}>
-            <CardActionArea >
+            <CardActionArea onClick={() => navigate(`/profile/${empUid}`)}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', m: 2 }}>
                     {emp  ? (
                     <Avatar

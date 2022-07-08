@@ -72,10 +72,6 @@ export const CompanyDetails = () => {
                                         <LocationOnOutlinedIcon />
                                         <Typography ml={1}>{companyInfo.address}</Typography>
                                     </Box>
-                                    <Box sx={{display:'flex', alignItems:'center'}}>
-                                        <LocationOnOutlinedIcon />
-                                        <Typography ml={1}>{companyInfo.address}</Typography>
-                                    </Box>
                                     {companyInfo.websiteUrl.length > 0 && 
                                     <Box sx={{display:'flex', alignItems:'center'}}>
                                         <LanguageOutlinedIcon />

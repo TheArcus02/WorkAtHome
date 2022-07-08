@@ -15,6 +15,7 @@ import { YourCompanies } from './pages/YourCompanies';
 import { CreateCompany } from './pages/CreateCompany';
 import { CompanyDetails } from './components/company/CompanyDetails';
 import { background, paper, primary, secondary } from './utils/colors';
+import { AddOffer } from './pages/AddOffer';
 
 
 const Darktheme = createTheme({
@@ -51,6 +52,7 @@ const App:React.FC = () => {
                 <Route path="/your-companies" element={<YourCompanies />} />
                 <Route path="/create-company" element={<CreateCompany />} />
                 <Route path="/company/:uid" element={<CompanyDetails />} />
+                <Route path="/add-offer" element={<AddOffer />} />
               </Route>
             </Routes>
             <ToastContainer 

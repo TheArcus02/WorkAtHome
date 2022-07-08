@@ -57,7 +57,7 @@ export const Navbar:React.FC = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
-              aria-label="account of current user"
+              aria-label="menu"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
@@ -111,7 +111,13 @@ export const Navbar:React.FC = () => {
               </Button>
             ))}
           </Box>
-
+          <Box sx={{display:{xs:"none", md:'inherit'}, mr:3}}>
+            <MuiLink component={Link} to="/add-offer" underline='none' color="inherit">
+              <Button color="secondary" variant='contained' size="small">
+                Post a job
+              </Button>
+            </MuiLink>
+          </Box>
           <Box sx={{ flexGrow: 0 }}>
             {currentUser ? (
               <>
@@ -159,7 +165,7 @@ export const Navbar:React.FC = () => {
               </>
             ) : (
               <MuiLink component={Link} to="/login" underline='none' color="inherit">
-                <Button color="inherit">Login</Button>
+                <Button color="inherit" variant="outlined">Login</Button>
               </MuiLink>
             )}
             
