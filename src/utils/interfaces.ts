@@ -71,3 +71,8 @@ export interface firestoreJobOffer{
     title: string;
     entries: string[];
 }
+
+// export type alert = {
+//     type: 'error' | 'warning' | 'info' | 'success';
+//     text: string; 
+// }
