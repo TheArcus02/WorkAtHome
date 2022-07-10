@@ -17,6 +17,8 @@ export const useValidateInputs = () => {
   const mappedNames: mappedNamesInterface = {
     firstName: 'First Name',
     lastName: 'Last Name',
+    maxSalary: 'Maximum Salary',
+    minSalary: 'Minimum Salary'
   };
 
   // This fields lenght is not being checked
@@ -70,7 +72,7 @@ export const useValidateInputs = () => {
           [fieldName]: {
             error: true,
             text: `Enter ${
-              mappedNames[fieldName] ? mappedNames[fieldName] : fieldName
+              mappedNames[fieldName] ? mappedNames[fieldName] : fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
             }`,
           },
         }));

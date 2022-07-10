@@ -1,13 +1,16 @@
 import { Cancel } from '@mui/icons-material'
 import { Box, Container, Paper, Typography, Grid, TextField, Select, MenuItem, InputLabel, Stack, Alert, AlertTitle, Button } from '@mui/material'
 import { makeStyles } from '@mui/styles'
+import { serverTimestamp } from 'firebase/firestore'
 import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Loader } from '../components/Loader'
 import { useAuth } from '../contexts/AuthContext'
+import { useSetDoc } from '../hooks/useSetDoc'
+import { useValidateInputs } from '../hooks/useValidateInputs'
 import { secondary } from '../utils/colors'
-import { AuthContextItf } from '../utils/interfaces'
+import { AuthContextItf, baseCompanyInfo, firestoreJobOffer, seniority } from '../utils/interfaces'
 
 type tagsProps = {
     tag: string;
@@ -15,8 +18,9 @@ type tagsProps = {
 }
 type formDataType = {
     title: string;
+    location: string;
     company: string;
-    seniority: string;
+    seniority: seniority;
     minSalary: string;
     maxSalary: string;
     description: string;
@@ -45,15 +49,18 @@ export const AddOffer = () => {
             flexWrap: 'wrap',
         }
     }))
-    const { userInfo } = useAuth() as AuthContextItf
+    const { userInfo, currentUser } = useAuth() as AuthContextItf
     const navigate = useNavigate()
     const classes = useStyles()
+    const { validateData, inputErrors, errors, validated } = useValidateInputs()
+    const { setDocument, firebaseDoc: doc } = useSetDoc()
 
     useEffect(() => {
         if (userInfo) {
             if (userInfo.companies.length > 0) {
                 const initialformData: formDataType = {
                     title: '',
+                    location: '',
                     company: userInfo.companies[0].uid,
                     description: '',
                     maxSalary: '',
@@ -68,6 +75,36 @@ export const AddOffer = () => {
         }
     }, [userInfo])
 
+    useEffect(() => {
+      if(validated){
+        if(errors) return
+        if(formData && currentUser && userInfo){
+            const documentData:firestoreJobOffer = {
+                ...formData,
+                company: userInfo.companies.find((company) => company.uid === formData.company) as baseCompanyInfo,
+                minSalary: parseInt(formData.minSalary),
+                maxSalary: parseInt(formData.maxSalary),
+                createdBy: currentUser.uid,
+                createdAt: new Date(),
+                technologies: tags,
+                entries: []
+            }
+            setDocument("Offers", documentData).then(() => {
+                toast.success("Offer created succesfully!")
+            }).catch((error) => (toast.error("Error ocurred during adding offer to database: " + error)))
+        }
+      }
+    }, [validated, errors])
+
+    // TODO navigate to offer detials page when it will be ready
+    
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if(formData){
+            validateData(formData)
+        }
+    }
+
     const handleChange = (name: string, value: string) => {
         setFormData((prev:any) => (
             {
@@ -80,7 +117,10 @@ export const AddOffer = () => {
     const handleAddTag = (e: React.KeyboardEvent) => {
         if (e.key === "Enter" && tagRef.current) {
             if (tags.includes(tagRef.current.value)) {
-                return toast.warn("Tag already included")
+                return toast.warn("Tag already included.")
+            }
+            if(tagRef.current.value.trim().length === 0){
+                return toast.warn("Tag is empty.")
             }
             setTags([...tags, tagRef.current.value])
             tagRef.current.value = ""
@@ -91,14 +131,18 @@ export const AddOffer = () => {
         setTags(tags.filter((tag) => tag !== val))
     }
 
+    const checkKeyDown = (e: React.KeyboardEvent) => {
+        if(e.key === "Enter") e.preventDefault()
+    }
+
     return (
-        <Container maxWidth="sm" sx={{ mb: 4 }} >
+        <Container maxWidth="sm" sx={{ mb: 4 }}>
             {formData && userInfo ? (
                 <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
                     <Typography component="h1" variant="h4" align="center">
                         Add Offer
                     </Typography>
-                    <Box component="form" onSubmit={() => undefined} noValidate>
+                    <Box component="form" noValidate onSubmit={handleSubmit} onKeyDown={checkKeyDown}>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <TextField
@@ -109,6 +153,19 @@ export const AddOffer = () => {
                                     value={formData.title}
                                     fullWidth
                                     autoComplete="title"
+                                    variant="standard"
+                                    onChange={(e) => handleChange(e.target.name, e.target.value)}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    id="location"
+                                    name="location"
+                                    label="Location"
+                                    value={formData.location}
+                                    fullWidth
+                                    autoComplete="location"
                                     variant="standard"
                                     onChange={(e) => handleChange(e.target.name, e.target.value)}
                                 />
@@ -214,10 +271,19 @@ export const AddOffer = () => {
                                     fullWidth
                                     maxRows={6}
                                     minRows={4}
-                                // onChange={(e) => handleChange(e.target.name, e.target.value)}
                                 />
                             </Grid>
                         </Grid>
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Button
+                                variant="contained"
+                                type="submit"
+                                sx={{ mt: 3, ml: 1, color: '#fff' }}
+                                color="success"
+                            >
+                                Add
+                            </Button>
+                        </Box>
                     </Box>
                 </Paper>
             ) : noCompanies ? (
@@ -242,18 +308,3 @@ export const AddOffer = () => {
         </Container>
     )
 }
-
-
-/*
-    createdBy: string;
-    createdAt: Timestamp;
-    description: string;
-    technologies: string[];
-    company: baseCompanyInfo;
-    location: string;
-    minSalary: number;
-    maxSalary: number;
-    seniority: string;
-    title: string;
-    entries: string[];
-*/

@@ -214,7 +214,6 @@ export const CreateCompany = () => {
                         <Button
                             variant="contained"
                             type="submit"
-                            // onClick={handleNext}
                             sx={{ mt: 3, ml: 1, color: '#fff' }}
                             color="success"
                         >

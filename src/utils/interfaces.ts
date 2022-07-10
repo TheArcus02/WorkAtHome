@@ -60,7 +60,7 @@ export type seniority = 'junior' | 'mid' | 'senior';
 
 export interface firestoreJobOffer{
     createdBy: string;
-    createdAt: Timestamp;
+    createdAt: Date;
     description: string;
     technologies: string[];
     company: baseCompanyInfo;

@@ -69,3 +69,4 @@ const App:React.FC = () => {
 export default App
 
 // TODO handle showing errors under inputs in froms 
+// ? change location/address fields to objects with lat an lon to interact with google maps api
