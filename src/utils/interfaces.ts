@@ -70,6 +70,7 @@ export interface firestoreJobOffer{
     seniority: seniority;
     title: string;
     entries: string[];
+    uid: string;
 }
 
 // export type alert = {

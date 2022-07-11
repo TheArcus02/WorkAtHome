@@ -16,6 +16,7 @@ import { CreateCompany } from './pages/CreateCompany';
 import { CompanyDetails } from './components/company/CompanyDetails';
 import { background, paper, primary, secondary } from './utils/colors';
 import { AddOffer } from './pages/AddOffer';
+import { OfferDetails } from './components/offer/OfferDetails';
 
 
 const Darktheme = createTheme({
@@ -53,6 +54,7 @@ const App:React.FC = () => {
                 <Route path="/create-company" element={<CreateCompany />} />
                 <Route path="/company/:uid" element={<CompanyDetails />} />
                 <Route path="/add-offer" element={<AddOffer />} />
+                <Route path="/offer/:uid" element={<OfferDetails />} />
               </Route>
             </Routes>
             <ToastContainer 
@@ -69,4 +71,5 @@ const App:React.FC = () => {
 export default App
 
 // TODO handle showing errors under inputs in froms 
+// TODO add go back in detailsPages
 // ? change location/address fields to objects with lat an lon to interact with google maps api

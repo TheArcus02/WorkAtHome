@@ -87,7 +87,8 @@ export const AddOffer = () => {
                 createdBy: currentUser.uid,
                 createdAt: new Date(),
                 technologies: tags,
-                entries: []
+                entries: [],
+                uid: ''
             }
             setDocument("Offers", documentData).then(() => {
                 toast.success("Offer created succesfully!")
@@ -96,6 +97,15 @@ export const AddOffer = () => {
       }
     }, [validated, errors])
 
+    useEffect(() => {
+      if(doc){
+        setDocument("Offers", {uid:doc.id}, doc.id).then(() => (
+            navigate(`/offer/${doc.id}`)
+        ))
+
+      }
+    }, [doc])
+    
     // TODO navigate to offer detials page when it will be ready
     
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

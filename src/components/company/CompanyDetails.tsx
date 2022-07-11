@@ -1,15 +1,14 @@
-import { Container, Paper, Typography, Link as MuiLink, Button } from "@mui/material"
+import { Container, Paper, Typography, Link as MuiLink, Button, Divider } from "@mui/material"
 import { Box } from "@mui/system"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 import { useGetDoc } from "../../hooks/useGetDoc"
 import { AuthContextItf, firestoreCompany } from "../../utils/interfaces"
-import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
+import { PeopleAltOutlined, LocationOnOutlined, LanguageOutlined,DescriptionOutlined  } from '@mui/icons-material'
 import { Loader } from "../Loader"
 import EmployeeCard from "./EmployeeCard"
+import { primaryLight } from "../../utils/colors"
 export const CompanyDetails = () => {
 
     const [companyInfo, setCompanyInfo] = useState<firestoreCompany | null>(null)
@@ -27,7 +26,7 @@ export const CompanyDetails = () => {
         if(uid){
             getDocument('Companies', uid);
         }
-    }, [])
+    }, [uid])
 
     useEffect(() => {
         if(document){
@@ -37,15 +36,14 @@ export const CompanyDetails = () => {
     
     useEffect(() => {
       if(companyInfo && currentUser){
-        companyInfo.createdBy === currentUser.uid ? 
-        setEditable(true) : ""
+        companyInfo.createdBy === currentUser.uid && setEditable(true)
       }
-    }, [companyInfo])
+    }, [companyInfo, currentUser])
     
     return (
         companyInfo ? (
             <Container maxWidth="xl" sx={{mt:5}}>
-                <Paper>
+                <Paper sx={{pb:5}}>
                     <Box 
                         loading="lazy"
                         component="img"
@@ -63,22 +61,30 @@ export const CompanyDetails = () => {
                                 <Typography component="h2" variant="h4" mt={2} mb={2} fontWeight="bold" sx={{textAlign:{xs:'center', md:'left'}}}>
                                     {companyInfo.name}
                                 </Typography>
-                                <Box sx={{display:'flex', gap:2, flexWrap:{xs:'wrap', md:'nowrap'}}} mb={2}>
-                                    <Box sx={{display:'flex', alignItems:'center'}}>
-                                        <PeopleAltOutlinedIcon />
-                                        <Typography ml={1}>{companyInfo.size}</Typography>
-                                    </Box>
-                                    <Box sx={{display:'flex', alignItems:'center'}}>
-                                        <LocationOnOutlinedIcon />
-                                        <Typography ml={1}>{companyInfo.address}</Typography>
-                                    </Box>
-                                    {companyInfo.websiteUrl.length > 0 && 
-                                    <Box sx={{display:'flex', alignItems:'center'}}>
-                                        <LanguageOutlinedIcon />
-                                        <MuiLink target='_blank' rel="noopener" href={companyInfo.websiteUrl} underline="none" color="secondary">
-                                            <Typography ml={1}>{companyInfo.name}</Typography>
-                                        </MuiLink>
-                                    </Box>
+                                <Box sx={{display:'flex', gap:1, flexWrap:{xs:'wrap', md:'nowrap'}}} mb={2}>
+                                    <Paper sx={{p:1.5}} elevation={0}>
+                                        <Box sx={{display:'flex', alignItems:'center'}}>
+                                            <PeopleAltOutlined sx={{color:primaryLight}} />
+                                            <Typography ml={1}>{companyInfo.size}</Typography>
+                                        </Box>
+                                    </Paper>
+                                    <Paper sx={{p:1.5}} elevation={0}>
+                                        <Box sx={{display:'flex', alignItems:'center'}}>
+                                            <LocationOnOutlined sx={{color:primaryLight}} />
+                                            <Typography ml={1}>{companyInfo.address}</Typography>
+                                        </Box>
+                                    </Paper>
+                                    
+                                    {companyInfo.websiteUrl.length > 0 &&
+                                    <Paper sx={{p:1.5}} elevation={0}>
+                                        <Box sx={{display:'flex', alignItems:'center'}}>
+                                            <LanguageOutlined sx={{color:primaryLight}} />
+                                            <MuiLink target='_blank' rel="noopener" href={companyInfo.websiteUrl} underline="none" color="secondary">
+                                                <Typography ml={1}>{companyInfo.name}</Typography>
+                                            </MuiLink>
+                                        </Box>
+                                    </Paper> 
+                                    
                                     }  
                                 </Box>
                             </Box>
@@ -96,15 +102,19 @@ export const CompanyDetails = () => {
                             
                         </Box>
                         
-                        <Typography variant="body1">
-                            {companyInfo.description}
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi voluptates quam blanditiis dolor in suscipit fugiat explicabo doloremque dicta. Numquam quibusdam atque rerum odio, debitis voluptatum dicta error inventore dolorem.
-                            Eveniet dignissimos minima, vero, aperiam quidem praesentium dolore facere doloremque pariatur vel optio fugiat sit ea quis amet illum laborum soluta dolores nam tenetur eligendi enim. Rem facilis eos molestiae.
-                            Quidem neque, accusantium harum ex eum sint placeat voluptatum magnam nulla recusandae laborum tempore repudiandae, a consequatur, quos sunt! Iste atque doloremque voluptates quas, voluptatibus explicabo nobis dolore porro cumque!
-                            {
-                                // TODO Delete lorem later
-                            }
-                        </Typography>
+                        <Paper elevation={0} sx={{p:2}}>
+                            <Box sx={{display:'flex', alignItems:'center', mb:1.5 }}>
+                                <DescriptionOutlined />
+                                <Typography variant="h5" ml={1}>Description</Typography>
+                            </Box>
+                            <Divider />
+                            <Typography variant="body1" mt={1.5}>
+                                {companyInfo.description}
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia deserunt, assumenda deleniti earum dignissimos unde? Alias ex quo ipsum modi, adipisci atque quisquam fugiat quaerat numquam beatae, veniam natus corrupti!
+                                Possimus accusantium sequi vitae voluptate corporis. Et praesentium quidem earum recusandae optio repellat cum nesciunt blanditiis cupiditate saepe necessitatibus, repellendus fuga reiciendis laborum assumenda laboriosam provident veritatis officia explicabo ut.
+                                Hic iure cumque blanditiis sed, saepe illum ex. Eos obcaecati deserunt qui adipisci minus laudantium excepturi possimus, incidunt molestiae illum veniam, temporibus hic est laborum consequatur. Cum dolore earum iusto!
+                            </Typography>
+                        </Paper>
                         {companyInfo.employees.length > 0 && 
                         <Box mt={5}>
                             <Typography variant="h4" align="center">
