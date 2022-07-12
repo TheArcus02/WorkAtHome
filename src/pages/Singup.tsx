@@ -25,7 +25,7 @@ export const Signup:React.FC = () => {
     }
     return !loading ? ( !currentUser ? (
         !emailSignup ? (
-            <Container component="main" maxWidth="xs">
+            <Container maxWidth="xs">
                 <Box
                     sx={{
                         marginTop: 8,

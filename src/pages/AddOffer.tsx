@@ -1,7 +1,6 @@
 import { Cancel } from '@mui/icons-material'
 import { Box, Container, Paper, Typography, Grid, TextField, Select, MenuItem, InputLabel, Stack, Alert, AlertTitle, Button } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import { serverTimestamp } from 'firebase/firestore'
 import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -19,7 +18,7 @@ type tagsProps = {
 type formDataType = {
     title: string;
     location: string;
-    company: string;
+    companyUid: string;
     seniority: seniority;
     minSalary: string;
     maxSalary: string;
@@ -61,11 +60,11 @@ export const AddOffer = () => {
                 const initialformData: formDataType = {
                     title: '',
                     location: '',
-                    company: userInfo.companies[0].uid,
+                    companyUid: userInfo.companies[0].uid,
                     description: '',
                     maxSalary: '',
                     minSalary: '',
-                    seniority: 'junior'
+                    seniority: 'Junior'
                 }
                 setFormData(initialformData)
             } else {
@@ -81,7 +80,7 @@ export const AddOffer = () => {
         if(formData && currentUser && userInfo){
             const documentData:firestoreJobOffer = {
                 ...formData,
-                company: userInfo.companies.find((company) => company.uid === formData.company) as baseCompanyInfo,
+                companyName: userInfo.companies.find((company) => company.uid === formData.companyUid)?.name as string,
                 minSalary: parseInt(formData.minSalary),
                 maxSalary: parseInt(formData.maxSalary),
                 createdBy: currentUser.uid,
@@ -106,7 +105,7 @@ export const AddOffer = () => {
       }
     }, [doc])
     
-    // TODO navigate to offer detials page when it will be ready
+    // TODO tags to chip
     
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -185,9 +184,9 @@ export const AddOffer = () => {
                                 <Select
                                     labelId='company-label'
                                     label="Comapny"
-                                    name="company"
-                                    id="company"
-                                    value={formData.company}
+                                    name="companyUid"
+                                    id="companyUid"
+                                    value={formData.companyUid}
                                     fullWidth
                                     variant='standard'
                                     required
@@ -213,9 +212,9 @@ export const AddOffer = () => {
                                     required
                                     onChange={(e) => handleChange(e.target.name, e.target.value)}
                                 >
-                                    <MenuItem value='junior'>Junior</MenuItem>
-                                    <MenuItem value='mid'>Mid</MenuItem>
-                                    <MenuItem value='senior'>Senior</MenuItem>
+                                    <MenuItem value='Junior'>Junior</MenuItem>
+                                    <MenuItem value='Mid'>Mid</MenuItem>
+                                    <MenuItem value='Senior'>Senior</MenuItem>
                                 </Select>
                             </Grid>
                             <Grid item xs={12}>

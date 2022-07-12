@@ -7,6 +7,7 @@ import { AuthContextItf, firestoreJobOffer } from "../../utils/interfaces"
 import { Loader } from "../Loader"
 import { BusinessOutlined, CodeOutlined, DescriptionOutlined, LocationOnOutlined, TimelineOutlined } from '@mui/icons-material'
 import { primaryLight } from "../../utils/colors"
+import moment from "moment"
 
 export const OfferDetails = () => {
   
@@ -40,7 +41,7 @@ export const OfferDetails = () => {
   
   
   // TODO add popup already applied for this job when entries will be ready
-  // TODO add oprion to aply for this job
+  // TODO add option to apply for this job
 
   return offer ? (
     <Container maxWidth="lg" sx={{mt:5}}>
@@ -48,19 +49,19 @@ export const OfferDetails = () => {
         <Box sx={{display:'flex', flexDirection:'column', textAlign:'justify'}} mx={5}>
           <Box sx={{display:'flex', alignItems:'center', justifyContent:'space-between', flexDirection:{xs:'column-reverse', md:"row"} }}>
             <Box>
-              <Typography component="h2" variant="h5" mb={2} fontWeight="bold" sx={{textAlign:{xs:'center', md:'left'}}}>
+              <Typography component="h2" variant="h5" fontWeight="bold" sx={{textAlign:{xs:'center', md:'left'}}}>
                   {offer.title}
               </Typography>
+              <Typography variant="subtitle2">{moment(offer.createdAt.toDate()).calendar()}</Typography>
               <Typography component="h3" variant="h6" mt={2} mb={2} sx={{textAlign:{xs:'center', md:'left'}}}>
                   {offer.minSalary} - {offer.maxSalary} PLN
               </Typography>
               <Box sx={{display:'flex', gap:1, flexWrap:{xs:'wrap', md:'nowrap'}}} mb={2}>
-
                 <Paper sx={{p:1.5}} elevation={0}>
                   <Box sx={{display:'flex', alignItems:'center'}}>
                     <BusinessOutlined sx={{color:primaryLight}}/>
-                    <MuiLink component={Link} to={`/company/${offer.company.uid}`} underline="none" color="secondary">
-                      <Typography ml={1}>{offer.company.name}</Typography>
+                    <MuiLink component={Link} to={`/company/${offer.companyUid}`} underline="none" color="secondary">
+                      <Typography ml={1}>{offer.companyName}</Typography>
                     </MuiLink>
                   </Box>
                 </Paper>

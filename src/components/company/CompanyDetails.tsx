@@ -4,19 +4,25 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 import { useGetDoc } from "../../hooks/useGetDoc"
-import { AuthContextItf, firestoreCompany } from "../../utils/interfaces"
+import { AuthContextItf, firestoreCompany, firestoreJobOffer } from "../../utils/interfaces"
 import { PeopleAltOutlined, LocationOnOutlined, LanguageOutlined,DescriptionOutlined  } from '@mui/icons-material'
 import { Loader } from "../Loader"
 import EmployeeCard from "./EmployeeCard"
 import { primaryLight } from "../../utils/colors"
+import { useQuery } from "../../hooks/useQuery"
+import { collection, query, where } from "firebase/firestore"
+import { db } from "../../firebase/firebase.config"
+import { OfferCard } from "../offer/OfferCard"
 export const CompanyDetails = () => {
 
     const [companyInfo, setCompanyInfo] = useState<firestoreCompany | null>(null)
     const [editable, setEditable] = useState<Boolean>(false)
     const [editMode, setEditMode] = useState<Boolean>(false)
+    const [offers, setOffers] = useState<firestoreJobOffer[]>([])
 
     const { currentUser } = useAuth() as AuthContextItf
     const { getDocument, document } = useGetDoc()
+    const { getQuery, queryResult } = useQuery()
     const params = useParams()
     const {uid} = params
     
@@ -25,8 +31,21 @@ export const CompanyDetails = () => {
     useEffect(() => {
         if(uid){
             getDocument('Companies', uid);
+            const q = query(collection(db, "Offers"), where("companyUid", "==", uid))
+            getQuery(q)
         }
     }, [uid])
+
+    useEffect(() => {
+      if(queryResult){
+        queryResult.forEach((doc: any) => {
+            setOffers((prev) => (
+                [...prev, doc.data()]
+            ))
+        })
+      }
+    }, [queryResult])
+    
 
     useEffect(() => {
         if(document){
@@ -131,8 +150,17 @@ export const CompanyDetails = () => {
                             
                         </Box>
                         }
-                        {
-                            // TODO job offers
+                        {offers.length > 0 && 
+                        <Box mt={5}>
+                            <Typography variant="h4" align="center">
+                                Job Offers
+                            </Typography>
+                            <Container  sx={{mt:5, display: 'flex', justifyContent: 'center', gap:2, flexWrap: 'wrap'}}>
+                                {offers.map((offer) => (
+                                    <OfferCard offer={offer} elevation={3} />
+                                ))}
+                            </Container>
+                        </Box>
                         }
 
                     </Box>   

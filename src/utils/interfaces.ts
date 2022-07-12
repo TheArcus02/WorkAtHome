@@ -56,14 +56,15 @@ export interface firestoreCompany{
     uid: string;
 }
 
-export type seniority = 'junior' | 'mid' | 'senior';
+export type seniority = 'Junior' | 'Mid' | 'Senior';
 
 export interface firestoreJobOffer{
     createdBy: string;
-    createdAt: Date;
+    createdAt: any; // Timestamp in firebase / save Date obj
     description: string;
     technologies: string[];
-    company: baseCompanyInfo;
+    companyName: string;
+    companyUid: string;
     location: string;
     minSalary: number;
     maxSalary: number;
