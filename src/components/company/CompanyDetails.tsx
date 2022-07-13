@@ -10,9 +10,8 @@ import { Loader } from "../Loader"
 import EmployeeCard from "./EmployeeCard"
 import { primaryLight } from "../../utils/colors"
 import { useQuery } from "../../hooks/useQuery"
-import { collection, query, where } from "firebase/firestore"
-import { db } from "../../firebase/firebase.config"
 import { OfferCard } from "../offer/OfferCard"
+import { where } from "firebase/firestore"
 export const CompanyDetails = () => {
 
     const [companyInfo, setCompanyInfo] = useState<firestoreCompany | null>(null)
@@ -31,8 +30,7 @@ export const CompanyDetails = () => {
     useEffect(() => {
         if(uid){
             getDocument('Companies', uid);
-            const q = query(collection(db, "Offers"), where("companyUid", "==", uid))
-            getQuery(q)
+            getQuery('',"Offers", where("companyUid", "==", uid))
         }
     }, [uid])
 

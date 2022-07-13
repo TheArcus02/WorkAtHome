@@ -1,12 +1,11 @@
 import { Card, CardActionArea, CardContent, CardMedia, Container, Tooltip, Typography } from "@mui/material"
-import { collection, query, where } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useAuth } from "../contexts/AuthContext"
-import { db } from "../firebase/firebase.config"
 import { useQuery } from "../hooks/useQuery"
 import { AuthContextItf, firestoreCompany } from "../utils/interfaces"
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { useNavigate } from "react-router-dom"
+import { where } from "firebase/firestore"
 
 export const YourCompanies = () => {
 
@@ -17,11 +16,10 @@ export const YourCompanies = () => {
   const navigate = useNavigate()
   
   useEffect(() => {
-    if(companies.length === 0){
-      const q = query(collection(db, "Companies"), where("createdBy", "==", currentUser?.uid))    
-      getQuery(q)
+    if(companies.length === 0 && currentUser){  
+      getQuery('', "Companies", where("createdBy", "==", currentUser.uid))
     }
-  }, [])
+  }, [currentUser])
 
   useEffect(() => {
     if(queryResult){

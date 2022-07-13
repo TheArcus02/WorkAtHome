@@ -6,15 +6,16 @@ import { firestoreJobOffer } from "../../utils/interfaces"
 
 type offerCardProps = {
     offer: firestoreJobOffer,
-    elevation: number
+    elevation: number,
+    maxWidth?: number | string,
 }
 
-export const OfferCard:React.FC<offerCardProps> = ({offer, elevation}) => {
+export const OfferCard:React.FC<offerCardProps> = ({offer, elevation, maxWidth}) => {
   
     const navigate = useNavigate()
 
     return (
-    <Card sx={{ maxWidth: 385 }} elevation={elevation}>
+    <Card sx={!maxWidth ? { maxWidth: 385 } : {maxWidth: maxWidth} } elevation={elevation}>
         <CardActionArea onClick={() => navigate(`/offer/${offer.uid}`)}>
             <CardContent>
                 <Typography variant="h5" mb={0.5}>{offer.title}</Typography>

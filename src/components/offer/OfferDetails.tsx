@@ -39,7 +39,7 @@ export const OfferDetails = () => {
     }
   }, [offer, currentUser])
   
-  
+  // TODO change mobile view
   // TODO add popup already applied for this job when entries will be ready
   // TODO add option to apply for this job
 
