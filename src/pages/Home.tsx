@@ -17,6 +17,7 @@ export const Home:React.FC = () => {
     useEffect(() => {
         if(recentOffers.length === 0){
             getQuery('recent', "Offers", orderBy("createdAt", "desc"), limit(1))
+            // change limit to 6 when component will be done
         }
     }, [recentOffers])
     
@@ -60,21 +61,25 @@ export const Home:React.FC = () => {
             </Container>
             
             <Container maxWidth="xl">
-
-            {recentOffers.length > 0 ? (
-                <Paper elevation={1}>
-                    <Typography variant="h4" textAlign="center" sx={{py:5}}>Recent Job Offers</Typography>
-                    <Box sx={{display: 'flex', justifyContent: 'center', gap:2, flexWrap:'wrap', px:{xs:2, md:0}}}>
-                        {recentOffers.map((offer, index) => (
-                            <OfferCard offer={offer} elevation={0} maxWidth={385} key={offer.uid + index} />
-                        ))}
-                    </Box>
-                    <Box mt={2} sx={{display: 'flex', justifyContent:'center'}}>
-                        <Button variant="contained" endIcon={<ArrowForward />}>Show more</Button>
-                        {/* // TODO add navigate to offersSection when ready */}
-                    </Box>
-                </Paper>
-            ) : <OfferSkeleton />}
+            
+            <Paper elevation={1}>
+                <Typography variant="h4" textAlign="center" sx={{py:5}}>Recent Job Offers</Typography>
+                <Box sx={{display: 'flex', justifyContent: 'center', gap:2, flexWrap:'wrap', px:{xs:2, md:0}}}>
+                    {recentOffers.length > 0 ? (
+                     recentOffers.map((offer, index) => (
+                        <OfferCard offer={offer} elevation={0} key={offer.uid + index} />
+                    ))   
+                    ) : ([...Array(6)].map(() => (
+                        <OfferSkeleton elevation={0} />
+                    )))}
+                    {}
+                </Box>
+                <Box mt={2} sx={{display: 'flex', justifyContent:'center'}}>
+                    <Button variant="contained" endIcon={<ArrowForward />}>Show more</Button>
+                    {/* // TODO add navigate to offersSection when ready */}
+                </Box>
+            </Paper>
+            
 
             </Container>
         </>
