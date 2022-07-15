@@ -124,6 +124,8 @@ export const CreateCompany = () => {
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <TextField
+                                error={inputErrors?.name.error}
+                                helperText={inputErrors?.name.text}
                                 required
                                 id="name"
                                 name="name"
@@ -137,6 +139,8 @@ export const CreateCompany = () => {
 
                         <Grid item xs={12}>
                             <TextField
+                                error={inputErrors?.address.error}
+                                helperText={inputErrors?.address.text}
                                 required
                                 id="address"
                                 name="address"
@@ -150,6 +154,8 @@ export const CreateCompany = () => {
 
                         <Grid item xs={12} sm={6}>
                             <TextField
+                                error={inputErrors?.email.error}
+                                helperText={inputErrors?.email.text}
                                 required
                                 id="email"
                                 name="email"
@@ -163,6 +169,8 @@ export const CreateCompany = () => {
 
                         <Grid item xs={12} sm={6}>
                             <TextField
+                                error={inputErrors?.websiteUrl.error}
+                                helperText={inputErrors?.websiteUrl.text}
                                 id="websiteUrl"
                                 name="websiteUrl"
                                 label="Website"
@@ -175,6 +183,8 @@ export const CreateCompany = () => {
 
                         <Grid item xs={12}>
                             <TextField
+                                error={inputErrors?.description.error}
+                                helperText={inputErrors?.description.text}
                                 required
                                 id="description"
                                 name="description"

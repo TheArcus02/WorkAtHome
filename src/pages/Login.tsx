@@ -95,6 +95,8 @@ export const Login:React.FC = () => {
           </Box>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
+              error={inputErrors?.loginEmail.error}
+              helperText={inputErrors?.loginEmail.text}
               margin="normal"
               required
               fullWidth
@@ -106,6 +108,8 @@ export const Login:React.FC = () => {
               onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
             <TextField
+              error={inputErrors?.loginPassword.error}
+              helperText={inputErrors?.loginPassword.text}
               margin="normal"
               required
               fullWidth

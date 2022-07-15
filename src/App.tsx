@@ -70,6 +70,5 @@ const App:React.FC = () => {
 
 export default App
 
-// TODO handle showing errors under inputs in froms 
 // TODO add go back in detailsPages
 // ? change location/address fields to objects with lat an lon to interact with google maps api

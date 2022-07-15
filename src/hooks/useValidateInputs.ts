@@ -18,7 +18,9 @@ export const useValidateInputs = () => {
     firstName: 'First Name',
     lastName: 'Last Name',
     maxSalary: 'Maximum Salary',
-    minSalary: 'Minimum Salary'
+    minSalary: 'Minimum Salary',
+    loginEmail: "Email",
+    loginPassword: "Password",
   };
 
   // This fields lenght is not being checked
@@ -88,7 +90,7 @@ export const useValidateInputs = () => {
           setErrors(true);
         }
       }
-      if(fieldName === "password"){
+      if(fieldName === "password" || fieldName === "loginPassword"){
         if(fieldVal.length < 6){
           setInputErrors((prev) => ({
             ...prev,

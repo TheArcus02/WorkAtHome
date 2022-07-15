@@ -8,8 +8,8 @@ import { Loader } from '../components/Loader'
 import { useAuth } from '../contexts/AuthContext'
 import { useSetDoc } from '../hooks/useSetDoc'
 import { useValidateInputs } from '../hooks/useValidateInputs'
-import { secondary } from '../utils/colors'
-import { AuthContextItf, baseCompanyInfo, firestoreJobOffer, seniority } from '../utils/interfaces'
+import { primary } from '../utils/colors'
+import { AuthContextItf, firestoreJobOffer, seniority } from '../utils/interfaces'
 
 type tagsProps = {
     tag: string;
@@ -26,7 +26,7 @@ type formDataType = {
 }
 const Tags: React.FC<tagsProps> = ({ tag, handleDelete }) => {
     return (
-        <Box sx={{ background: secondary, height: "100%", display: 'flex', p: 1, m: 1, ml: 0, justifyContent: 'center', alignContent: 'center' }}>
+        <Box sx={{ background: primary, height: "100%", display: 'flex', p: 1, m: 1, ml: 0, justifyContent: 'center', alignContent: 'center' }}>
             <Stack direction='row' gap={1}>
                 <Typography>{tag}</Typography>
                 <Cancel sx={{ cursor: "pointer" }} onClick={() => handleDelete(tag)} />
@@ -155,6 +155,8 @@ export const AddOffer = () => {
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <TextField
+                                    error={inputErrors?.title.error}
+                                    helperText={inputErrors?.title.text}
                                     required
                                     id="title"
                                     name="title"
@@ -168,6 +170,8 @@ export const AddOffer = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
+                                    error={inputErrors?.location.error}
+                                    helperText={inputErrors?.location.text}
                                     required
                                     id="location"
                                     name="location"
@@ -242,6 +246,8 @@ export const AddOffer = () => {
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <TextField
+                                    error={inputErrors?.minSalary.error}
+                                    helperText={inputErrors?.minSalary.text}
                                     required
                                     value={formData.minSalary}
                                     onChange={(e) => handleChange(e.target.name, e.target.value)}
@@ -256,6 +262,8 @@ export const AddOffer = () => {
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <TextField
+                                    error={inputErrors?.maxSalary.error}
+                                    helperText={inputErrors?.maxSalary.text}
                                     required
                                     value={formData.maxSalary}
                                     onChange={(e) => handleChange(e.target.name, e.target.value)}
@@ -270,6 +278,8 @@ export const AddOffer = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
+                                    error={inputErrors?.description.error}
+                                    helperText={inputErrors?.description.text}
                                     required
                                     value={formData.description}
                                     onChange={(e) => handleChange(e.target.name, e.target.value)}
