@@ -74,6 +74,15 @@ export interface firestoreJobOffer{
     uid: string;
 }
 
+// export interface entry{
+//     [uid: string] : {
+//         userUid: string;
+//         name: string;
+//         surname: string;
+//         introduce: string;
+//     } 
+// }
+// TODO make proper entry interface 
 // export type alert = {
 //     type: 'error' | 'warning' | 'info' | 'success';
 //     text: string; 

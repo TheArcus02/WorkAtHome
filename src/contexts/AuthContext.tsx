@@ -1,9 +1,8 @@
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, TwitterAuthProvider, updateProfile, User } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { auth, db } from "../firebase/firebase.config";
-import { useGetDoc } from "../hooks/useGetDoc";
 import { useSetDoc } from "../hooks/useSetDoc";
 import { AuthContextItf, currentUser, firestoreUser, userInfo } from "../utils/interfaces";
 
@@ -14,11 +13,10 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
 
-    const [currentUser, setCurrentUser] = useState<User | null | undefined>(undefined)
+    const [currentUser, setCurrentUser] = useState<currentUser>(undefined)
     const [userInfo, setUserInfo] = useState<userInfo>(null)
     const [loading, setLoading] = useState(true)
     const {setDocument} = useSetDoc()
-    const {document, getDocument} = useGetDoc()
 
     const login = (email: string, password: string) => {
         return signInWithEmailAndPassword(auth, email, password)
@@ -100,16 +98,13 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
         if(currentUser !== undefined){
             setLoading(false)
             if(currentUser !== null){
-                getDocument("Users", currentUser.uid)
+                const unsub = onSnapshot(doc(db, "Users", currentUser.uid), (doc) => (
+                    setUserInfo(doc.data() as userInfo)
+                ))
+                return unsub
             }
         }
     }, [currentUser])
-
-    useEffect(() => {
-      if(document){
-        setUserInfo(document as userInfo);
-      }
-    }, [document])
     
 
     const value:AuthContextItf = {

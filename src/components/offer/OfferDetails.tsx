@@ -5,9 +5,10 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useGetDoc } from "../../hooks/useGetDoc"
 import { AuthContextItf, firestoreJobOffer } from "../../utils/interfaces"
 import { Loader } from "../Loader"
-import { BusinessOutlined, CodeOutlined, DescriptionOutlined, LocationOnOutlined, TimelineOutlined } from '@mui/icons-material'
+import { BorderColorOutlined, BusinessOutlined, CodeOutlined, DescriptionOutlined, LocationOnOutlined, TimelineOutlined } from '@mui/icons-material'
 import { primaryLight } from "../../utils/colors"
 import moment from "moment"
+import { ApplyForm } from "./ApplyForm"
 
 export const OfferDetails = () => {
   
@@ -122,6 +123,17 @@ export const OfferDetails = () => {
                 {offer.description}
               </Typography>
             </Paper>
+
+            {!editable && (
+            <Paper elevation={0} sx={{p:2}}>
+              <Box sx={{display:'flex', alignItems:'center', mb:1.5 }}>
+                <BorderColorOutlined />
+                <Typography variant="h5" ml={1}>Apply for this job</Typography>
+              </Box>
+              <Divider />
+              <ApplyForm />
+            </Paper>
+            )}
           </Box>
           
           

@@ -69,8 +69,8 @@ export const Home:React.FC = () => {
                      recentOffers.map((offer, index) => (
                         <OfferCard offer={offer} elevation={0} key={offer.uid + index} />
                     ))   
-                    ) : ([...Array(6)].map(() => (
-                        <OfferSkeleton elevation={0} />
+                    ) : ([...Array(6)].map((_, index) => (
+                        <OfferSkeleton elevation={0} key={index} />
                     )))}
                     {}
                 </Box>
