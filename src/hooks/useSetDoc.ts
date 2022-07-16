@@ -7,7 +7,7 @@ import { collections } from "../utils/interfaces"
 export const useSetDoc = () => {
     const [firebaseDoc, setFirebaseDoc ] = useState<DocumentData | undefined>(undefined)
 
-    const setDocument = async ( c: collections, data: any, id?: string ) => {
+    const setDocument = async ( c: collections | string, data: any, id?: string ) => {
         id ? await setDoc(doc(db, c, id), data, { merge: true })
         .catch(
           (err: FirestoreError) => {

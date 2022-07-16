@@ -39,6 +39,7 @@ export const OfferDetails = () => {
       offer.createdBy === currentUser.uid && setEditable(true) 
     }
   }, [offer, currentUser])
+  console.log(offer)
   
   // TODO change mobile view
   // TODO add popup already applied for this job when entries will be ready
@@ -131,7 +132,7 @@ export const OfferDetails = () => {
                 <Typography variant="h5" ml={1}>Apply for this job</Typography>
               </Box>
               <Divider />
-              <ApplyForm />
+              <ApplyForm uid={offer.uid} />
             </Paper>
             )}
           </Box>
