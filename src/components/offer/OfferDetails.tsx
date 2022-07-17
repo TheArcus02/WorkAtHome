@@ -59,7 +59,7 @@ export const OfferDetails = () => {
                   {offer.minSalary} - {offer.maxSalary} PLN
               </Typography>
               <Box sx={{display:'flex', gap:1, flexWrap:{xs:'wrap', md:'nowrap'}}} mb={2}>
-                <Paper sx={{p:1.5}} elevation={0}>
+                <Paper sx={{p:1.5, width:{xs: "100%", md:'initial'}, display:{xs:'flex', md:"inherit"}, justifyContent:'center'}} elevation={0}>
                   <Box sx={{display:'flex', alignItems:'center'}}>
                     <BusinessOutlined sx={{color:primaryLight}}/>
                     <MuiLink component={Link} to={`/company/${offer.companyUid}`} underline="none" color="secondary">
@@ -68,14 +68,14 @@ export const OfferDetails = () => {
                   </Box>
                 </Paper>
 
-                <Paper sx={{p:1.5}} elevation={0}>
+                <Paper sx={{p:1.5, width:{xs: "100%", md:'initial'}, display:{xs:'flex', md:"inherit"}, justifyContent:'center'}} elevation={0}>
                   <Box sx={{display:'flex', alignItems:'center'}}>
                     <LocationOnOutlined sx={{color:primaryLight}}/>
                     <Typography ml={1}>{offer.location}</Typography>
                   </Box>
                 </Paper>
 
-                <Paper sx={{p:1.5}} elevation={0}>
+                <Paper sx={{p:1.5, width:{xs: "100%", md:'initial'}, display:{xs:'flex', md:"inherit"}, justifyContent:'center'}} elevation={0}>
                   <Box sx={{display:'flex', alignItems:'center'}}>
                     <TimelineOutlined sx={{color:primaryLight}}/>
                     <Typography ml={1}>{offer.seniority}</Typography>
@@ -120,7 +120,7 @@ export const OfferDetails = () => {
                 <Typography variant="h5" ml={1}>Description</Typography>
               </Box>
               <Divider />
-              <Typography variant="body1" mt={1.5}>
+              <Typography variant="body1" mt={1.5} sx={{textAlign:{xs:'left', md:"justify"}}}>
                 {offer.description}
               </Typography>
             </Paper>
@@ -132,7 +132,9 @@ export const OfferDetails = () => {
                 <Typography variant="h5" ml={1}>Apply for this job</Typography>
               </Box>
               <Divider />
-              <ApplyForm uid={offer.uid} />
+              <Box mt={2}>
+                <ApplyForm uid={offer.uid} />
+              </Box>
             </Paper>
             )}
           </Box>

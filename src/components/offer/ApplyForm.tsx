@@ -23,7 +23,7 @@ export const ApplyForm:React.FC<applyFormProps> = ({ uid }) => {
 
     const { userInfo, currentUser } = useAuth() as AuthContextItf
     const { validateData, inputErrors, errors, validated } = useValidateInputs()
-    const { firebaseDoc: doc, setDocument } = useSetDoc()
+    const { setDocument } = useSetDoc()
     const { getQuery, queryResult } = useQuery()
 
     useEffect(() => {
@@ -76,14 +76,12 @@ export const ApplyForm:React.FC<applyFormProps> = ({ uid }) => {
         }
     }
 
-    // TODO check if user already in entries then display edit instead of apply
-
     return (
         !alreadyApplied ? (
             formData ? (
                 <Box component="form" noValidate onSubmit={handleSubmit}>
                     <Grid container spacing={3}>
-                        <Grid item xs={6}>
+                        <Grid item md={6} xs={12}>
                             <TextField
                                 error={inputErrors?.name.error}
                                 helperText={inputErrors?.name.text}
@@ -98,7 +96,7 @@ export const ApplyForm:React.FC<applyFormProps> = ({ uid }) => {
                                 onChange={(e) => handleChange(e.target.name, e.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item md={6} xs={12}>
                             <TextField
                                 error={inputErrors?.surname.error}
                                 helperText={inputErrors?.surname.text}
@@ -143,7 +141,6 @@ export const ApplyForm:React.FC<applyFormProps> = ({ uid }) => {
                 </Box>
             ) : (<Loader />)
         ) : (<Typography align="center" mt={2}>You already applied for this job</Typography>)
-        // TODO add click here to edit the entrie
         
     )
 }
