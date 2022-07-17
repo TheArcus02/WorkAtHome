@@ -1,5 +1,5 @@
 import { Cancel } from '@mui/icons-material'
-import { Box, Container, Paper, Typography, Grid, TextField, Select, MenuItem, InputLabel, Stack, Alert, AlertTitle, Button } from '@mui/material'
+import { Box, Container, Paper, Typography, Grid, TextField, Select, MenuItem, InputLabel, Stack, Alert, Button, Collapse } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -10,6 +10,7 @@ import { useSetDoc } from '../hooks/useSetDoc'
 import { useValidateInputs } from '../hooks/useValidateInputs'
 import { primary } from '../utils/colors'
 import { AuthContextItf, firestoreJobOffer, seniority } from '../utils/interfaces'
+import { TransitionGroup } from 'react-transition-group';
 
 type tagsProps = {
     tag: string;
@@ -26,7 +27,7 @@ type formDataType = {
 }
 const Tags: React.FC<tagsProps> = ({ tag, handleDelete }) => {
     return (
-        <Box sx={{ background: primary, height: "100%", display: 'flex', p: 1, m: 1, ml: 0, justifyContent: 'center', alignContent: 'center' }}>
+        <Box sx={{ background: primary, display: 'flex', p: 1, m: 1, ml: 0, justifyContent: 'center', alignContent: 'center' }}>
             <Stack direction='row' gap={1}>
                 <Typography>{tag}</Typography>
                 <Cancel sx={{ cursor: "pointer" }} onClick={() => handleDelete(tag)} />
@@ -42,7 +43,7 @@ export const AddOffer = () => {
     const [noCompanies, setNoCompanies] = useState(false)
     const tagRef = useRef<HTMLInputElement>()
 
-    const useStyles = makeStyles(() => ({
+    const useStyles:any = makeStyles(() => ({
         tagsField: {
             display: 'flex',
             flexWrap: 'wrap',
@@ -229,19 +230,20 @@ export const AddOffer = () => {
                                     label="Tech stack"
                                     placeholder={tags.length < 5 ? "Enter tags" : ''}
                                     onKeyDown={(e) => handleAddTag(e)}
-                                    sx={{ display: 'flex', flexWrap: 'wrap', width: '502px' }}
+                                    sx={{ display: 'flex', flexWrap: 'wrap',}}
                                     InputProps={{
                                         startAdornment: (
-                                            <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                            <Box component={TransitionGroup} sx={{ display: 'flex', flexWrap: 'wrap' }}>
                                                 {tags.map((tag, index) => (
-                                                    <Tags tag={tag} handleDelete={handleDeleteTag} key={tag + index} />
+                                                    <Collapse key={tag + index} orientation="horizontal">
+                                                        <Tags tag={tag} handleDelete={handleDeleteTag} />
+                                                    </Collapse>
                                                 ))}
                                             </Box>
                                         ),
                                         className: classes.tagsField
                                     }}
                                 />
-                                {/* // TODO add transition group */}
 
                             </Grid>
                             <Grid item xs={12} md={6}>
