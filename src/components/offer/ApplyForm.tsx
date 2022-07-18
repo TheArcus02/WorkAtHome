@@ -1,5 +1,5 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material"
-import { where } from "firebase/firestore";
+import { increment, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useQuery } from "../../hooks/useQuery";
@@ -55,6 +55,7 @@ export const ApplyForm:React.FC<applyFormProps> = ({ uid }) => {
             userUid: currentUser.uid
         }
         setDocument(`Offers/${uid}/entries`, data)
+        setDocument('Offers', {counterUid:increment(1)}, uid)
         setAlreadyApplied(true)
       }
     }, [errors, validated, currentUser, formData, alreadyApplied])

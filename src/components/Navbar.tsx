@@ -1,27 +1,46 @@
-import { AppBar, Toolbar, Typography, Box, IconButton, Menu, MenuItem, Button, Tooltip, Avatar, Link as MuiLink} from '@mui/material';
+import { AppBar, Toolbar, Typography, Box, IconButton, Menu, MenuItem, Button, Tooltip, Avatar, Link as MuiLink, Badge} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { AuthContextItf } from '../utils/interfaces';
 import slugify from 'react-slugify';
+import { Logout, NotificationsOutlined } from '@mui/icons-material';
 
 
 export const Navbar:React.FC = () => {
 
-  const menu = ['Profile', 'Account', 'Your Companies']
+  const initialPages = ['Offers', 'Pricing', 'Blog'];
+  const initialMenu = ['Profile', 'Account']
+
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [pages, setPages] = useState<string[]>(initialPages)
+  const [menu, setMenu] = useState<string[]>(initialMenu)
+
   const { currentUser, userInfo, logout } = useAuth() as AuthContextItf
-  
-
-  const pages = ['Products', 'Pricing', 'Blog'];
-
-  
-  
 
   console.log({currentUser, userInfo});
+
+  useEffect(() => {
+    if(userInfo){
+
+      if(menu.includes('Your Companies') ||
+       menu.includes('Create Company') || 
+       menu.includes('Your Job Applications')) return //! delete on prod
+
+      userInfo.jobApplications.length > 0 && 
+      setMenu((prev) => ([...prev, 'Your Job Applications']))
+
+      userInfo.companies.length > 0 ?
+      setMenu((prev) => ([...prev, 'Your Companies', 'Your Job Offers'])) :
+      setMenu((prev) => ([...prev, 'Create Company']))
+
+      
+    }
+  }, [userInfo])
+  
 
   const handleOpenNavMenu = (event: any) => {
     setAnchorElNav(event.currentTarget);
@@ -118,6 +137,17 @@ export const Navbar:React.FC = () => {
               </Button>
             </MuiLink>
           </Box>
+
+          <Box sx={{display:{xs:"none", md:'inherit'}, mr:3}}>
+            <Tooltip title="Notifications">
+              <IconButton>
+                <Badge badgeContent={null} color="secondary">
+                  <NotificationsOutlined />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+          </Box>
+          {/* // TODO integrate with Notifications system when ready */}
           <Box sx={{ flexGrow: 0 }}>
             {currentUser ? (
               <>
@@ -159,7 +189,8 @@ export const Navbar:React.FC = () => {
                     </MuiLink>
                   ))}
                   <MenuItem onClick={() => handleLogut()}>
-                      <Typography textAlign="center">Logout</Typography>
+                      <Logout />
+                      <Typography ml={1} textAlign="center">Logout</Typography>
                   </MenuItem>
                 </Menu>
               </>

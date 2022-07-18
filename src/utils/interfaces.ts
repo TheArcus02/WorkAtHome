@@ -27,6 +27,8 @@ export type baseJobInfo = {name: string, uid: string, current:Boolean}
 
 export type socialNames = 'facebook' | 'twitter' | 'instagram' | 'website' | 'youtube' 
 export type socialsInfo = {name:socialNames, link:string}
+export type jobApplication = {companyUid: string, entryUid: string} 
+
 export interface firestoreUser {
     name: string;
     surname: string;
@@ -39,6 +41,7 @@ export interface firestoreUser {
     hired: boolean;
     photoUrl: string;
     active: boolean;
+    jobApplications: jobApplication[];
 }
 
 export type userInfo = firestoreUser | null;
@@ -70,7 +73,7 @@ export interface firestoreJobOffer{
     maxSalary: number;
     seniority: seniority;
     title: string;
-    entries: string[];
+    entriesCounter: number;
     uid: string;
 }
 

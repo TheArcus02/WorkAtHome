@@ -80,7 +80,8 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
                 description: "",
                 hired: false,
                 active: true,
-                photoUrl: user.photoURL ? user.photoURL : ""
+                photoUrl: user.photoURL ? user.photoURL : "",
+                jobApplications: [],
             }
             setDocument("Users", userData, user.uid);
         }

@@ -40,7 +40,7 @@ export const OfferDetails = () => {
     }
   }, [offer, currentUser])
   console.log(offer)
-
+// TODO preview edit instead of button for owner on top component switch
   return offer ? (
     <Container maxWidth="lg" sx={{mt:5}}>
       <Paper sx={{py:5}}>

@@ -87,7 +87,7 @@ export const AddOffer = () => {
                 createdBy: currentUser.uid,
                 createdAt: new Date(),
                 technologies: tags,
-                entries: [],
+                entriesCounter: 0,
                 uid: ''
             }
             setDocument("Offers", documentData).then(() => {
