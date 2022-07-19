@@ -62,6 +62,8 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries}) => {
       setPage(0)
   }
   
+ // TODO add approve reject buttons with (are you sure?) popup
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -82,6 +84,8 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries}) => {
                 </TableSortLabel>
               </TableCell>
             ))}
+            <TableCell>Profile</TableCell>
+            <TableCell />
             <TableCell />
           </TableRow>
         </TableHead>
