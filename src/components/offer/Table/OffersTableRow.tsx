@@ -1,12 +1,15 @@
 import { Button, TableCell, TableRow } from "@mui/material"
 import { styled } from "@mui/styles"
 import moment from "moment"
+import { useNavigate } from "react-router-dom"
 import { firestoreJobOffer } from "../../../utils/interfaces"
 
 type tableRowProps = {
     offer: firestoreJobOffer
 }
 export const OffersTableRow:React.FC<tableRowProps> = ({ offer }) => {
+
+    const navigate = useNavigate()
 
     const StyledTableRow = styled(TableRow)(({ theme }:any) => ({
         '&:nth-of-type(odd)': {
@@ -25,12 +28,12 @@ export const OffersTableRow:React.FC<tableRowProps> = ({ offer }) => {
             <TableCell>{moment(offer.createdAt.toDate()).calendar()}</TableCell>
             <TableCell>{offer.entriesCounter}</TableCell>
             <TableCell>
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary" onClick={() => navigate(`/offer/${offer.uid}`)}>
                     Edit
                 </Button>
             </TableCell>
             <TableCell>
-                <Button variant="contained" color="secondary">
+                <Button variant="contained" color="secondary" onClick={() => navigate(`/offer/${offer.uid}/entries`)}>
                     Entries
                 </Button>
             </TableCell>

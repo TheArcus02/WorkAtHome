@@ -18,6 +18,7 @@ import { background, paper, primary, secondary } from './utils/colors';
 import { AddOffer } from './pages/AddOffer';
 import { OfferDetails } from './components/offer/OfferDetails';
 import { YourJobOffers } from './pages/YourJobOffers';
+import { Entries } from './components/offer/Entries/Entries';
 
 
 const Darktheme = createTheme({
@@ -56,6 +57,7 @@ const App:React.FC = () => {
                 <Route path="/company/:uid" element={<CompanyDetails />} />
                 <Route path="/add-offer" element={<AddOffer />} />
                 <Route path="/offer/:uid" element={<OfferDetails />} />
+                <Route path="/offer/:uid/entries" element={<Entries />} />
                 <Route path="/your-job-offers" element={<YourJobOffers />} />
               </Route>
             </Routes>

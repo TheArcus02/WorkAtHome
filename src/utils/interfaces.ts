@@ -81,8 +81,11 @@ export interface firestoreEntry{
     userUid: string;
     name: string;
     surname: string;
-    introduce: string;    
+    introduce: string; 
+    createdAt: any; // Timestamp in firebase / save Date obj
 }
+
+export type Order = "desc" | "asc"
 
 // export type alert = {
 //     type: 'error' | 'warning' | 'info' | 'success';

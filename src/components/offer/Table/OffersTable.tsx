@@ -1,13 +1,13 @@
-import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, TableSortLabel } from "@mui/material"
-import { useState } from "react"
+import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, TableSortLabel, TableFooter, TablePagination } from "@mui/material"
+import React, { useState } from "react"
 import { primary } from "../../../utils/colors"
-import { firestoreJobOffer } from "../../../utils/interfaces"
+import { firestoreJobOffer, Order } from "../../../utils/interfaces"
+import { getComparator } from "../../../utils/utils"
 import { OffersTableRow } from "./OffersTableRow"
 
 type offersTableProps = {
     offers: firestoreJobOffer[]
 }
-type Order = "desc" | "asc"
 interface Data {
     title: string;
     companyName: string;
@@ -53,6 +53,8 @@ export const OffersTable:React.FC<offersTableProps> = ({ offers }) => {
     
     const [order, setOrder] = useState<Order>('asc')
     const [orderBy, setOrderBy] = useState<keyof Data>('companyName')
+    const [rowsPerPage, setRowsPerPage] = useState(10)
+    const [page, setPage] = useState(0)
 
     const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
         const isAsc = orderBy === property && order === 'asc'
@@ -60,26 +62,13 @@ export const OffersTable:React.FC<offersTableProps> = ({ offers }) => {
         setOrderBy(property)
     }
 
-    function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-        if (b[orderBy] < a[orderBy]) {
-          return -1;
-        }
-        if (b[orderBy] > a[orderBy]) {
-          return 1;
-        }
-        return 0;
+    const handleChangePage = (e: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+        setPage(newPage)
     }
 
-    function getComparator<Key extends keyof any>(
-        order: Order,
-        orderBy: Key,
-      ): (
-        a: { [key in Key]: number | string },
-        b: { [key in Key]: number | string },
-      ) => number {
-        return order === 'desc'
-          ? (a, b) => descendingComparator(a, b, orderBy)
-          : (a, b) => -descendingComparator(a, b, orderBy);
+    const handleRowsPerPage = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setRowsPerPage(parseInt(e.target.value, 10))
+        setPage(0)
     }
 
     return (
@@ -108,12 +97,26 @@ export const OffersTable:React.FC<offersTableProps> = ({ offers }) => {
             </TableHead>
             <TableBody>
                 {
-                    offers.slice().sort(getComparator(order, orderBy)).map((offer, index) => (
-                        <OffersTableRow offer={offer} />
+                    offers.slice().sort(getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((offer) => (
+                        <OffersTableRow offer={offer} key={offer.uid} />
                     ))
                 }
-                
             </TableBody>
+            <TableFooter>
+                <TableRow>
+                    <TablePagination
+                        rowsPerPageOptions={[10,25,50]}
+                        colSpan={7}
+                        count={offers.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleRowsPerPage}
+                    />
+                </TableRow>
+            </TableFooter>
         </Table>
     </TableContainer>
   )

@@ -45,17 +45,17 @@ export const ApplyForm:React.FC<applyFormProps> = ({ uid }) => {
         }
       }
     }, [queryResult])
-    
 
     useEffect(() => {
       if(validated && currentUser && formData && !alreadyApplied){
         if(errors) return
         const data:firestoreEntry = {
             ...formData,
-            userUid: currentUser.uid
+            userUid: currentUser.uid,
+            createdAt: new Date()
         }
         setDocument(`Offers/${uid}/entries`, data)
-        setDocument('Offers', {counterUid:increment(1)}, uid)
+        setDocument('Offers', {entriesCounter:increment(1)}, uid)
         setAlreadyApplied(true)
       }
     }, [errors, validated, currentUser, formData, alreadyApplied])

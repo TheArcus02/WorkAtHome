@@ -22,14 +22,14 @@ export const YourCompanies = () => {
   }, [currentUser])
 
   useEffect(() => {
-    if(queryResult){
+    if(queryResult && companies.length === 0){
       queryResult.forEach((doc: any) => {
         setCompanies((prev) => (
           [...prev, doc.data()]
         ))
       })
     }
-  }, [queryResult])
+  }, [queryResult, companies])
   
   useEffect(() => {
     console.log(companies);

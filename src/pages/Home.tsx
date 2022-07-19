@@ -16,13 +16,12 @@ export const Home:React.FC = () => {
 
     useEffect(() => {
         if(recentOffers.length === 0){
-            getQuery('recent', "Offers", orderBy("createdAt", "desc"), limit(1))
-            // change limit to 6 when component will be done
+            getQuery('recent', "Offers", orderBy("createdAt", "desc"), limit(6))
         }
     }, [recentOffers])
     
     useEffect(() => {
-        if(queryResult && queryRef){
+        if(queryResult && queryRef && recentOffers.length === 0){
             queryResult.forEach((doc: any) => {
                 switch(queryRef){
                     case 'recent': setRecentOffers((prev) => (
@@ -32,7 +31,7 @@ export const Home:React.FC = () => {
                 }
             })
         }
-    }, [queryResult, queryRef])
+    }, [queryResult, queryRef, recentOffers])
 
     return(
         <>
