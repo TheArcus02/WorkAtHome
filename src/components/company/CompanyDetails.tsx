@@ -21,7 +21,7 @@ export const CompanyDetails = () => {
 
     const { currentUser } = useAuth() as AuthContextItf
     const { getDocument, document } = useGetDoc()
-    const { getQuery, queryResult } = useQuery()
+    const { getQuery, queryResult, unsubscribe } = useQuery()
     const params = useParams()
     const {uid} = params
     
@@ -35,7 +35,7 @@ export const CompanyDetails = () => {
     }, [uid])
 
     useEffect(() => {
-      if(queryResult){
+      if(queryResult && offers.length === 0){
         queryResult.forEach((doc: any) => {
             setOffers((prev) => (
                 [...prev, doc.data()]
@@ -56,6 +56,16 @@ export const CompanyDetails = () => {
         companyInfo.createdBy === currentUser.uid && setEditable(true)
       }
     }, [companyInfo, currentUser])
+
+
+    useEffect(() => {
+      
+        if(unsubscribe)
+        return () =>  (
+            unsubscribe()  
+        )
+    }, [unsubscribe])
+    
     
     return (
         companyInfo ? (
@@ -142,7 +152,7 @@ export const CompanyDetails = () => {
                                 sx={{mt:5, display: 'flex', justifyContent: 'center', gap:2, flexWrap: 'wrap'}}
                             >
                                 {companyInfo.employees.map((emp) => (
-                                    <EmployeeCard empUid={emp} />
+                                    <EmployeeCard empUid={emp} key={emp} />
                                 ))}
                             </Container>
                             
@@ -155,7 +165,7 @@ export const CompanyDetails = () => {
                             </Typography>
                             <Container  sx={{mt:5, display: 'flex', justifyContent: 'center', gap:2, flexWrap: 'wrap'}}>
                                 {offers.map((offer) => (
-                                    <OfferCard offer={offer} elevation={3} />
+                                    <OfferCard offer={offer} elevation={3} key={offer.uid} />
                                 ))}
                             </Container>
                         </Box>

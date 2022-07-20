@@ -78,11 +78,14 @@ export interface firestoreJobOffer{
 }
 
 export interface firestoreEntry{
+    uid: string;
     userUid: string;
     name: string;
     surname: string;
     introduce: string; 
     createdAt: any; // Timestamp in firebase / save Date obj
+    aproved: boolean;
+    rejected: boolean;
 }
 
 export type Order = "desc" | "asc"

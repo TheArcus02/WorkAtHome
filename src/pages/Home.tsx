@@ -12,7 +12,7 @@ export const Home:React.FC = () => {
     
     const [recentOffers, setRecentOffers] = useState<firestoreJobOffer[]>([])
     
-    const { getQuery, queryResult, queryRef } = useQuery()
+    const { getQuery, queryResult, queryRef, unsubscribe } = useQuery()
 
     useEffect(() => {
         if(recentOffers.length === 0){
@@ -32,6 +32,15 @@ export const Home:React.FC = () => {
             })
         }
     }, [queryResult, queryRef, recentOffers])
+
+    useEffect(() => {
+      
+        if(unsubscribe)
+        return () => {
+            unsubscribe()
+        }
+    }, [unsubscribe])
+    
 
     return(
         <>

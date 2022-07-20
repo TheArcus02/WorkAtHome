@@ -1,24 +1,45 @@
 import { AccountBoxOutlined, CheckCircleOutline, HighlightOffOutlined, KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material"
-import { Box, Button, Collapse, IconButton, TableCell, TableRow, Tooltip, Typography } from "@mui/material"
+import { Box, Button, Collapse, IconButton, Table, TableCell, TableRow, Tooltip, Typography } from "@mui/material"
 import { styled } from "@mui/styles"
 import moment from "moment"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import { useSetDoc } from "../../../hooks/useSetDoc"
 import { firestoreEntry } from "../../../utils/interfaces"
 import { EntriesDialog } from "./EntriesDialog"
 
 type entriesTableRowProps = {
-    entry: firestoreEntry
+    entry: firestoreEntry;
+    offerUid: string;
 }
 
-export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry}) => {
+export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offerUid}) => {
 
     const [openIntroduction, setOpenIntroduction] = useState(false)
     const [openAproveDialog, setOpenAproveDialog] = useState(false)
     const [openRejectDialog, setOpenRejectDialog] = useState(false)
 
     const navigate = useNavigate()
+    const {setDocument} = useSetDoc()
 
+    const handleReject = () => {
+        setDocument(`Offers/${offerUid}/entries/`, {rejected: true}, entry.uid).then(() => (
+            toast.success(`${entry.name} ${entry.surname} apply has been rejected.`)
+        )).catch((error) => (
+            toast.error("Error has occured during setting rejection. ", error)
+        ))
+        setOpenRejectDialog(false)
+    }
+
+    const handleAprove = () => {
+        setDocument(`Offers/${offerUid}/entries/`, {approved: true}, entry.uid).then(() => (
+            toast.success(`${entry.name} ${entry.surname} apply has been aproved.`)
+        )).catch((error) => (
+            toast.error("Error has occured during setting an aprove. ", error)
+        ))
+        setOpenAproveDialog(false)
+    }
     
     // TODO prevent table from moving on collapsing 
 
@@ -29,7 +50,7 @@ export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry}) => {
                     <IconButton
                         aria-label="expand row"
                         size="small"
-                        onClick={() => setOpenIntroduction(!open)}
+                        onClick={() => setOpenIntroduction(!openIntroduction)}
                     >
                         {openIntroduction ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
                     </IconButton>
@@ -92,16 +113,15 @@ export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry}) => {
                 dialogDescription={`The ${entry.name} ${entry.surname} entry status will be aproved and other entries status will be changed to rejected.`}
                 dialogTitle="Are you sure?"
                 handleClose={() => setOpenAproveDialog(false)}
-                onSubmit={() => null}
+                onSubmit={handleAprove}
             />
             <EntriesDialog 
                 open={openRejectDialog}
                 dialogDescription={`The ${entry.name} ${entry.surname} entry will be set to rejected.`}
                 dialogTitle="Are you sure?"
                 handleClose={() => setOpenRejectDialog(false)}
-                onSubmit={() => null}
+                onSubmit={handleReject}
             />
-            {/* // TODO handle on submit methods in dialogs */}
         </>
         
     )

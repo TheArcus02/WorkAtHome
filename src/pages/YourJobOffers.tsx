@@ -13,7 +13,7 @@ export const YourJobOffers = () => {
     const [offers, setOffers] = useState<firestoreJobOffer[]>([])
 
     const { currentUser } = useAuth() as AuthContextItf
-    const { getQuery, queryResult } = useQuery()
+    const { getQuery, queryResult, unsubscribe } = useQuery()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -31,6 +31,15 @@ export const YourJobOffers = () => {
             ))
         }
     }, [queryResult, offers])
+
+    useEffect(() => {
+      
+        if(unsubscribe)
+        return () => {
+            unsubscribe()
+        }
+    }, [unsubscribe])
+    
 
 
     return (

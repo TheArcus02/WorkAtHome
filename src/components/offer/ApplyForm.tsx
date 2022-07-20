@@ -1,6 +1,7 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material"
 import { increment, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useAuth } from "../../contexts/AuthContext";
 import { useQuery } from "../../hooks/useQuery";
 import { useSetDoc } from "../../hooks/useSetDoc";
@@ -23,8 +24,8 @@ export const ApplyForm:React.FC<applyFormProps> = ({ uid }) => {
 
     const { userInfo, currentUser } = useAuth() as AuthContextItf
     const { validateData, inputErrors, errors, validated } = useValidateInputs()
-    const { setDocument } = useSetDoc()
-    const { getQuery, queryResult } = useQuery()
+    const { setDocument, firebaseDoc: doc } = useSetDoc()
+    const { getQuery, queryResult, unsubscribe } = useQuery()
 
     useEffect(() => {
         if (userInfo && currentUser) {
@@ -52,13 +53,34 @@ export const ApplyForm:React.FC<applyFormProps> = ({ uid }) => {
         const data:firestoreEntry = {
             ...formData,
             userUid: currentUser.uid,
-            createdAt: new Date()
+            createdAt: new Date(),
+            aproved: false,
+            rejected: false,
+            uid:''
         }
         setDocument(`Offers/${uid}/entries`, data)
         setDocument('Offers', {entriesCounter:increment(1)}, uid)
         setAlreadyApplied(true)
       }
     }, [errors, validated, currentUser, formData, alreadyApplied])
+    
+
+    useEffect(() => {
+      if(doc){
+        setDocument(`Offers/${uid}/entries`, {uid:doc.id}, doc.id).then(() => (
+            toast.success(`Your apply has been send.`)
+        ))
+      }
+    }, [doc])
+
+    useEffect(() => {
+      
+        if(unsubscribe)
+        return () => {
+            unsubscribe()
+        }
+    }, [unsubscribe])
+    
     
 
     const handleChange = (name: string, value: string) => {

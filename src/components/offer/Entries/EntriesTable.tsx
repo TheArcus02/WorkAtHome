@@ -37,10 +37,11 @@ const headCells: readonly headCell[] = [
 ]
 
 type entriesTableProps = {
-  entries: firestoreEntry[]
+  entries: firestoreEntry[];
+  offerUid: string;
 }
 
-export const EntriesTable:React.FC<entriesTableProps> = ({entries}) => {
+export const EntriesTable:React.FC<entriesTableProps> = ({entries, offerUid}) => {
 
   const [order, setOrder] = useState<Order>('desc')
   const [orderBy, setOrderBy] = useState<keyof Data>('createdAt')
@@ -94,7 +95,7 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries}) => {
            entries.slice().sort(getComparator(order, orderBy))
            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
            .map((entry, index) => (
-              <EntriesTableRow entry={entry} key={entry.createdAt + index} />
+              <EntriesTableRow entry={entry} offerUid={offerUid} key={entry.createdAt + index} />
            ))
           }
         </TableBody>

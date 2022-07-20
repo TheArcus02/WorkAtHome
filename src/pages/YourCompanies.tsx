@@ -12,7 +12,7 @@ export const YourCompanies = () => {
   const {currentUser} = useAuth() as AuthContextItf
   const [companies, setCompanies] = useState<firestoreCompany[]>([])
 
-  const {getQuery, queryResult} = useQuery()
+  const {getQuery, queryResult, unsubscribe} = useQuery()
   const navigate = useNavigate()
   
   useEffect(() => {
@@ -32,8 +32,11 @@ export const YourCompanies = () => {
   }, [queryResult, companies])
   
   useEffect(() => {
-    console.log(companies);
-  }, [companies])
+    if(unsubscribe)
+    return () => (
+      unsubscribe()
+    )
+  }, [unsubscribe])
 
   return (
             <Container 

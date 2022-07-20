@@ -2,7 +2,7 @@ import { ArrowBack } from "@mui/icons-material"
 import { Alert, Button, Container } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { useQuery } from "../../../hooks/useQuery"
+import { useRealtimeCollection } from "../../../hooks/useRealtimeCollection"
 import { firestoreEntry } from "../../../utils/interfaces"
 import { Loader } from "../../Loader"
 import { EntriesTable } from "./EntriesTable"
@@ -12,30 +12,47 @@ export const Entries = () => {
     
     const [entries, setEntries] = useState<firestoreEntry[]>([])
 
-    const { getQuery, queryResult } = useQuery()    
+    const { getRealtime, realtimeCollection, unsubscribe } = useRealtimeCollection()  
     const params = useParams()
     const {uid} = params
     const navigate = useNavigate()
 
     useEffect(() => {
       if(uid){
-        getQuery("", `Offers/${uid}/entries`)
+        getRealtime(`Offers/${uid}/entries`)
       }
+      
     }, [uid])
-    
+
+        
     useEffect(() => {
-      if(queryResult && entries.length === 0){
-        queryResult.forEach((doc) => (
-            setEntries((prev) => [...prev, doc.data() as firestoreEntry])
-        ))
+      if(realtimeCollection){
+        if(!realtimeCollection.empty){
+            setEntries([])
+            realtimeCollection.forEach((doc) => {
+                console.log(doc.data())
+                setEntries((prev) => [...prev, doc.data() as firestoreEntry])
+            })
+        }
+        
       }
-    }, [queryResult, entries])
+    }, [realtimeCollection])
+
+    useEffect(() => {
+      if(unsubscribe)
+        return () => (
+            unsubscribe() 
+        )
+    }, [unsubscribe])
+    
+
+    
 
     return (
         <Container maxWidth="md" sx={{ mt: 5 }}>
-            { queryResult ? (
+            { realtimeCollection && uid ? (
                 entries.length > 0 ? (
-                    <EntriesTable entries={entries} />
+                    <EntriesTable entries={entries} offerUid={uid} />
                 ) : (
                 <Alert 
                     severity='info'
