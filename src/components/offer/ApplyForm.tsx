@@ -1,12 +1,12 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material"
-import { increment, where } from "firebase/firestore";
+import { arrayUnion, increment, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../../contexts/AuthContext";
 import { useQuery } from "../../hooks/useQuery";
 import { useSetDoc } from "../../hooks/useSetDoc";
 import { useValidateInputs } from "../../hooks/useValidateInputs";
-import { AuthContextItf, firestoreEntry } from "../../utils/interfaces";
+import { AuthContextItf, firestoreEntry, jobApplication } from "../../utils/interfaces";
 import { Loader } from "../Loader";
 
 type formDataType = {
@@ -15,16 +15,16 @@ type formDataType = {
     introduce: string;
 }
 type applyFormProps = {
-    uid: string;
+    offerUid: string;
 }
-export const ApplyForm:React.FC<applyFormProps> = ({ uid }) => {
+export const ApplyForm:React.FC<applyFormProps> = ({ offerUid }) => {
 
     const [formData, setFormData] = useState<formDataType | null>(null)
     const [alreadyApplied, setAlreadyApplied] = useState(false)
 
     const { userInfo, currentUser } = useAuth() as AuthContextItf
     const { validateData, inputErrors, errors, validated } = useValidateInputs()
-    const { setDocument, firebaseDoc: doc } = useSetDoc()
+    const { setDocument, firebaseDoc: doc, docRef } = useSetDoc()
     const { getQuery, queryResult, unsubscribe } = useQuery()
 
     useEffect(() => {
@@ -34,7 +34,7 @@ export const ApplyForm:React.FC<applyFormProps> = ({ uid }) => {
                 name, surname, introduce: ''
             }
             setFormData(data)
-            getQuery("", `Offers/${uid}/entries`,where('userUid', '==', currentUser.uid))
+            getQuery("", `Offers/${offerUid}/entries`,where('userUid', '==', currentUser.uid))
         }
 
     }, [userInfo, currentUser])
@@ -58,27 +58,33 @@ export const ApplyForm:React.FC<applyFormProps> = ({ uid }) => {
             rejected: false,
             uid:''
         }
-        setDocument(`Offers/${uid}/entries`, data)
-        setDocument('Offers', {entriesCounter:increment(1)}, uid)
+        setDocument('Offers', {entriesCounter:increment(1)}, offerUid)
+        setDocument(`Offers/${offerUid}/entries`, data, undefined, "Entries")
         setAlreadyApplied(true)
       }
     }, [errors, validated, currentUser, formData, alreadyApplied])
     
-
     useEffect(() => {
-      if(doc){
-        setDocument(`Offers/${uid}/entries`, {uid:doc.id}, doc.id).then(() => (
-            toast.success(`Your apply has been send.`)
-        ))
+      if(doc && currentUser && docRef){
+        if(docRef === "Entries"){
+            const jobApplicationObj:jobApplication = {
+                entryUid: doc.id,
+                offerUid
+            }
+            setDocument("Users", {jobApplications: arrayUnion(jobApplicationObj)}, currentUser.uid)
+            setDocument(`Offers/${offerUid}/entries`, {uid:doc.id}, doc.id).then(() => (
+                toast.success(`Your apply has been send.`)
+            ))
+        }
       }
-    }, [doc])
+    }, [doc, currentUser, docRef])
 
     useEffect(() => {
       
         if(unsubscribe)
-        return () => {
+        return () => (
             unsubscribe()
-        }
+        )
     }, [unsubscribe])
     
     

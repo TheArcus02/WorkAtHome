@@ -88,7 +88,8 @@ export const AddOffer = () => {
                 createdAt: new Date(),
                 technologies: tags,
                 entriesCounter: 0,
-                uid: ''
+                uid: '',
+                active: true
             }
             setDocument("Offers", documentData).then(() => {
                 toast.success("Offer created succesfully!")

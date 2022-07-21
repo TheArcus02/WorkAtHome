@@ -1,9 +1,12 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Alert, Button, Container } from "@mui/material"
+import { where } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import { useGetDoc } from "../../../hooks/useGetDoc"
 import { useRealtimeCollection } from "../../../hooks/useRealtimeCollection"
-import { firestoreEntry } from "../../../utils/interfaces"
+import { useSetDoc } from "../../../hooks/useSetDoc"
+import { firestoreEntry, firestoreJobOffer } from "../../../utils/interfaces"
 import { Loader } from "../../Loader"
 import { EntriesTable } from "./EntriesTable"
 
@@ -11,20 +14,28 @@ import { EntriesTable } from "./EntriesTable"
 export const Entries = () => {
     
     const [entries, setEntries] = useState<firestoreEntry[]>([])
+    const [offer, setOffer] = useState<firestoreJobOffer | null>(null)
 
     const { getRealtime, realtimeCollection, unsubscribe } = useRealtimeCollection()  
+    const { getDocument, document } = useGetDoc()
     const params = useParams()
     const {uid} = params
     const navigate = useNavigate()
 
     useEffect(() => {
       if(uid){
-        getRealtime(`Offers/${uid}/entries`)
+        getDocument("Offers", uid)
+        getRealtime(`Offers/${uid}/entries`, where("rejected", "==", false))
       }
       
     }, [uid])
 
-        
+    useEffect(() => {
+        if(document){
+            setOffer(document as firestoreJobOffer)
+        }
+    },[document])    
+
     useEffect(() => {
       if(realtimeCollection){
         if(!realtimeCollection.empty){
@@ -44,15 +55,12 @@ export const Entries = () => {
             unsubscribe() 
         )
     }, [unsubscribe])
-    
-
-    
 
     return (
         <Container maxWidth="md" sx={{ mt: 5 }}>
-            { realtimeCollection && uid ? (
+            { realtimeCollection && offer ? (
                 entries.length > 0 ? (
-                    <EntriesTable entries={entries} offerUid={uid} />
+                    <EntriesTable entries={entries} offer={offer} />
                 ) : (
                 <Alert 
                     severity='info'

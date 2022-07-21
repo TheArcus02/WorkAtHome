@@ -3,7 +3,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { useEffect, useState } from "react";
 import { firestoreJobOffer } from "../utils/interfaces";
 import { useQuery } from "../hooks/useQuery";
-import { limit, orderBy } from "firebase/firestore";
+import { limit, orderBy, where } from "firebase/firestore";
 import { OfferSkeleton } from "../components/offer/OfferSkeleton";
 import { OfferCard } from "../components/offer/OfferCard";
 import { ArrowForward } from "@mui/icons-material";
@@ -16,7 +16,7 @@ export const Home:React.FC = () => {
 
     useEffect(() => {
         if(recentOffers.length === 0){
-            getQuery('recent', "Offers", orderBy("createdAt", "desc"), limit(6))
+            getQuery('recent', "Offers", where("active", "==", true), limit(6))
         }
     }, [recentOffers])
     

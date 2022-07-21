@@ -1,7 +1,12 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
+import { ArrowBackOutlined } from "@mui/icons-material";
+import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
+import { arrayRemove, arrayUnion } from "firebase/firestore";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useSetDoc } from "../../../hooks/useSetDoc";
 import { primary } from "../../../utils/colors";
-import { firestoreEntry, Order } from "../../../utils/interfaces";
+import { baseJobInfo, firestoreEntry, firestoreJobOffer, jobApplication, Order } from "../../../utils/interfaces";
 import { getComparator } from "../../../utils/utils";
 import { EntriesTableRow } from "./EntriesTableRow";
 
@@ -38,15 +43,18 @@ const headCells: readonly headCell[] = [
 
 type entriesTableProps = {
   entries: firestoreEntry[];
-  offerUid: string;
+  offer: firestoreJobOffer;
 }
 
-export const EntriesTable:React.FC<entriesTableProps> = ({entries, offerUid}) => {
+export const EntriesTable:React.FC<entriesTableProps> = ({entries, offer}) => {
 
   const [order, setOrder] = useState<Order>('desc')
   const [orderBy, setOrderBy] = useState<keyof Data>('createdAt')
   const [rowsPerPage, setRowsPerPage] = useState(25)
   const [page, setPage] = useState(0)
+
+  const navigate = useNavigate()
+  const { setDocument } = useSetDoc()
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -62,15 +70,59 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries, offerUid}) =>
       setRowsPerPage(parseInt(e.target.value, 10))
       setPage(0)
   }
-  
- // TODO add approve reject buttons with (are you sure?) popup
+
+  const handleAprove = (entry: firestoreEntry) => {
+    // set entry status as aproved
+    setDocument(`Offers/${offer.uid}/entries/`, {approved: true}, entry.uid)
+
+    // set offer status as inactive 
+    setDocument('Offers', {active: false}, offer.uid)
+
+    const { title, companyName, companyUid } = offer
+    const jobInfo:baseJobInfo = {
+        current: true,
+        title,
+        companyName,
+        companyUid
+    }
+
+    // set user info as hired, add new job 
+    setDocument("Users", {
+        hired: true, 
+        jobs: arrayUnion(jobInfo), 
+    }, entry.userUid)
+
+    // removing job applies from users 
+    // becouse offer is inactive now
+    removeJobsApplies()
+
+    // add new employee to company 
+    setDocument("Companies", {employees: arrayUnion(entry.userUid)}, offer.companyUid)
+    
+    toast.success(`${entry.name} ${entry.surname} entry has beed aproved! Welcome your new employee.`)
+    navigate(`/profile/${entry.userUid}`)
+  }
+
+  const removeJobsApplies = () => {
+    entries.forEach((entry) => {
+      const jobAplicationObj:jobApplication = {
+        offerUid: offer.uid,
+        entryUid: entry.uid
+      }
+      setDocument("Users", {jobApplications: arrayRemove(jobAplicationObj)}, entry.userUid)
+    })
+  }
 
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead sx={{background: primary}}>
           <TableRow>
-            <TableCell />
+            <TableCell>
+              <IconButton onClick={() => navigate(-1)}>
+                <ArrowBackOutlined />
+              </IconButton>
+            </TableCell>
             {headCells.map((headCell) => (
               <TableCell
                 key={headCell.id}
@@ -95,7 +147,7 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries, offerUid}) =>
            entries.slice().sort(getComparator(order, orderBy))
            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
            .map((entry, index) => (
-              <EntriesTableRow entry={entry} offerUid={offerUid} key={entry.createdAt + index} />
+              <EntriesTableRow entry={entry} handleAprove={handleAprove} offerUid={offer.uid} key={entry.createdAt + index} />
            ))
           }
         </TableBody>

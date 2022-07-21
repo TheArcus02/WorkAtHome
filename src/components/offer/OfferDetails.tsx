@@ -15,6 +15,7 @@ export const OfferDetails = () => {
   const [offer, setOffer] = useState<firestoreJobOffer | null>(null)
   const [editable, setEditable] = useState(false)
   const [editMode, setEditMode] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const { currentUser } = useAuth() as AuthContextItf
   const { document, getDocument } = useGetDoc()
@@ -23,8 +24,8 @@ export const OfferDetails = () => {
 
   useEffect(() => {
     if(uid){
+      setLoading(true)
       getDocument("Offers", uid)
-
     }
   }, [uid])
 
@@ -37,11 +38,12 @@ export const OfferDetails = () => {
   useEffect(() => {
     if(offer && currentUser){
       offer.createdBy === currentUser.uid && setEditable(true) 
+      setLoading(false)
     }
   }, [offer, currentUser])
-  console.log(offer)
-// TODO preview edit instead of button for owner on top component switch
-  return offer ? (
+
+  // TODO preview edit instead of button for owner on top component switch
+  return offer && !loading ? (
     <Container maxWidth="lg" sx={{mt:5}}>
       <Paper sx={{py:5}}>
         <Box sx={{display:'flex', flexDirection:'column', textAlign:'justify'}} mx={5}>
@@ -129,7 +131,7 @@ export const OfferDetails = () => {
               </Box>
               <Divider />
               <Box mt={2}>
-                <ApplyForm uid={offer.uid} />
+                <ApplyForm offerUid={offer.uid} />
               </Box>
             </Paper>
             )}

@@ -6,6 +6,7 @@ import { SocialLink } from "../components/profile/SocialLink"
 import { useAuth } from "../contexts/AuthContext"
 import { useGetDoc } from "../hooks/useGetDoc"
 import { useTransitionStyles } from "../hooks/useTransitionStyles"
+import { primaryLight } from "../utils/colors"
 import { AuthContextItf, firestoreUser, userInfo } from "../utils/interfaces"
 
 export const Profile = () => {
@@ -52,10 +53,16 @@ export const Profile = () => {
                             <Box sx={{display:'flex', alignItems:'center', justifyContent:'space-between', flexDirection:{xs:'column', md:"row"} }} >
                                 <Box>
                                     <Typography variant="h5" component="h1" gutterBottom fontWeight="bold">{user.name.length > 0 && user.surname.length > 0 ? user.name + " " + user.surname : user.displayName}</Typography>
-                                    {// TODO working at when jobs will be ready 
-                                    //* Set to current job                                   v
-                                    }   
-                                    <Typography variant="subtitle1" gutterBottom>Working at Firma</Typography>
+                                    {user.jobs.length > 0 ? (
+                                        user.jobs.find((job) => job.current === true) ?
+                                        user.jobs.map((job) => (
+                                            job.current ? 
+                                            <Typography key={job.title + job.companyUid} variant="subtitle1" gutterBottom>Working at <MuiLink component={Link} underline="none" color={primaryLight} to={`/company/${job.companyUid}`}>{job.companyName}</MuiLink></Typography>
+                                            : null
+                                        ))
+                                        : 
+                                        <Typography variant="subtitle1" gutterBottom>Currently unemployed</Typography>
+                                    ): <Typography variant="subtitle1" gutterBottom>Unemployed</Typography>}  
                                    {user.companies.length > 0 ? (
                                      <Typography variant="subtitle1" gutterBottom>
                                         Owner of 
@@ -65,7 +72,6 @@ export const Profile = () => {
                                             component={Link} 
                                             to={`/company/${company.uid}`}
                                             underline="none"
-                                            color="info"
                                             className={transitionStyles.primaryLight}
                                         >
                                                 {" " + company.name}

@@ -18,7 +18,7 @@ export const YourJobOffers = () => {
 
     useEffect(() => {
         if (currentUser) {
-            getQuery('', "Offers", where("createdBy", "==", currentUser.uid))
+            getQuery('', "Offers", where("createdBy", "==", currentUser.uid), where("active", '==', true))
         }
     }, [currentUser])
 

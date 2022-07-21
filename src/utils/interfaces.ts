@@ -23,11 +23,16 @@ export interface errorsInterface {
 }
 
 export type baseCompanyInfo = {name: string, uid: string}
-export type baseJobInfo = {name: string, uid: string, current:Boolean}
+export interface baseJobInfo{
+    title: string, 
+    companyName: string, 
+    companyUid: string, 
+    current:boolean
+}
 
 export type socialNames = 'facebook' | 'twitter' | 'instagram' | 'website' | 'youtube' 
 export type socialsInfo = {name:socialNames, link:string}
-export type jobApplication = {companyUid: string, entryUid: string} 
+export type jobApplication = {offerUid: string, entryUid: string} 
 
 export interface firestoreUser {
     name: string;
@@ -62,6 +67,7 @@ export interface firestoreCompany{
 export type seniority = 'Junior' | 'Mid' | 'Senior';
 
 export interface firestoreJobOffer{
+    active: boolean;
     createdBy: string;
     createdAt: any; // Timestamp in firebase / save Date obj
     description: string;

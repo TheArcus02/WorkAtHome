@@ -1,20 +1,20 @@
 import { AccountBoxOutlined, CheckCircleOutline, HighlightOffOutlined, KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material"
-import { Box, Button, Collapse, IconButton, Table, TableCell, TableRow, Tooltip, Typography } from "@mui/material"
-import { styled } from "@mui/styles"
+import { Box, Button, Collapse, IconButton, TableCell, TableRow, Tooltip, Typography } from "@mui/material"
 import moment from "moment"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { useSetDoc } from "../../../hooks/useSetDoc"
-import { firestoreEntry } from "../../../utils/interfaces"
+import {firestoreEntry, firestoreJobOffer} from "../../../utils/interfaces"
 import { EntriesDialog } from "./EntriesDialog"
 
 type entriesTableRowProps = {
     entry: firestoreEntry;
     offerUid: string;
+    handleAprove: (entry: firestoreEntry) => void;
 }
 
-export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offerUid}) => {
+export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offerUid, handleAprove}) => {
 
     const [openIntroduction, setOpenIntroduction] = useState(false)
     const [openAproveDialog, setOpenAproveDialog] = useState(false)
@@ -32,16 +32,6 @@ export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offerUid}
         setOpenRejectDialog(false)
     }
 
-    const handleAprove = () => {
-        setDocument(`Offers/${offerUid}/entries/`, {approved: true}, entry.uid).then(() => (
-            toast.success(`${entry.name} ${entry.surname} apply has been aproved.`)
-        )).catch((error) => (
-            toast.error("Error has occured during setting an aprove. ", error)
-        ))
-        setOpenAproveDialog(false)
-    }
-    
-    // TODO prevent table from moving on collapsing 
 
     return (
         <>
@@ -110,10 +100,10 @@ export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offerUid}
             </TableRow>
             <EntriesDialog 
                 open={openAproveDialog} 
-                dialogDescription={`The ${entry.name} ${entry.surname} entry status will be aproved and other entries status will be changed to rejected.`}
+                dialogDescription={`The ${entry.name} ${entry.surname} entry status will be aproved and other entries status will be changed to rejected. Job offer will deactivate.`}
                 dialogTitle="Are you sure?"
                 handleClose={() => setOpenAproveDialog(false)}
-                onSubmit={handleAprove}
+                onSubmit={() => handleAprove(entry)}
             />
             <EntriesDialog 
                 open={openRejectDialog}
