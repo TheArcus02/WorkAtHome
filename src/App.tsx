@@ -16,7 +16,7 @@ import { CreateCompany } from './pages/CreateCompany';
 import { CompanyDetails } from './components/company/CompanyDetails';
 import { background, paper, primary, secondary } from './utils/colors';
 import { AddOffer } from './pages/AddOffer';
-import { OfferDetails } from './components/offer/OfferDetails';
+import { OfferDetails } from './components/offer/Details/OfferDetails';
 import { YourJobOffers } from './pages/YourJobOffers';
 import { Entries } from './components/offer/Entries/Entries';
 
@@ -74,5 +74,6 @@ const App:React.FC = () => {
 
 export default App
 
-// TODO add go back in detailsPages
+// TODO Add go back in detailsPages
+// TODO Add edit mode logic 
 // ? change location/address fields to objects with lat an lon to interact with google maps api

@@ -38,9 +38,6 @@ export const Profile = () => {
       }
     }, [document])
     
-    
-
-    // TODO add editMode logic
     return (
         user ? (
             <Container maxWidth="lg" sx={{mt:5}}>

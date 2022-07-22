@@ -107,7 +107,6 @@ export const AddOffer = () => {
       }
     }, [doc])
     
-    // TODO tags to chip
     
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
