@@ -101,8 +101,7 @@ export const Profile = () => {
                             </Box>
                             
                             
-                            <Typography variant="body1" sx={{mt:{xs: 2, md:0}, textAlign:{xs:'center' ,md:'justify'} }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae expedita labore fugit praesentium commodi quas blanditiis porro obcaecati veritatis quidem recusandae, excepturi aperiam, ex eum repellendus quisquam unde, est fuga?
-                            Amet quaerat officia quo quisquam ipsam voluptas soluta dolore quod culpa. Earum nulla nesciunt repellendus cumque voluptate temporibus distinctio? Expedita accusamus ea dolores minima illo a commodi optio perferendis odio.</Typography>
+                            <Typography variant="body1" sx={{mt:{xs: 2, md:0}, textAlign:{xs:'center' ,md:'justify'} }}>{user.description}</Typography>
                         </Box>
                     </Box>
                     

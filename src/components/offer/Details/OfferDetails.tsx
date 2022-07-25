@@ -9,12 +9,15 @@ import { styled } from "@mui/styles"
 import { OfferPreview } from "./OfferPreview"
 import { OfferEditMode } from "./OfferEditMode"
 
+type OfferDetailsProps = {
+  initialEditMode?: boolean
+}
 
-export const OfferDetails = () => {
+export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
 
   const [offer, setOffer] = useState<firestoreJobOffer | null>(null)
   const [editable, setEditable] = useState(false)
-  const [editMode, setEditMode] = useState(false)
+  const [editMode, setEditMode] = useState(initialEditMode || false)
   const [loading, setLoading] = useState(true)
 
   const { currentUser } = useAuth() as AuthContextItf
@@ -46,7 +49,6 @@ export const OfferDetails = () => {
     textTransform: 'none'
   }));
 
-  // TODO preview edit instead of button for owner on top component switch
   return offer && !loading ? (
     <Container maxWidth="lg" sx={{ mt: 5 }}>
       {editable &&
