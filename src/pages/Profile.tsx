@@ -1,12 +1,13 @@
-import { Avatar, Button, CircularProgress, Container, Paper, Typography, Link as MuiLink } from "@mui/material"
+import { ArrowBack, DescriptionOutlined } from "@mui/icons-material"
+import { Button, CircularProgress, Container, Divider, IconButton, Paper, Typography} from "@mui/material"
+import { styled } from "@mui/styles"
 import { Box } from "@mui/system"
 import { useEffect, useState } from "react"
-import { useParams, Link } from "react-router-dom"
-import { SocialLink } from "../components/profile/SocialLink"
+import { useNavigate, useParams } from "react-router-dom"
+import { ProfileEditMode } from "../components/profile/ProfileEditMode"
+import { ProfileHeader } from "../components/profile/ProfileHeader"
 import { useAuth } from "../contexts/AuthContext"
 import { useGetDoc } from "../hooks/useGetDoc"
-import { useTransitionStyles } from "../hooks/useTransitionStyles"
-import { primaryLight } from "../utils/colors"
 import { AuthContextItf, firestoreUser, userInfo } from "../utils/interfaces"
 
 export const Profile = () => {
@@ -15,9 +16,9 @@ export const Profile = () => {
     const [editable, setEditable] = useState(false)
     const [user, setUser] = useState<userInfo>(null)
 
-    const transitionStyles = useTransitionStyles()
     const {currentUser, userInfo} = useAuth() as AuthContextItf
     const { getDocument, document } = useGetDoc()
+    const navigate = useNavigate()
     const params = useParams()
     const {uid} = params
 
@@ -37,74 +38,82 @@ export const Profile = () => {
         setUser(document as firestoreUser)
       }
     }, [document])
-    
+
+    const StyledButton = styled(Button)(({ theme }: any) => ({
+        textTransform: 'none'
+    }));
+    // TODO add experience component
     return (
         user ? (
             <Container maxWidth="lg" sx={{mt:5}}>
-                <Paper sx={{display: 'flex', justifyContent:'center'}}>
-                    <Box sx={{py:5, display:'flex', width:'100%', flexDirection:{xs: 'column', md:'row'}, alignItems:{xs:'center', md:'inherit'}}}>
-                        <Avatar alt="Profile Picture" src={user.photoUrl ? user.photoUrl : ""} sx={{ width: 168, height: 168, m:3, bgcolor: '#fff'}} >
-                            <Typography fontSize={40}>{!user.photoUrl && user.displayName?.slice(0,2)}</Typography>
-                        </Avatar>
-                        <Box sx={{display: {xs: 'flex', md:'block'}, flexDirection: {xs: 'column'}, alignItems: {xs:'center'}, p:{xs:3, md:0} ,mr:{md:3} }}>
-                            <Box sx={{display:'flex', alignItems:'center', justifyContent:'space-between', flexDirection:{xs:'column', md:"row"} }} >
-                                <Box>
-                                    <Typography variant="h5" component="h1" gutterBottom fontWeight="bold">{user.name.length > 0 && user.surname.length > 0 ? user.name + " " + user.surname : user.displayName}</Typography>
-                                    {user.jobs.length > 0 ? (
-                                        user.jobs.find((job) => job.current === true) ?
-                                        user.jobs.map((job) => (
-                                            job.current ? 
-                                            <Typography key={job.title + job.companyUid} variant="subtitle1" gutterBottom>Working at <MuiLink component={Link} underline="none" color={primaryLight} to={`/company/${job.companyUid}`}>{job.companyName}</MuiLink></Typography>
-                                            : null
-                                        ))
-                                        : 
-                                        <Typography variant="subtitle1" gutterBottom>Currently unemployed</Typography>
-                                    ): <Typography variant="subtitle1" gutterBottom>Unemployed</Typography>}  
-                                   {user.companies.length > 0 ? (
-                                     <Typography variant="subtitle1" gutterBottom>
-                                        Owner of 
-                                        {user.companies.map((company) => (
-                                        <MuiLink 
-                                            key={company.uid} 
-                                            component={Link} 
-                                            to={`/company/${company.uid}`}
-                                            underline="none"
-                                            className={transitionStyles.primaryLight}
-                                        >
-                                                {" " + company.name}
-                                        </MuiLink>
-                                        ))} 
-                                     </Typography>
-                                    ): ("")}
-                                    {user.socials.length > 0 && (
-                                        <Box sx={{display:'flex', gap:1, flexWrap:{xs:'wrap', md:'nowrap'}, alignItems:'center', justifyContent:{xs:'center', md:'inherit'} }}>
-                                                {
-                                                    user.socials.map((social) => (
-                                                        <SocialLink social={social} key={social.name} />
-                                                    ))
-                                                }
-                                        </Box>
+                {editable &&
+                    <Box sx={{ display: 'flex' }}>
+                    <Paper
+                        component={editMode ? StyledButton : Paper}
+                        variant={editMode ? "outlined" : "elevation"}
+                        elevation={editMode ? 0 : 1}
+                        sx={{
+                        boxShadow: 0,
+                        height: 45,
+                        borderRadius: "20px 20px 0 0",
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '30%',
+                        fontSize: 16,
+                        transition: 'cubic-bezier(0.4, 0, 0.2, 1) 0ms, 150ms'
+                        }}
+                        onClick={editMode ? () => setEditMode(false) : null}
+                    >
+                        Preview
+                    </Paper>
+                    <Paper
+                        component={!editMode ? StyledButton : Paper}
+                        variant={!editMode ? "outlined" : "elevation"}
+                        elevation={!editMode ? 0 : 1}
+                        sx={{
+                        boxShadow: 0,
+                        height: 45,
+                        borderRadius: "20px 20px 0 0",
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '30%',
+                        textTransform: 'none',
+                        fontSize: 16,
+                        transition: 'cubic-bezier(0.4, 0, 0.2, 1) 0ms, 150ms'
 
-                                    )}
-                                </Box>
-                                {editable && 
-                                <Box>
-                                    <Button 
-                                        variant="contained" 
-                                        sx={{mt:{xs:1, md:0}}}
-                                        onClick={() => setEditMode(true)} 
-                                    >
-                                        Edit Profile
-                                    </Button>
-                                </Box>
-                                }
+                        }}
+                        onClick={!editMode ? () => setEditMode(true) : null}
+                    >
+                        Edit
+                    </Paper>
+                    </Box>
+                }
+                <Paper sx={ editable ? { borderTopLeftRadius: 0} : undefined}>
+                    {!editMode ? (
+                        <>
+                            <ProfileHeader user={user} /> 
+                            
+                            <Divider />
+                            <Box px={5} pt={3}>
+                                <Paper elevation={0} sx={{ p: 2 }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                                        <DescriptionOutlined />
+                                        <Typography variant="h5" ml={1}>Information</Typography>
+                                    </Box>
+                                    <Divider />
+                                    <Typography variant="body1" mt={1.5} sx={{ textAlign: { xs: 'left', md: "justify" } }}>
+                                        {user.description}
+                                    </Typography>
+                                </Paper>
                             </Box>
                             
-                            
-                            <Typography variant="body1" sx={{mt:{xs: 2, md:0}, textAlign:{xs:'center' ,md:'justify'} }}>{user.description}</Typography>
-                        </Box>
-                    </Box>
-                    
+                        </>
+
+                    ) : (
+                        <ProfileEditMode />
+                    )}
                 </Paper>
             </Container>
         ) : (

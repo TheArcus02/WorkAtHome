@@ -95,7 +95,7 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
           </Paper>
         </Box>
       }
-      <Paper sx={{ py: 5, borderTopLeftRadius: 0 }}>
+      <Paper sx={editable ? { py: 5, borderTopLeftRadius: 0 } : { py:5 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'justify' }} mx={5}>
           {!editMode ? (
             <OfferPreview editable={editable} offer={offer} />

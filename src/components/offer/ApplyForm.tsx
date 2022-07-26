@@ -132,7 +132,7 @@ export const ApplyForm:React.FC<applyFormProps> = ({ offerUid }) => {
                                 required
                                 id="surname"
                                 name="surname"
-                                label="surname"
+                                label="Surname"
                                 value={formData.surname}
                                 fullWidth
                                 autoComplete="surname"

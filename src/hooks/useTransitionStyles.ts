@@ -17,5 +17,25 @@ export const useTransitionStyles = makeStyles((theme?: any) => ({
         color: info,
         '&:hover':{color: infoDark},
         transition:'cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms'
+    },
+    youtube:{
+        color: "#FF0000",
+        '&:hover':{color: '#b20000'},
+        transition:'cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms'
+    },
+    twitter:{
+        color: "#1DA1F2",
+        '&:hover':{color: '#1470a9'},
+        transition:'cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms'
+    },
+    instagram:{
+        color: '#E1306C',
+        '&:hover':{color: '#9d214b'},
+        transition:'cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms'
+    },
+    facebook:{
+        color: '#00B2FF',
+        '&:hover':{color: '#006AFF'},
+        transition:'cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms'
     }
 }))

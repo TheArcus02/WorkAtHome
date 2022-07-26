@@ -76,4 +76,5 @@ export default App
 
 // TODO Add go back in detailsPages
 // TODO Add edit mode logic 
+// TODO implement rich text editor
 // ? change location/address fields to objects with lat an lon to interact with google maps api
