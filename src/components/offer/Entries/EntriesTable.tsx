@@ -83,7 +83,9 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries, offer}) => {
         current: true,
         title,
         companyName,
-        companyUid
+        companyUid,
+        startedAt: new Date(),
+        endedAt: '', 
     }
 
     // set user info as hired, add new job 

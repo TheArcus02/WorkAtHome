@@ -1,9 +1,10 @@
-import { ArrowBack, DescriptionOutlined } from "@mui/icons-material"
-import { Button, CircularProgress, Container, Divider, IconButton, Paper, Typography} from "@mui/material"
+import { DescriptionOutlined } from "@mui/icons-material"
+import { Button, CircularProgress, Container, Divider, Paper, Typography} from "@mui/material"
 import { styled } from "@mui/styles"
 import { Box } from "@mui/system"
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
+import { Experience } from "../components/profile/Experience"
 import { ProfileEditMode } from "../components/profile/ProfileEditMode"
 import { ProfileHeader } from "../components/profile/ProfileHeader"
 import { useAuth } from "../contexts/AuthContext"
@@ -18,7 +19,6 @@ export const Profile = () => {
 
     const {currentUser, userInfo} = useAuth() as AuthContextItf
     const { getDocument, document } = useGetDoc()
-    const navigate = useNavigate()
     const params = useParams()
     const {uid} = params
 
@@ -96,8 +96,8 @@ export const Profile = () => {
                             <ProfileHeader user={user} /> 
                             
                             <Divider />
-                            <Box px={5} pt={3}>
-                                <Paper elevation={0} sx={{ p: 2 }}>
+                            <Box sx={{px:{xs:2, md:5}}} py={3}>
+                                <Paper elevation={0} sx={{ p:2 }}>
                                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
                                         <DescriptionOutlined />
                                         <Typography variant="h5" ml={1}>Information</Typography>
@@ -107,8 +107,9 @@ export const Profile = () => {
                                         {user.description}
                                     </Typography>
                                 </Paper>
+                                {user.jobs.length > 0 && <Experience jobs={user.jobs} /> }
+
                             </Box>
-                            
                         </>
 
                     ) : (

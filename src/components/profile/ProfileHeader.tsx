@@ -1,4 +1,5 @@
-import { Box, Avatar, Typography, Link as MuiLink } from "@mui/material"
+import { ShareOutlined, TagOutlined } from "@mui/icons-material"
+import { Box, Avatar, Typography, Link as MuiLink, Paper, Divider } from "@mui/material"
 import { Link } from "react-router-dom"
 import { useTransitionStyles } from "../../hooks/useTransitionStyles"
 import { primaryLight } from "../../utils/colors"
@@ -18,7 +19,7 @@ export const ProfileHeader:React.FC<ProfileHeaderProps> = ({ user }) => {
             <Avatar alt="Profile Picture" src={user.photoUrl ? user.photoUrl : ""} sx={{ width: 168, height: 168, m: 3, ml:5, bgcolor: '#fff' }} >
                 <Typography fontSize={40}>{!user.photoUrl && user.displayName?.slice(0, 2)}</Typography>
             </Avatar>
-            <Box sx={{width:'100%', display:'flex', justifyContent:'space-between', flexDirection:{xs:'column', md:'row'}}}>
+            <Box sx={{width:'100%', display:'flex', justifyContent:'space-between', alignItems:'center', flexDirection:{xs:'column', md:'row'}}}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign:{xs:'center', md:'inherit'}, p: { xs: 3, md: 0 }, mr: { md: 3 } }}>
                             <Typography variant="h5" component="h1" gutterBottom fontWeight="bold">{user.name.length > 0 && user.surname.length > 0 ? user.name + " " + user.surname : user.displayName}</Typography>
                             {user.jobs.length > 0 ? (
@@ -50,12 +51,21 @@ export const ProfileHeader:React.FC<ProfileHeaderProps> = ({ user }) => {
                             
                 </Box>
                 {user.socials.length > 0 && (
-                    <Box sx={{ display: 'flex', gap: 1, flexWrap: { xs: 'wrap', md: 'nowrap' }, alignItems: 'center', justifyContent: { xs: 'center', md: 'inherit' }, mr:{md:15} }}>
-                        {
-                            user.socials.map((social) => (
-                                <SocialLink social={social} key={social.name} size="large" />
-                            ))
-                        } 
+                    <Box sx={{px:{xs:2, md:5}, pt:{xs:1, md:3}}}>
+                        <Paper elevation={0} sx={{p:2}}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                                <ShareOutlined />
+                                <Typography variant="h5" ml={1}>Socials</Typography>
+                            </Box>
+                            <Divider />
+                            <Box sx={{ display: 'flex', gap: 2, flexWrap: { xs: 'wrap', md: 'nowrap' }, alignItems: 'center', justifyContent: { xs: 'center', md: 'inherit' }, mt:2}}>
+                                {
+                                    user.socials.map((social) => (
+                                        <SocialLink social={social} key={social.name} size="large" />
+                                    ))
+                                } 
+                            </Box>
+                        </Paper>
                     </Box>
                 )}
             </Box>

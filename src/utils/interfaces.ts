@@ -24,10 +24,12 @@ export interface errorsInterface {
 
 export type baseCompanyInfo = {name: string, uid: string}
 export interface baseJobInfo{
-    title: string, 
-    companyName: string, 
-    companyUid: string, 
-    current:boolean
+    title: string;
+    companyName: string; 
+    companyUid: string;
+    current:boolean;
+    startedAt: any; // Timestamp in firebase / save Date obj
+    endedAt: any; // Timestamp in firebase / save Date obj
 }
 
 export type socialNames = 'facebook' | 'twitter' | 'instagram' | 'website' | 'youtube' 
