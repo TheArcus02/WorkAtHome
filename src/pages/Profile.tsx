@@ -1,7 +1,6 @@
 import { DescriptionOutlined } from "@mui/icons-material"
-import { Button, CircularProgress, Container, Divider, Paper, Typography} from "@mui/material"
+import { Box, Button, CircularProgress, Container, Divider, Paper, Typography} from "@mui/material"
 import { styled } from "@mui/styles"
-import { Box } from "@mui/system"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Experience } from "../components/profile/Experience"
@@ -107,7 +106,7 @@ export const Profile = () => {
                                         {user.description}
                                     </Typography>
                                 </Paper>
-                                {user.jobs.length > 0 && <Experience jobs={user.jobs} /> }
+                                {user.jobs.length > 0 && <Experience jobs={user.jobs.slice().reverse()} /> }
 
                             </Box>
                         </>

@@ -1,4 +1,4 @@
-import { ShareOutlined, TagOutlined } from "@mui/icons-material"
+import { ShareOutlined } from "@mui/icons-material"
 import { Box, Avatar, Typography, Link as MuiLink, Paper, Divider } from "@mui/material"
 import { Link } from "react-router-dom"
 import { useTransitionStyles } from "../../hooks/useTransitionStyles"
@@ -58,7 +58,7 @@ export const ProfileHeader:React.FC<ProfileHeaderProps> = ({ user }) => {
                                 <Typography variant="h5" ml={1}>Socials</Typography>
                             </Box>
                             <Divider />
-                            <Box sx={{ display: 'flex', gap: 2, flexWrap: { xs: 'wrap', md: 'nowrap' }, alignItems: 'center', justifyContent: { xs: 'center', md: 'inherit' }, mt:2}}>
+                            <Box sx={{ display: 'flex', gap: 2, flexWrap: { xs: 'wrap', md: 'nowrap' }, alignItems: 'center', justifyContent: { xs: 'center', md: 'center' }, mt:2}}>
                                 {
                                     user.socials.map((social) => (
                                         <SocialLink social={social} key={social.name} size="large" />

@@ -74,6 +74,7 @@ const App:React.FC = () => {
 
 export default App
 
+// TODO add mobile view to timline in profile 
 // TODO Add go back in detailsPages
 // TODO Add edit mode logic 
 // TODO implement rich text editor
