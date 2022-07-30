@@ -83,6 +83,7 @@ export interface firestoreJobOffer{
     title: string;
     entriesCounter: number;
     uid: string;
+    lastEdit: any; // Timestamp in firebase / save Date obj
 }
 
 export interface firestoreEntry{
@@ -97,6 +98,16 @@ export interface firestoreEntry{
 }
 
 export type Order = "desc" | "asc"
+
+export type offerForm = {
+    title: string;
+    location: string;
+    companyUid: string;
+    seniority: seniority;
+    minSalary: string;
+    maxSalary: string;
+    description: string;
+}
 
 // export type alert = {
 //     type: 'error' | 'warning' | 'info' | 'success';

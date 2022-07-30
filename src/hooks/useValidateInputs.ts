@@ -103,5 +103,5 @@ export const useValidateInputs = () => {
     setValidated(true);
   };
 
-  return { validateData, inputErrors, errors, validated };
+  return { validateData, inputErrors, errors, validated, setValidated };
 };

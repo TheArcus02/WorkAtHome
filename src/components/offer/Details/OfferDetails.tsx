@@ -20,7 +20,7 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
   const [editMode, setEditMode] = useState(initialEditMode || false)
   const [loading, setLoading] = useState(true)
 
-  const { currentUser } = useAuth() as AuthContextItf
+  const { currentUser, userInfo } = useAuth() as AuthContextItf
   const { document, getDocument } = useGetDoc()
   const params = useParams()
   const { uid } = params
@@ -28,7 +28,7 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
   useEffect(() => {
     if (uid) {
       setLoading(true)
-      getDocument("Offers", uid)
+      getDocument("Offers", uid) // TODO change to realtime collection
     }
   }, [uid])
 
@@ -49,7 +49,7 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
     textTransform: 'none'
   }));
 
-  return offer && !loading ? (
+  return offer && userInfo && !loading ? (
     <Container maxWidth="lg" sx={{ mt: 5 }}>
       {editable &&
         <Box sx={{ display: 'flex' }}>
@@ -99,7 +99,7 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'justify' }} mx={5}>
           {!editMode ? (
             <OfferPreview editable={editable} offer={offer} />
-          ) : <OfferEditMode offer={offer} />}
+          ) : <OfferEditMode offer={offer} userInfo={userInfo} />}
         </Box>
       </Paper>
 

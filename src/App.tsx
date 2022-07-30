@@ -75,7 +75,7 @@ const App:React.FC = () => {
 export default App
 
 // TODO add mobile view to timline in profile 
-// TODO Add go back in detailsPages
+// TODO offers with sorting filtering page
 // TODO Add edit mode logic 
 // TODO implement rich text editor
 // ? change location/address fields to objects with lat an lon to interact with google maps api

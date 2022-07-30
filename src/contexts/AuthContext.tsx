@@ -92,7 +92,7 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
         const unsub = auth.onAuthStateChanged(user => {
             setCurrentUser(user)
         })
-        return unsub
+        return () => unsub()
     }, [])
     
     useEffect(() => {
