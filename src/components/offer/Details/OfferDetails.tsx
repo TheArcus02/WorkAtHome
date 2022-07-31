@@ -2,12 +2,13 @@ import { Box, Container, Paper, Button} from "@mui/material"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useAuth } from "../../../contexts/AuthContext"
-import { useGetDoc } from "../../../hooks/useGetDoc"
 import { AuthContextItf, firestoreJobOffer } from "../../../utils/interfaces"
 import { Loader } from "../../Loader"
 import { styled } from "@mui/styles"
 import { OfferPreview } from "./OfferPreview"
 import { OfferEditMode } from "./OfferEditMode"
+import { useRealtimeCollection } from "../../../hooks/useRealtimeCollection"
+import { where } from "firebase/firestore"
 
 type OfferDetailsProps = {
   initialEditMode?: boolean
@@ -21,22 +22,26 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
   const [loading, setLoading] = useState(true)
 
   const { currentUser, userInfo } = useAuth() as AuthContextItf
-  const { document, getDocument } = useGetDoc()
+  const { getRealtime, realtimeCollection , unsubscribe} = useRealtimeCollection()
   const params = useParams()
   const { uid } = params
 
   useEffect(() => {
     if (uid) {
       setLoading(true)
-      getDocument("Offers", uid) // TODO change to realtime collection
+      getRealtime('Offers', where('uid', '==', uid))
     }
   }, [uid])
 
   useEffect(() => {
-    if (document) {
-      setOffer(document as firestoreJobOffer)
+    if (realtimeCollection) {
+      if(!realtimeCollection.empty){
+        realtimeCollection.forEach((doc: any) => (
+          setOffer(doc.data())
+        ))
+      }
     }
-  }, [document])
+  }, [realtimeCollection])
 
   useEffect(() => {
     if (offer && currentUser) {
@@ -44,6 +49,14 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
       setLoading(false)
     }
   }, [offer, currentUser])
+
+  useEffect(() => {
+      
+    if(unsubscribe)
+    return () => {
+        unsubscribe()
+    }
+}, [unsubscribe])
 
   const StyledButton = styled(Button)(({ theme }: any) => ({
     textTransform: 'none'
