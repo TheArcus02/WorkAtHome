@@ -43,7 +43,7 @@ export const Profile = () => {
     }));
     // TODO add experience component
     return (
-        user ? (
+        user && currentUser ? (
             <Container maxWidth="lg" sx={{mt:5}}>
                 {editable &&
                     <Box sx={{ display: 'flex' }}>
@@ -112,7 +112,7 @@ export const Profile = () => {
                         </>
 
                     ) : (
-                        <ProfileEditMode />
+                        <ProfileEditMode userInfo={user} userUid={currentUser.uid} />
                     )}
                 </Paper>
             </Container>

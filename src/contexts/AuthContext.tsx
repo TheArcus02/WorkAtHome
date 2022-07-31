@@ -102,7 +102,7 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
                 const unsub = onSnapshot(doc(db, "Users", currentUser.uid), (doc) => (
                     setUserInfo(doc.data() as userInfo)
                 ))
-                return unsub
+                return () => unsub()
             }
         }
     }, [currentUser])
