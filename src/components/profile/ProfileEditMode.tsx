@@ -1,11 +1,13 @@
 import { Box, Grid, TextField, Typography, Button, Container, Avatar, Divider } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useValidateInputs } from "../../hooks/useValidateInputs"
-import { firestoreUser, socialsInfo, socialNames } from "../../utils/interfaces"
+import { firestoreUser, socialsInfo } from "../../utils/interfaces"
 import { v4 } from 'uuid'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { storage } from "../../firebase/firebase.config"
 import { Loader } from "../Loader"
+import { useSetDoc } from "../../hooks/useSetDoc"
+import { toast } from "react-toastify"
 
 
 type formDataType = Pick<firestoreUser, "displayName" | "description" | "photoUrl">
@@ -16,7 +18,7 @@ type ProfileEditModeProps = {
 type Isocials = {
   [key: string]: string | undefined
 }
-const socialOptions: Array<socialNames> = ['facebook', 'twitter', 'instagram', 'website', 'youtube']
+const socialOptions: Array<string> = ['facebook', 'twitter', 'instagram', 'website', 'youtube']
 export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, userUid }) => {
 
 
@@ -24,54 +26,108 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
   const [formData, setFormData] = useState<formDataType>({ displayName, description, photoUrl })
   const [socials, setSocials] = useState<Isocials | null>(null)
   const [imageUpload, setImageUpload] = useState<File | null>(null)
+  const [imageUploading, setImageUploading] = useState(false)
 
-
-  const { validateData, inputErrors, errors, validated } = useValidateInputs()
-
-  console.log({ formData, socials })
+  const { validateData, inputErrors, errors, validated, setValidated } = useValidateInputs()
+  const { setDocument } = useSetDoc()
+  
 
   useEffect(() => {
     socialOptions.forEach((socialOpt) => (
       setSocials((prev: any) => (
         {
           ...prev,
-          [socialOpt]: userInfo.socials.find((social) => social.name === socialOpt)?.link 
+          [socialOpt]: userInfo.socials.find((social) => social.name === socialOpt)?.link || ""
         }
       ))
     ))
-  
+
   }, [])
+
+  useEffect(() => {
+    console.log(validated)
+
+    const uploadImage = async () => {
+      if (imageUpload) {
+        setImageUploading(true)
+        const imageRef = ref(storage, `Profiles/${userUid}/${imageUpload.name + v4() + userUid}`)
+        await uploadBytes(imageRef, imageUpload).then((snapshot) => {
+          getDownloadURL(snapshot.ref).then((downloadURL) => {
+            console.log('downloadURL => ', downloadURL)
+            setFormData((prev) => (
+              {
+                ...prev,
+                'photoUrl': downloadURL
+              }
+            ))
+            setImageUpload(null)
+            setImageUploading(false)
+          })
+        })
+      }
+    }
+
+    if(validated && socials){
+      if(errors) return
+      if (imageUpload && !imageUploading) {
+        uploadImage()
+        .catch((error: any) => toast.error("error ocurred during uploading an image.", error))
+      }
+
+      const socialsEntries = Object.entries(socials).map((social) => (
+        social[1]?.length === 0 ? null : {link:social[1], name: social[0]}
+      )).filter(n => n)
+      
+
+      const data = {
+        ...formData,
+        socials:[
+          ...socialsEntries
+        ]
+      }
+      console.log({data})
+      setDocument("Users", data, userUid)
+      setValidated(false)
+    }
+  }, [validated, errors, socials])
+
+  useEffect(() => {
+    if(formData.photoUrl && formData.photoUrl !== userInfo.photoUrl){
+      setDocument("Users", {photoUrl: formData.photoUrl}, userUid)
+    }
+  }, [formData.photoUrl])
   
 
+
   const handleChange = (name: string, value: string) => {
-    setFormData((prev: any) => (
-      {
-        ...prev,
-        [name]: value
-      }
-    ))
+    if (socialOptions.includes(name)) {
+      setSocials((prev: any) => (
+        {
+          ...prev,
+          [name]: value
+        }
+      ))
+    } else {
+      setFormData((prev: any) => (
+        {
+          ...prev,
+          [name]: value
+        }
+      ))
+    }
+
   }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    if(!validated){
+      console.log({ ...formData, ...socials })
+      validateData({...formData, ...socials })
+    }
+    
   }
 
-  const uploadImage = () => {
-    if (imageUpload) {
-      const imageRef = ref(storage, `Profiles/${imageUpload.name + v4() + userUid}`)
-      uploadBytes(imageRef, imageUpload).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((downloadURL) => {
-          console.log('downloadURL => ', downloadURL)
-          setFormData((prev) => (
-            {
-              ...prev,
-              'photoUrl': downloadURL
-            }
-          ))
-        })
-      })
-    }
-  }
+  
 
 
   return socials ? (
@@ -82,8 +138,14 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
       <Box component="form" noValidate onSubmit={handleSubmit} mt={2}>
         <Grid container spacing={3}>
           <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Avatar alt="Profile Picture" src={userInfo.photoUrl ? userInfo.photoUrl : ""} sx={{ width: 168, height: 168, m: 3, bgcolor: '#fff' }} >
-              <Typography fontSize={40}>{!userInfo.photoUrl && userInfo.displayName?.slice(0, 2)}</Typography>
+            <Avatar 
+              alt="Profile Picture" 
+              src={formData.photoUrl ? formData.photoUrl : userInfo.photoUrl ? userInfo.photoUrl : ""} 
+              sx={{ width: 168, height: 168, m: 3, bgcolor: '#fff' }} 
+            >
+              <Typography fontSize={40}>
+                {!userInfo.photoUrl && userInfo.displayName?.slice(0, 2)}
+              </Typography>
             </Avatar>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Typography>Profile Photo:</Typography>
@@ -103,8 +165,8 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
             </Box>
             {imageUpload && <Typography mt={2}>Uploaded image: {imageUpload.name}</Typography>}
           </Grid>
-          <Grid item xs={12}>
-              <Divider><Typography variant="h5" >Info</Typography></Divider>
+          <Grid item xs={12} my={1}>
+            <Divider><Typography variant="h5" >Info</Typography></Divider>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -140,14 +202,14 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
             />
           </Grid>
           <Grid container item xs={12} spacing={2} mt={2}>
-            <Grid item xs={12}>
-            <Divider><Typography variant="h5">Socials</Typography></Divider>
+            <Grid item xs={12} my={1}>
+              <Divider><Typography variant="h5">Socials</Typography></Divider>
             </Grid>
             {socialOptions.map((option, index) => (
               <Grid item xs={12} md={6} key={option + index}>
                 <TextField
-                  error={inputErrors?.photoUrl.error}
-                  helperText={inputErrors?.photoUrl.text}
+                  error={inputErrors?.[option].error}
+                  helperText={inputErrors?.[option].text}
                   id={option}
                   name={option}
                   label={option}
@@ -163,6 +225,16 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
 
           </Grid>
         </Grid>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Button
+            variant="contained"
+            type="submit"
+            sx={{ mt: 5, ml: 1, color: '#fff' }}
+            color="warning"
+          >
+            Edit
+          </Button>
+        </Box>
       </Box>
     </Container>
   ) : <Loader />

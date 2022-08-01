@@ -23,13 +23,23 @@ export const useValidateInputs = () => {
     loginPassword: "Password",
   };
 
+  const checkForUrl: readonly string[] = [
+    'websiteUrl',
+    'facebook',
+    'instagram',
+    'photoUrl',
+    'twitter',
+    'website',
+    'youtube',
+  ]
+
   // This fields lenght is not being checked
-  const skipInputs: string[] = [
-      'websiteUrl',
+  const skipInputs: readonly string[] = [
+      ...checkForUrl,
       'photoUrl',
   ];
   
-  const dontTost: string[] = [
+  const dontTost: readonly string[] = [
     "loginEmail",
     "loginPassword",
   ]
@@ -53,7 +63,7 @@ export const useValidateInputs = () => {
       let fieldVal = field[1];
 
       // if's for fields without lenght checking
-      if(fieldName === 'websiteUrl' && fieldVal.length > 0) {
+      if(checkForUrl.includes(fieldName) && fieldVal.length > 0) {
         if(!isValidHttpUrl(fieldVal)){
           setInputErrors((prev) => ({
             ...prev,
