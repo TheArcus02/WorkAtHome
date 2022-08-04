@@ -149,12 +149,12 @@ export const Navbar:React.FC = () => {
           </Box>
           {/* // TODO integrate with Notifications system when ready */}
           <Box sx={{ flexGrow: 0 }}>
-            {currentUser ? (
+            {currentUser && userInfo ? (
               <>
                 <Tooltip title="Open menu">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Profile Picture" src={currentUser.photoURL ? currentUser.photoURL : ""} sx={{bgcolor:'#fff'}}>
-                      {!currentUser.photoURL && currentUser.displayName?.slice(0,2)}
+                    <Avatar alt="Profile Picture" src={userInfo.photoUrl ? userInfo.photoUrl : ""} sx={{bgcolor:'#fff'}}>
+                      {!userInfo.photoUrl && currentUser.displayName?.slice(0,2)}
                     </Avatar>
                   </IconButton>
                 </Tooltip>
