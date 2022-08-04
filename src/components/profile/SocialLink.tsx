@@ -20,7 +20,7 @@ const getClasses = (name: socialNames, styles:ClassNameMap<"youtube" | "secondar
     }  
 }
 
-const getSocialIcon = (name: socialNames, size: fontSize) => {
+export const getSocialIcon = (name: socialNames, size: fontSize) => {
     switch(name){
         case 'facebook': return (
             <FacebookOutlined fontSize={size} />

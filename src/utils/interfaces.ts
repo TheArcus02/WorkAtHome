@@ -32,7 +32,7 @@ export interface baseJobInfo{
     endedAt: any; // Timestamp in firebase / save Date obj
 }
 
-export type socialNames = 'facebook' | 'twitter' | 'instagram' | 'website' | 'youtube' 
+export type socialNames = 'facebook' | 'twitter' | 'instagram' | 'website' | 'youtube' | string
 export type socialsInfo = {name:socialNames, link:string}
 export type jobApplication = {offerUid: string, entryUid: string} 
 

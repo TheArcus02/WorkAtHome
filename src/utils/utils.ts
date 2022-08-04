@@ -1,4 +1,4 @@
-import { Order } from "./interfaces";
+import { Order, socialNames } from "./interfaces";
 
 export const validateEmail = (email: string) => {
   return email
@@ -19,6 +19,10 @@ export const isValidHttpUrl = (checkedUrl: string) => {
 
   return url.protocol === "http:" || url.protocol === "https:";
 };
+
+export const isValidSocialLink = (name: string, url:string) => {
+  return url.indexOf(name) > -1
+}
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {

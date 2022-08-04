@@ -1,4 +1,4 @@
-import { Box, Grid, TextField, Typography, Button, Container, Avatar, Divider } from "@mui/material"
+import { Box, Grid, TextField, Typography, Button, Container, Avatar, Divider, InputAdornment } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useValidateInputs } from "../../hooks/useValidateInputs"
 import { firestoreUser, socialsInfo } from "../../utils/interfaces"
@@ -8,6 +8,8 @@ import { storage } from "../../firebase/firebase.config"
 import { Loader } from "../Loader"
 import { useSetDoc } from "../../hooks/useSetDoc"
 import { toast } from "react-toastify"
+import { getSocialIcon } from "./SocialLink"
+import { isValidSocialLink } from "../../utils/utils"
 
 
 type formDataType = Pick<firestoreUser, "displayName" | "description" | "photoUrl">
@@ -43,10 +45,7 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
     ))
 
   }, [])
-
   useEffect(() => {
-    console.log(validated)
-
     const uploadImage = async () => {
       if (imageUpload) {
         setImageUploading(true)
@@ -68,7 +67,10 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
     }
 
     if(validated && socials){
-      if(errors) return
+      if(errors) {
+        setValidated(false)
+        return
+      }
       if (imageUpload && !imageUploading) {
         uploadImage()
         .catch((error: any) => toast.error("error ocurred during uploading an image.", error))
@@ -212,12 +214,19 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
                   helperText={inputErrors?.[option].text}
                   id={option}
                   name={option}
-                  label={option}
+                  label={option.charAt(0).toUpperCase() + option.slice(1)}
                   value={socials[option] || ""}
                   fullWidth
                   autoComplete={option}
                   variant="standard"
                   onChange={(e) => handleChange(e.target.name, e.target.value)}
+                  InputProps={{
+                    startAdornment:(
+                      <InputAdornment position="start">
+                        {getSocialIcon(option, "small")}
+                      </InputAdornment>
+                    )
+                  }}
                 />
               </Grid>
             ))}

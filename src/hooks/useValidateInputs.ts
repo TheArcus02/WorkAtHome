@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { errorsInterface } from "../utils/interfaces";
-import { isValidHttpUrl, validateEmail } from "../utils/utils";
+import { isValidHttpUrl, isValidSocialLink, validateEmail } from "../utils/utils";
 
 
 export const useValidateInputs = () => {
@@ -22,15 +22,17 @@ export const useValidateInputs = () => {
     loginEmail: "Email",
     loginPassword: "Password",
   };
-
-  const checkForUrl: readonly string[] = [
-    'websiteUrl',
+  const socials: readonly string[] = [
     'facebook',
     'instagram',
-    'photoUrl',
     'twitter',
-    'website',
     'youtube',
+  ]
+  const checkForUrl: readonly string[] = [
+    ...socials,
+    'photoUrl',
+    'websiteUrl',
+    'website',
   ]
 
   // This fields lenght is not being checked
@@ -73,7 +75,18 @@ export const useValidateInputs = () => {
             },
           }));
           setErrors(true);
-        } 
+        } else if(socials.includes(fieldName)){
+          if(!isValidSocialLink(fieldName, fieldVal)){
+            setInputErrors((prev) => ({
+              ...prev,
+              [fieldName]: {
+                error: true,
+                text: `Looks like your ${fieldName} link is not correct.`,
+              },
+            }));
+            setErrors(true);
+          }
+        }
       }
 
       if (skipInputs.includes(fieldName)) return;
