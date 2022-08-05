@@ -74,6 +74,7 @@ const App:React.FC = () => {
 
 export default App
 
+// TODO add uploadImage hook
 // TODO add mobile view to timline in profile 
 // TODO offers with sorting filtering page
 // TODO Add edit mode logic 

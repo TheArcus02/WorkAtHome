@@ -82,6 +82,7 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
                 active: true,
                 photoUrl: user.photoURL ? user.photoURL : "",
                 jobApplications: [],
+                uid: user.uid
             }
             setDocument("Users", userData, user.uid);
         }

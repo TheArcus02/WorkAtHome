@@ -1,6 +1,6 @@
 import { ArrowBackOutlined } from "@mui/icons-material";
 import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
-import { arrayRemove, arrayUnion } from "firebase/firestore";
+import { arrayRemove, arrayUnion, increment } from "firebase/firestore";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -99,7 +99,7 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries, offer}) => {
     removeJobsApplies()
 
     // add new employee to company 
-    setDocument("Companies", {employees: arrayUnion(entry.userUid)}, offer.companyUid)
+    setDocument("Companies", {employees: arrayUnion(entry.userUid), size: increment(1)}, offer.companyUid)
     
     toast.success(`${entry.name} ${entry.surname} entry has beed aproved! Welcome your new employee.`)
     navigate(`/profile/${entry.userUid}`)

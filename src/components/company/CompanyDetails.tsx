@@ -82,7 +82,7 @@ export const CompanyDetails = () => {
         companyInfo ? (
             <Container maxWidth="xl" sx={{mt:5}}>
                 <Paper sx={{pb:5}}>
-                    <Box sx={editable && {position:'relative'}}>
+                    <Box sx={editable ? {position:'relative'} : undefined}>
                         <Box 
                             loading="lazy"
                             component="img"
@@ -141,7 +141,7 @@ export const CompanyDetails = () => {
                     {!editMode ? (
                         <CompanyPreview companyInfo={companyInfo} offers={offers} />  
                     ) : (
-                        <CompanyEditMode />
+                        <CompanyEditMode companyInfo={companyInfo} />
                     )}
                 </Paper>
             </Container>

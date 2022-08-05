@@ -24,17 +24,18 @@ export const CreateCompany = () => {
     }
     const [formData, setFormData] = useState(defaultFormData)
     const [imageUpload, setImageUpload] = useState<File | null>(null)
+    const [imageUploading, setImageUploading] = useState(false)
+
 
     const { currentUser } = useAuth() as AuthContextItf
-    const { validateData, inputErrors, errors, validated } = useValidateInputs()
+    const { validateData, inputErrors, errors, validated, setValidated } = useValidateInputs()
     const { setDocument, firebaseDoc: doc } = useSetDoc()
     const navigate = useNavigate()
 
     useEffect(() => {
         if (validated && currentUser) {
-            if (errors) return
-            if (imageUpload) {
-                uploadImage()
+            if (errors) {
+                setValidated(false)
                 return
             }
             const documentData: firestoreCompany = {
@@ -44,34 +45,52 @@ export const CreateCompany = () => {
                 employees: [],
                 active: true,
                 size: 0,
-                uid:''
+                uid: ''
             }
             setDocument("Companies", documentData)
+            setValidated(false)
         }
 
     }, [validated, errors])
 
+
     useEffect(() => {
-        if (currentUser && formData.photoUrl) {
-            const documentData: firestoreCompany = {
-                ...formData,
-                createdBy: currentUser.uid,
-                employees: [],
-                active: true,
-                size: 0,
-                uid:''
-            }
-            setDocument("Companies", documentData)
+        if (formData.photoUrl && doc) {
+            setDocument("Companies", { photoUrl: formData.photoUrl }, doc.id)
         }
-    }, [formData.photoUrl])
+    }, [formData.photoUrl, doc])
+
 
     useEffect(() => {
         if (doc && currentUser) {
-            const companyInfo:baseCompanyInfo = {name:formData.name, uid:doc.id} 
 
-            setDocument("Companies", {uid:doc.id}, doc.id);
+            const companyInfo: baseCompanyInfo = { name: formData.name, uid: doc.id }
 
-            setDocument("Users", {companies: arrayUnion(companyInfo)}, currentUser.uid).then(() => {
+            const uploadImage = async () => {
+                if (imageUpload) {
+                    setImageUploading(true)
+                    const imageRef = ref(storage, `Companies/${companyInfo.uid}/${imageUpload.name + v4() + companyInfo.uid}`)
+                    await uploadBytes(imageRef, imageUpload).then((snapshot) => {
+                        getDownloadURL(snapshot.ref).then((downloadURL) => {
+                            console.log('downloadURL => ', downloadURL)
+                            setFormData((prev) => (
+                                {
+                                    ...prev,
+                                    'photoUrl': downloadURL
+                                }
+                            ))
+                            setImageUpload(null)
+                            setImageUploading(false)
+                        })
+                    })
+                }
+            }
+            if (imageUpload && !imageUploading) {
+                uploadImage()
+                    .catch((error: any) => toast.error("error ocurred during uploading an image.", error))
+            }
+            setDocument("Companies", { uid: doc.id }, doc.id);
+            setDocument("Users", { companies: arrayUnion(companyInfo) }, currentUser.uid).then(() => {
                 toast.success("Company added successfuly")
                 navigate(`/company/${doc.id}`)
             }
@@ -93,23 +112,6 @@ export const CreateCompany = () => {
         event.preventDefault();
         validateData(formData)
     };
-
-    const uploadImage = () => {
-        if (imageUpload) {
-            const imageRef = ref(storage, `Companies/${imageUpload.name + v4()}`)
-            uploadBytes(imageRef, imageUpload).then((snapshot) => {
-                getDownloadURL(snapshot.ref).then((downloadURL) => {
-                    console.log('downloadURL => ', downloadURL)
-                    setFormData((prev) => (
-                        {
-                            ...prev,
-                            'photoUrl': downloadURL
-                        }
-                    ))
-                })
-            })
-        }
-    }
 
     return (
         <Container

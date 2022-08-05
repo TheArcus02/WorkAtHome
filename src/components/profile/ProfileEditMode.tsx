@@ -1,7 +1,7 @@
 import { Box, Grid, TextField, Typography, Button, Container, Avatar, Divider, InputAdornment } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useValidateInputs } from "../../hooks/useValidateInputs"
-import { firestoreUser, socialsInfo } from "../../utils/interfaces"
+import { firestoreUser } from "../../utils/interfaces"
 import { v4 } from 'uuid'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { storage } from "../../firebase/firebase.config"
@@ -9,7 +9,6 @@ import { Loader } from "../Loader"
 import { useSetDoc } from "../../hooks/useSetDoc"
 import { toast } from "react-toastify"
 import { getSocialIcon } from "./SocialLink"
-import { isValidSocialLink } from "../../utils/utils"
 
 
 type formDataType = Pick<firestoreUser, "displayName" | "description" | "photoUrl">
@@ -45,6 +44,7 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
     ))
 
   }, [])
+  
   useEffect(() => {
     const uploadImage = async () => {
       if (imageUpload) {

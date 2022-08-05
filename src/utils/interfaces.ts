@@ -49,6 +49,7 @@ export interface firestoreUser {
     photoUrl: string;
     active: boolean;
     jobApplications: jobApplication[];
+    uid: string;
 }
 
 export type userInfo = firestoreUser | null;
@@ -63,6 +64,7 @@ export interface firestoreCompany{
     size: number;
     websiteUrl: string;
     active: boolean;
+    email: string;
     uid: string;
 }
 
