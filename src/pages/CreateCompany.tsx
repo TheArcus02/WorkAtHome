@@ -1,8 +1,6 @@
 import { Button, Container, Grid, Paper, TextField, Typography } from '@mui/material'
 import { Box } from '@mui/system'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { useEffect, useState } from 'react'
-import { storage } from '../firebase/firebase.config'
 import { useValidateInputs } from '../hooks/useValidateInputs'
 import { v4 } from 'uuid'
 import { useSetDoc } from '../hooks/useSetDoc'
@@ -11,6 +9,7 @@ import { AuthContextItf, baseCompanyInfo, firestoreCompany } from '../utils/inte
 import { toast } from 'react-toastify'
 import { arrayUnion } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
+import { useImageUpload } from '../hooks/useImageUpload'
 
 export const CreateCompany = () => {
 
@@ -18,19 +17,18 @@ export const CreateCompany = () => {
         name: '',
         address: '',
         description: '',
-        photoUrl: '',
         websiteUrl: '',
         email: '',
     }
     const [formData, setFormData] = useState(defaultFormData)
     const [imageUpload, setImageUpload] = useState<File | null>(null)
-    const [imageUploading, setImageUploading] = useState(false)
 
 
     const { currentUser } = useAuth() as AuthContextItf
     const { validateData, inputErrors, errors, validated, setValidated } = useValidateInputs()
     const { setDocument, firebaseDoc: doc } = useSetDoc()
     const navigate = useNavigate()
+    const { image, imageUploading, uploadImage } = useImageUpload()
 
     useEffect(() => {
         if (validated && currentUser) {
@@ -55,10 +53,15 @@ export const CreateCompany = () => {
 
 
     useEffect(() => {
-        if (formData.photoUrl && doc) {
-            setDocument("Companies", { photoUrl: formData.photoUrl }, doc.id)
+        if (image && doc) {
+            setDocument("Companies", { photoUrl: image }, doc.id)
+            .then(() => {
+                toast.success("Company added successfuly")
+                navigate(`/company/${doc.id}`)
+            })
+            
         }
-    }, [formData.photoUrl, doc])
+    }, [image, doc])
 
 
     useEffect(() => {
@@ -66,37 +69,20 @@ export const CreateCompany = () => {
 
             const companyInfo: baseCompanyInfo = { name: formData.name, uid: doc.id }
 
-            const uploadImage = async () => {
-                if (imageUpload) {
-                    setImageUploading(true)
-                    const imageRef = ref(storage, `Companies/${companyInfo.uid}/${imageUpload.name + v4() + companyInfo.uid}`)
-                    await uploadBytes(imageRef, imageUpload).then((snapshot) => {
-                        getDownloadURL(snapshot.ref).then((downloadURL) => {
-                            console.log('downloadURL => ', downloadURL)
-                            setFormData((prev) => (
-                                {
-                                    ...prev,
-                                    'photoUrl': downloadURL
-                                }
-                            ))
-                            setImageUpload(null)
-                            setImageUploading(false)
-                        })
-                    })
-                }
-            }
-            if (imageUpload && !imageUploading) {
-                uploadImage()
-                    .catch((error: any) => toast.error("error ocurred during uploading an image.", error))
-            }
             setDocument("Companies", { uid: doc.id }, doc.id);
-            setDocument("Users", { companies: arrayUnion(companyInfo) }, currentUser.uid).then(() => {
+            setDocument("Users", { companies: arrayUnion(companyInfo) }, currentUser.uid)
+                .catch(() => toast.error("Erorr ocured when adding company."))
+
+            if (imageUpload && !imageUploading) {
+                toast.info("Company created. You will be navigated when image uploading will be finished.")
+                uploadImage(imageUpload, `Companies/${companyInfo.uid}/${imageUpload.name + v4() + companyInfo.uid}`)
+            } else {
                 toast.success("Company added successfuly")
                 navigate(`/company/${doc.id}`)
             }
-            ).catch(() => toast.error("Erorr ocured when adding company."))
         }
     }, [doc])
+
 
 
     const handleChange = (name: string, value: string) => {

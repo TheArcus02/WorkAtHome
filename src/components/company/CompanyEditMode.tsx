@@ -1,9 +1,8 @@
 import { Box, Button, Container, Grid, TextField, Typography } from "@mui/material"
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { v4 } from "uuid";
-import { storage } from "../../firebase/firebase.config";
+import { useImageUpload } from "../../hooks/useImageUpload";
 import { useSetDoc } from "../../hooks/useSetDoc";
 import { useValidateInputs } from "../../hooks/useValidateInputs";
 import { firestoreCompany } from "../../utils/interfaces";
@@ -13,46 +12,29 @@ type CompanyEditModeProps = {
 }
 
 export const CompanyEditMode: React.FC<CompanyEditModeProps> = ({ companyInfo }) => {
-  const { address, description, name, photoUrl, websiteUrl, email } = companyInfo
-  const initialFormData: Partial<firestoreCompany> = { email, address, description, name, photoUrl, websiteUrl, }
+  const { address, description, name, websiteUrl, email } = companyInfo
+  const initialFormData: Partial<firestoreCompany> = { email, address, description, name, websiteUrl, }
   
   const [formData, setFormData] = useState<Partial<firestoreCompany>>(initialFormData)
   const [imageUpload, setImageUpload] = useState<File | null>(null)
-  const [imageUploading, setImageUploading] = useState(false)
 
 
   const { validateData, inputErrors, errors, validated, setValidated } = useValidateInputs()
   const { setDocument } = useSetDoc()
+  const { deleteImage, image, imageUploading, uploadImage } = useImageUpload()
 
   useEffect(() => {
-    const uploadImage = async () => {
-      if (imageUpload) {
-        setImageUploading(true)
-        const imageRef = ref(storage, `Companies/${companyInfo.uid}/${imageUpload.name + v4() + companyInfo.uid}`)
-        await uploadBytes(imageRef, imageUpload).then((snapshot) => {
-          getDownloadURL(snapshot.ref).then((downloadURL) => {
-            console.log('downloadURL => ', downloadURL)
-            setFormData((prev) => (
-              {
-                ...prev,
-                'photoUrl': downloadURL
-              }
-            ))
-            setImageUpload(null)
-            setImageUploading(false)
-          })
-        })
-      }
-    }
-
     if (validated) {
       if (errors) {
         setValidated(false)
         return
       }
-      if (imageUpload && !imageUploading) {
-        uploadImage()
-          .catch((error: any) => toast.error("error ocurred during uploading an image.", error))
+      if (imageUpload) {
+        if(!imageUploading){
+          uploadImage(imageUpload, `Companies/${companyInfo.uid}/${imageUpload.name + v4() + companyInfo.uid}`)
+        } else {
+          toast.warning("Other image is already uploading. You can't upload another until the first is done.")
+        }
       }
 
       setDocument("Companies", formData, companyInfo.uid)
@@ -61,10 +43,13 @@ export const CompanyEditMode: React.FC<CompanyEditModeProps> = ({ companyInfo })
   }, [validated, errors])
 
   useEffect(() => {
-    if(formData.photoUrl && formData.photoUrl !== companyInfo.photoUrl){
-      setDocument("Companies", {photoUrl: formData.photoUrl}, companyInfo.uid)
+    if(image){
+      if(companyInfo.photoUrl.length > 0) deleteImage(companyInfo.photoUrl)
+      setDocument("Companies", {photoUrl: image}, companyInfo.uid)
+      .then(() => toast.success("Image changed successfully"))
+      setImageUpload(null)
     }
-  }, [formData.photoUrl])
+  }, [image])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
