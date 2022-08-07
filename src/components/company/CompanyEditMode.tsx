@@ -46,7 +46,7 @@ export const CompanyEditMode: React.FC<CompanyEditModeProps> = ({ companyInfo })
     if(image){
       if(companyInfo.photoUrl.length > 0) deleteImage(companyInfo.photoUrl)
       setDocument("Companies", {photoUrl: image}, companyInfo.uid)
-      .then(() => toast.success("Image changed successfully"))
+      .then(() => toast.success("Image changed successfully 🎉"))
       setImageUpload(null)
     }
   }, [image])
@@ -69,7 +69,7 @@ export const CompanyEditMode: React.FC<CompanyEditModeProps> = ({ companyInfo })
   }
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" sx={{ py: 5 }}>
       <Typography component="h1" variant="h4" align="center">
         Edit Compnay
       </Typography>
@@ -177,7 +177,7 @@ export const CompanyEditMode: React.FC<CompanyEditModeProps> = ({ companyInfo })
             sx={{ mt: 3, ml: 1, color: '#fff' }}
             color="success"
           >
-            Edit
+            Save
           </Button>
         </Box>
       </Box>

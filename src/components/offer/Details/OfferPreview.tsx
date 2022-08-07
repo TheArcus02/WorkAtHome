@@ -1,5 +1,5 @@
 import { ArrowBack, BusinessOutlined, LocationOnOutlined, TimelineOutlined, CodeOutlined, DescriptionOutlined, BorderColorOutlined } from '@mui/icons-material'
-import { Paper, Box, IconButton, Typography, Divider, Chip, Link as MuiLink } from '@mui/material'
+import { Paper, Box, IconButton, Typography, Divider, Chip, Link as MuiLink, Alert, Button } from '@mui/material'
 import moment from 'moment'
 import { Link, useNavigate } from 'react-router-dom'
 import { primaryLight } from '../../../utils/colors'
@@ -9,9 +9,10 @@ import { ApplyForm } from '../ApplyForm'
 type OfferPreviewProps = {
     offer: firestoreJobOffer
     editable: boolean
+    userLogged: boolean
 }
 
-export const OfferPreview: React.FC<OfferPreviewProps> = ({ offer, editable }) => {
+export const OfferPreview: React.FC<OfferPreviewProps> = ({ offer, editable, userLogged }) => {
 
     const navigate = useNavigate()
 
@@ -25,7 +26,7 @@ export const OfferPreview: React.FC<OfferPreviewProps> = ({ offer, editable }) =
                     <Typography component="h2" variant="h5" fontWeight="bold" sx={{ textAlign: { xs: 'center', md: 'left' } }}>
                         {offer.title}
                     </Typography>
-                    <Typography variant="subtitle2" sx={{textAlign:{xs: 'center', md:'left'}}}>{moment(offer.createdAt.toDate()).calendar()}</Typography>
+                    <Typography variant="subtitle2" sx={{ textAlign: { xs: 'center', md: 'left' } }}>{moment(offer.createdAt.toDate()).calendar()}</Typography>
                     <Typography component="h3" variant="h6" mt={2} mb={2} sx={{ textAlign: { xs: 'center', md: 'left' } }}>
                         {offer.minSalary} - {offer.maxSalary} PLN
                     </Typography>
@@ -93,7 +94,17 @@ export const OfferPreview: React.FC<OfferPreviewProps> = ({ offer, editable }) =
                         </Box>
                         <Divider />
                         <Box mt={2}>
-                            <ApplyForm offerUid={offer.uid} />
+                            {userLogged ? (
+                                <ApplyForm offerUid={offer.uid} />
+                            ) : (
+                                <Alert severity='info' variant='outlined' action={
+                                    <Button color="inherit" size="small" onClick={() => navigate("/login")}>
+                                        Login
+                                    </Button>
+                                }>
+                                    You need to be logged in to apply for this job.
+                                </Alert>
+                            )}
                         </Box>
                     </Paper>
                 )}

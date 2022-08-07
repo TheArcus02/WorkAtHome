@@ -61,7 +61,7 @@ export const AddOffer = () => {
                 active: true
             }
             setDocument("Offers", documentData).then(() => {
-                toast.success("Offer created succesfully!")
+                toast.success("Offer created succesfully! 🎉")
             }).catch((error) => (toast.error("Error ocurred during adding offer to database: " + error)))
         }
       }

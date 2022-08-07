@@ -20,7 +20,7 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const login = (email: string, password: string) => {
         return signInWithEmailAndPassword(auth, email, password)
-                .then(() => toast.success("Logged in Succesfully"))
+                .then(() => toast.success("Logged in Succesfully. 🔑"))
                 .catch(() => toast.error("Failed to login"));
     }
 
@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
                     updateProfile(user, {
                         displayName: name + " " + surname
                     }).then(() => addUserToDb(user, name, surname))
-                    toast.success("Logged in Succesfully")
+                    toast.success("Logged in Succesfully. 🔑")
                 })
                 .catch(() => toast.error("Failed to login"));
         
@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
             .then((result) => {
                 const user = result.user;
                 addUserToDb(user)
-                toast.success("Logged in Succesfully")
+                toast.success("Logged in Succesfully. 🔑")
             })
             .catch(() => toast.error("Failed to login"));
     }
@@ -54,14 +54,14 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
             .then((result) => {
                 const user = result.user;
                 addUserToDb(user)
-                toast.success("Logged in Succesfully")
+                toast.success("Logged in Succesfully. 🔑")
             })
             .catch(() => toast.error("Failed to login"));
     } 
 
     const logout = () => {
         return auth.signOut()
-        .then(() => toast.success("Logged out Succesfully"));
+        .then(() => toast.success("Logged out Succesfully. 🔒"));
     }
 
     const addUserToDb = async (user: User, name?: string, surname?:string) => {

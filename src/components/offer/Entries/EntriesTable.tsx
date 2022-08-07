@@ -101,7 +101,7 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries, offer}) => {
     // add new employee to company 
     setDocument("Companies", {employees: arrayUnion(entry.userUid), size: increment(1)}, offer.companyUid)
     
-    toast.success(`${entry.name} ${entry.surname} entry has beed aproved! Welcome your new employee.`)
+    toast.success(`${entry.name} ${entry.surname} entry has beed aproved! Welcome your new employee. 🙋‍♂️`)
     navigate(`/profile/${entry.userUid}`)
   }
 

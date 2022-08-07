@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, CardMedia, Container, Tooltip, Typography } from "@mui/material"
+import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Container, Tooltip, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useAuth } from "../contexts/AuthContext"
 import { useQuery } from "../hooks/useQuery"
@@ -44,8 +44,7 @@ export const YourCompanies = () => {
              sx={{mt:5, display: 'flex', justifyContent: 'center', gap:2, flexWrap: 'wrap'}}
             >
               {companies.map((company, index) => (
-                <Card sx={{maxWidth: 345, height:312}} key={company.name + index} elevation={1} >
-                  <CardActionArea onClick={() => navigate(`/company/${company.uid}`)}>
+                <Card sx={{maxWidth: 345, height:345}} key={company.name + index} elevation={1} >
                     <CardMedia 
                      component="img"
                      height="140"
@@ -56,19 +55,23 @@ export const YourCompanies = () => {
                       <Typography gutterBottom variant="h5" component="div">
                         {company.name}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{maxHeight: '100px', overflow: "hidden"}}>
+                      <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 345, overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical" }}>
                         {company.description}
                       </Typography>
                     </CardContent>
-                  </CardActionArea>
+                    <CardActions>
+                      <Button onClick={() => navigate(`/company/${company.uid}`)} color="secondary">Details</Button>
+                      <Button onClick={() => navigate(`/company/${company.uid}`)} color="secondary">Employees</Button>
+                      {/* TODO add employees link when component ready ⬆ */}
+                    </CardActions>
                 </Card>
               ))}
 
-              <Card sx={{maxWidth: 345}} elevation={1}>
+              <Card sx={{maxWidth: 345, height:345}} elevation={1}>
                   <CardActionArea onClick={() => navigate('/create-company')}>
                     <CardContent sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', p:0}} >
                       <Tooltip title="Create company">
-                        <AddOutlinedIcon sx={{ height: 312, width:345}} />
+                        <AddOutlinedIcon sx={{ height: 345, width:345}} />
                       </Tooltip>
                     </CardContent>
                   </CardActionArea>

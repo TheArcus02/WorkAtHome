@@ -56,7 +56,7 @@ export const CreateCompany = () => {
         if (image && doc) {
             setDocument("Companies", { photoUrl: image }, doc.id)
             .then(() => {
-                toast.success("Company added successfuly")
+                toast.success("Company added successfuly. 🏢🎉")
                 navigate(`/company/${doc.id}`)
             })
             
@@ -77,7 +77,7 @@ export const CreateCompany = () => {
                 toast.info("Company created. You will be navigated when image uploading will be finished.")
                 uploadImage(imageUpload, `Companies/${companyInfo.uid}/${imageUpload.name + v4() + companyInfo.uid}`)
             } else {
-                toast.success("Company added successfuly")
+                toast.success("Company added successfuly. 🏢🎉")
                 navigate(`/company/${doc.id}`)
             }
         }

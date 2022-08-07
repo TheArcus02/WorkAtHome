@@ -41,7 +41,6 @@ export const Profile = () => {
     const StyledButton = styled(Button)(({ theme }: any) => ({
         textTransform: 'none'
     }));
-    // TODO add experience component
     return (
         user && currentUser ? (
             <Container maxWidth="lg" sx={{mt:5}}>

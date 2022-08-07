@@ -10,7 +10,7 @@ import { getSocialIcon } from "./SocialLink"
 import { useImageUpload } from "../../hooks/useImageUpload"
 
 
-type formDataType = Pick<firestoreUser, "displayName" | "description">
+type formDataType = Pick<firestoreUser, "displayName" | "description" | "name" | "surname">
 type ProfileEditModeProps = {
   userInfo: firestoreUser;
   userUid: string;
@@ -22,8 +22,8 @@ const socialOptions: Array<string> = ['facebook', 'twitter', 'instagram', 'websi
 export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, userUid }) => {
 
 
-  const { displayName, description, photoUrl } = userInfo
-  const [formData, setFormData] = useState<formDataType>({ displayName, description })
+  const { displayName, description, name, surname } = userInfo
+  const [formData, setFormData] = useState<formDataType>({ displayName, description, name, surname })
   const [socials, setSocials] = useState<Isocials | null>(null)
   const [imageUpload, setImageUpload] = useState<File | null>(null)
 
@@ -80,7 +80,7 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
     if (image) {
       if (userInfo.photoUrl.length > 0) deleteImage(userInfo.photoUrl)
       setDocument("Users", { photoUrl: image }, userUid)
-        .then(() => toast.success("Image changed successfully"))
+        .then(() => toast.success("Image changed successfully. ✨"))
       setImageUpload(null)
     }
   }, [image])
@@ -156,6 +156,34 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
           <Grid item xs={12} my={1}>
             <Divider><Typography variant="h5" >Info</Typography></Divider>
           </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              error={inputErrors?.name.error}
+              helperText={inputErrors?.name.text}
+              id="name"
+              name="name"
+              label="Name"
+              value={formData.name}
+              fullWidth
+              autoComplete="name"
+              variant="standard"
+              onChange={(e) => handleChange(e.target.name, e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              error={inputErrors?.surname.error}
+              helperText={inputErrors?.surname.text}
+              id="surname"
+              name="surname"
+              label="Surname"
+              value={formData.surname}
+              fullWidth
+              autoComplete="surname"
+              variant="standard"
+              onChange={(e) => handleChange(e.target.name, e.target.value)}
+            />
+          </Grid>
           <Grid item xs={12}>
             <TextField
               error={inputErrors?.displayName.error}
@@ -227,7 +255,7 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
             sx={{ mt: 5, ml: 1, color: '#fff' }}
             color="warning"
           >
-            Edit
+            Save
           </Button>
         </Box>
       </Box>

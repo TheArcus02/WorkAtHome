@@ -44,7 +44,7 @@ export const OfferEditMode: React.FC<OfferEditModeProps> = ({ offer, userInfo })
                   technologies: tags,
               }
               setDocument("Offers", documentData, offer.uid).then(() => {
-                  toast.success("Offer edited succesfully!")
+                  toast.success("Offer edited succesfully! ✨")
               }).catch((error) => (toast.error("Error ocurred during editing offer in database: " + error)))
             }
             setValidated(false)

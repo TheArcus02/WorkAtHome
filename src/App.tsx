@@ -56,10 +56,10 @@ const App:React.FC = () => {
                 <Route path="/create-company" element={<CreateCompany />} />
                 <Route path="/company/:uid" element={<CompanyDetails />} />
                 <Route path="/add-offer" element={<AddOffer />} />
-                <Route path="/offer/:uid" element={<OfferDetails />} />
                 <Route path="/offer/:uid/entries" element={<Entries />} />
                 <Route path="/your-job-offers" element={<YourJobOffers />} />
               </Route>
+              <Route path="/offer/:uid" element={<OfferDetails />} />
             </Routes>
             <ToastContainer 
             autoClose={2000} 

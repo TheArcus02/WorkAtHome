@@ -73,7 +73,7 @@ export const ApplyForm:React.FC<applyFormProps> = ({ offerUid }) => {
             }
             setDocument("Users", {jobApplications: arrayUnion(jobApplicationObj)}, currentUser.uid)
             setDocument(`Offers/${offerUid}/entries`, {uid:doc.id}, doc.id).then(() => (
-                toast.success(`Your apply has been send.`)
+                toast.success(`Your apply has been send. 🎉`)
             ))
         }
       }

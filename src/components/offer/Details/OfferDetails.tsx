@@ -1,6 +1,6 @@
 import { Box, Container, Paper, Button} from "@mui/material"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Navigate, useParams } from "react-router-dom"
 import { useAuth } from "../../../contexts/AuthContext"
 import { AuthContextItf, firestoreJobOffer } from "../../../utils/interfaces"
 import { Loader } from "../../Loader"
@@ -44,8 +44,8 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
   }, [realtimeCollection])
 
   useEffect(() => {
-    if (offer && currentUser) {
-      offer.createdBy === currentUser.uid && setEditable(true)
+    if (offer) {
+      offer.createdBy === currentUser?.uid && setEditable(true)
       setLoading(false)
     }
   }, [offer, currentUser])
@@ -62,7 +62,7 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
     textTransform: 'none'
   }));
 
-  return offer && userInfo && !loading ? (
+  return offer && !loading ? (
     <Container maxWidth="lg" sx={{ mt: 5 }}>
       {editable &&
         <Box sx={{ display: 'flex' }}>
@@ -111,8 +111,8 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
       <Paper sx={editable ? { py: 5, borderTopLeftRadius: 0 } : { py:5 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'justify' }} mx={5}>
           {!editMode ? (
-            <OfferPreview editable={editable} offer={offer} />
-          ) : <OfferEditMode offer={offer} userInfo={userInfo} />}
+            <OfferPreview editable={editable} offer={offer} userLogged={currentUser ? true : false}/>
+          ): userInfo ? <OfferEditMode offer={offer} userInfo={userInfo} /> : <Navigate to="/login" state={{from: location}} replace />}
         </Box>
       </Paper>
 

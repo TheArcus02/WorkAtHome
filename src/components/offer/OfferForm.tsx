@@ -243,7 +243,7 @@ export const OfferForm: React.FC<OfferFormProps> = ({
                         sx={{ mt: 3, ml: 1, color: '#fff' }}
                         color="success"
                     >
-                        {editMode ? "Edit" : "Add"}
+                        {editMode ? "Save" : "Add"}
                     </Button>
                 </Box>
             </Box>
