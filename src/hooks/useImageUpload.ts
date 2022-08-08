@@ -14,7 +14,6 @@ export const useImageUpload = () => {
         
         await uploadBytes(imageRef, imageToUpload).then((snapshot) => {
             getDownloadURL(snapshot.ref).then((downloadURL) => {
-                console.log('downloadURL => ', downloadURL)
                 setImage(downloadURL)
                 setImageUploading(false)
             })

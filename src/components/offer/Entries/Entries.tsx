@@ -41,7 +41,6 @@ export const Entries = () => {
         if(!realtimeCollection.empty){
             setEntries([])
             realtimeCollection.forEach((doc) => {
-                console.log(doc.data())
                 setEntries((prev) => [...prev, doc.data() as firestoreEntry])
             })
         }

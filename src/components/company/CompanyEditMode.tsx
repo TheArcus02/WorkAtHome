@@ -54,7 +54,6 @@ export const CompanyEditMode: React.FC<CompanyEditModeProps> = ({ companyInfo })
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!validated) {
-      console.log({ formData })
       validateData(formData)
     }
   }

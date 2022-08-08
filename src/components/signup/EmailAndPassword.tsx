@@ -2,6 +2,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Button, Container, Grid, Link as MuiLink, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useAuth } from '../../contexts/AuthContext';
 import { useValidateInputs } from '../../hooks/useValidateInputs';
 import { AuthContextItf } from '../../utils/interfaces';
@@ -36,7 +37,7 @@ export const EmailAndPassword:React.FC<EandPItf> = ({setEmailSignup}) => {
       try {
         EandPSignup(email, password,firstName,lastName);
       } catch (error) {
-        console.log(error)
+        toast.error("Error occured during signup proccess." + error)
       }
     }
     

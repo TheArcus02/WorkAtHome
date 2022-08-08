@@ -69,7 +69,6 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
           ...socialsEntries
         ]
       }
-      console.log({ data })
       setDocument("Users", data, userUid)
       setValidated(false)
     }
@@ -109,7 +108,6 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!validated) {
-      console.log({ ...formData, ...socials })
       validateData({ ...formData, ...socials })
     }
 
