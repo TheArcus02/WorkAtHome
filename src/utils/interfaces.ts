@@ -97,6 +97,7 @@ export interface firestoreEntry{
     createdAt: any; // Timestamp in firebase / save Date obj
     aproved: boolean;
     rejected: boolean;
+    active: boolean;
 }
 
 export type Order = "desc" | "asc"

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { AuthContextItf } from '../utils/interfaces';
 import slugify from 'react-slugify';
-import { Logout, NotificationsOutlined } from '@mui/icons-material';
+import { Edit, Logout, NotificationsOutlined } from '@mui/icons-material';
 
 
 export const Navbar:React.FC = () => {
@@ -132,7 +132,7 @@ export const Navbar:React.FC = () => {
           </Box>
           <Box sx={{display:{xs:"none", md:'inherit'}, mr:3}}>
             <MuiLink component={Link} to="/add-offer" underline='none' color="inherit">
-              <Button color="secondary" variant='contained' size="small">
+              <Button color="secondary" variant='contained' size="small" startIcon={<Edit />}>
                 Post a job
               </Button>
             </MuiLink>

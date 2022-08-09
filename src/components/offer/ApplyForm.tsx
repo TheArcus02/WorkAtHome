@@ -56,7 +56,8 @@ export const ApplyForm:React.FC<applyFormProps> = ({ offerUid }) => {
             createdAt: new Date(),
             aproved: false,
             rejected: false,
-            uid:''
+            uid:'',
+            active: true,
         }
         setDocument('Offers', {entriesCounter:increment(1)}, offerUid)
         setDocument(`Offers/${offerUid}/entries`, data, undefined, "Entries")

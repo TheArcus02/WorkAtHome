@@ -1,3 +1,4 @@
+import { Article, Edit } from "@mui/icons-material"
 import { Button, TableCell, TableRow } from "@mui/material"
 import { styled } from "@mui/styles"
 import moment from "moment"
@@ -28,12 +29,12 @@ export const OffersTableRow:React.FC<tableRowProps> = ({ offer }) => {
             <TableCell>{moment(offer.createdAt.toDate()).calendar()}</TableCell>
             <TableCell>{offer.entriesCounter}</TableCell>
             <TableCell>
-                <Button variant="contained" color="primary" onClick={() => navigate(`/offer/${offer.uid}`)}>
+                <Button variant="contained" color="primary" onClick={() => navigate(`/offer/${offer.uid}`)} startIcon={<Edit />}>
                     Edit
                 </Button>
             </TableCell>
             <TableCell>
-                <Button variant="contained" color="secondary" onClick={() => navigate(`/offer/${offer.uid}/entries`)}>
+                <Button variant="contained" color="secondary" onClick={() => navigate(`/offer/${offer.uid}/entries`)} startIcon={<Article />}>
                     Entries
                 </Button>
             </TableCell>

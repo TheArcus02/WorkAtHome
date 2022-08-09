@@ -25,7 +25,7 @@ export const Entries = () => {
     useEffect(() => {
       if(uid){
         getDocument("Offers", uid)
-        getRealtime(`Offers/${uid}/entries`, where("rejected", "==", false))
+        getRealtime(`Offers/${uid}/entries`, where("rejected", "==", false), where("active", "==", true))
       }
       
     }, [uid])
