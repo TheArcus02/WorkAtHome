@@ -54,7 +54,7 @@ export const ApplyForm:React.FC<applyFormProps> = ({ offerUid }) => {
             ...formData,
             userUid: currentUser.uid,
             createdAt: new Date(),
-            aproved: false,
+            approved: false,
             rejected: false,
             uid:'',
             active: true,

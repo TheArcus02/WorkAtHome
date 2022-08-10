@@ -1,5 +1,5 @@
-import { Cancel, Edit } from "@mui/icons-material";
-import { Button, styled, TableCell, TableRow, Typography } from "@mui/material";
+import { Cancel, Check, Edit, Pending } from "@mui/icons-material";
+import { Box, Button, styled, TableCell, TableRow, Typography } from "@mui/material";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useGetDoc } from "../../hooks/useGetDoc";
@@ -71,12 +71,15 @@ export const JobApplicationTableRow: React.FC<ComponentProps> = ({ entryUid, off
                 <TableCell>{offerDetails.companyName}</TableCell>
                 <TableCell>{moment(entryDetails.createdAt.toDate()).calendar()}</TableCell>
                 <TableCell>
-                    {entryDetails.aproved ? (
-                        <Typography color="success.main">Aproved</Typography>
+                    {entryDetails.approved ? (
+                        <Box sx={{ display: 'flex', gap: 0.5 }} color="success.light">
+                            <Check />
+                            <Typography>Aproved</Typography>
+                        </Box>
                     ) : entryDetails.rejected ? (
                         <Typography color="error.main">Rejected</Typography>
                     ) : (
-                        <Typography color="info.light">In review</Typography>
+                        <Typography color="info.main">In review</Typography>
                     )}
                 </TableCell>
                 <TableCell align="center">

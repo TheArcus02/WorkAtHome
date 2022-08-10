@@ -95,7 +95,7 @@ export interface firestoreEntry{
     surname: string;
     introduce: string; 
     createdAt: any; // Timestamp in firebase / save Date obj
-    aproved: boolean;
+    approved: boolean;
     rejected: boolean;
     active: boolean;
 }

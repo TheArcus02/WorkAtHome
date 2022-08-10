@@ -1,5 +1,5 @@
 import { Alert, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
-import { arrayRemove } from "firebase/firestore"
+import { arrayRemove, increment } from "firebase/firestore"
 import { toast } from "react-toastify"
 import { JobApplicationTableRow } from "../components/JobApplications/JobApplicationTableRow"
 import { Loader } from "../components/Loader"
@@ -18,6 +18,7 @@ export const YourJobApplications = () => {
         if(currentUser){
             setDocument(`Offers/${offerUid}/entries`, {active: false, rejected: true}, entryUid)
             setDocument(`Users`, {jobApplications: arrayRemove({entryUid, offerUid})}, currentUser.uid)
+            setDocument('Offers', {entriesCounter: increment(-1)}, offerUid)
             toast.success("Job apply has been canceled.")
         } else {
             toast.error("Cannot update database without user uid. Try reloading the page.")

@@ -1,5 +1,6 @@
 import { AccountBoxOutlined, CheckCircleOutline, HighlightOffOutlined, KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material"
 import { Box, Button, Collapse, IconButton, TableCell, TableRow, Tooltip, Typography } from "@mui/material"
+import { increment } from "firebase/firestore"
 import moment from "moment"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -24,6 +25,7 @@ export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offerUid,
     const {setDocument} = useSetDoc()
 
     const handleReject = () => {
+        setDocument('Offers', {entriesCounter: increment(-1)}, offerUid)
         setDocument(`Offers/${offerUid}/entries/`, {rejected: true}, entry.uid).then(() => (
             toast.success(`${entry.name} ${entry.surname} apply has been rejected.`)
         )).catch((error) => (

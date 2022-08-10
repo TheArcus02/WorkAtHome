@@ -76,6 +76,8 @@ const App:React.FC = () => {
 
 export default App
 
+// ! refactored entries component to check if user has privilages to access the page, changed typo in firestoreEntry, entriesCounter is now decrementing when user cancels the entry or the entry is rejected
+
 // TODO add company employees page 
 // TODO add your job entries page
 // TODO add mobile view to timline in profile 
