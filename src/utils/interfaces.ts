@@ -28,6 +28,7 @@ export interface baseJobInfo{
     companyName: string; 
     companyUid: string;
     current:boolean;
+    salary: string;
     startedAt: any; // Timestamp in firebase / save Date obj
     endedAt: any; // Timestamp in firebase / save Date obj
 }

@@ -20,6 +20,7 @@ import { OfferDetails } from './components/offer/Details/OfferDetails';
 import { YourJobOffers } from './pages/YourJobOffers';
 import { Entries } from './components/offer/Entries/Entries';
 import { YourJobApplications } from './pages/YourJobApplications';
+import { Employees } from './components/company/Employees/Employees';
 
 
 const Darktheme = createTheme({
@@ -58,6 +59,7 @@ const App:React.FC = () => {
                 <Route path="/offer/:uid/entries" element={<Entries />} />
                 <Route path="/your-job-offers" element={<YourJobOffers />} />
                 <Route path="/your-job-applications" element={<YourJobApplications />} />
+                <Route path="/company/:uid/employees" element={<Employees />} />
               </Route>
               <Route path="/company/:uid" element={<CompanyDetails />} />
               <Route path="/offer/:uid" element={<OfferDetails />} />
@@ -76,8 +78,8 @@ const App:React.FC = () => {
 
 export default App
 
-// ! refactored entries component to check if user has privilages to access the page, changed typo in firestoreEntry, entriesCounter is now decrementing when user cancels the entry or the entry is rejected
-
+// ! created company employees working page with pagination and sorting
+// TODO create popup when new employee is aproved with salary
 // TODO add company employees page 
 // TODO add your job entries page
 // TODO add mobile view to timline in profile 

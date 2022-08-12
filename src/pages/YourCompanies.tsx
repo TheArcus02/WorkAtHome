@@ -61,7 +61,7 @@ export const YourCompanies = () => {
                     </CardContent>
                     <CardActions>
                       <Button onClick={() => navigate(`/company/${company.uid}`)} color="secondary">Details</Button>
-                      <Button onClick={() => navigate(`/company/${company.uid}`)} color="secondary">Employees</Button>
+                      <Button onClick={() => navigate(`/company/${company.uid}/employees`)} color="secondary">Employees</Button>
                       {/* TODO add employees link when component ready ⬆ */}
                     </CardActions>
                 </Card>

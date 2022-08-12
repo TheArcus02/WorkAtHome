@@ -81,6 +81,7 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries, offer}) => {
     const { title, companyName, companyUid } = offer
     const jobInfo:baseJobInfo = {
         current: true,
+        salary: '0',
         title,
         companyName,
         companyUid,
