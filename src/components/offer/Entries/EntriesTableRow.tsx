@@ -8,25 +8,27 @@ import { toast } from "react-toastify"
 import { useSetDoc } from "../../../hooks/useSetDoc"
 import {firestoreEntry, firestoreJobOffer} from "../../../utils/interfaces"
 import { EntriesDialog } from "./EntriesDialog"
+import { SalaryDialog } from "./SalaryDialog"
 
 type entriesTableRowProps = {
     entry: firestoreEntry;
-    offerUid: string;
-    handleAprove: (entry: firestoreEntry) => void;
+    offer: firestoreJobOffer;
+    handleAprove: (entry: firestoreEntry, salary: number) => void;
 }
 
-export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offerUid, handleAprove}) => {
+export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offer, handleAprove}) => {
 
     const [openIntroduction, setOpenIntroduction] = useState(false)
     const [openAproveDialog, setOpenAproveDialog] = useState(false)
     const [openRejectDialog, setOpenRejectDialog] = useState(false)
+    const [openSalaryDialog, setOpenSalaryDialog] = useState(false)
 
     const navigate = useNavigate()
     const {setDocument} = useSetDoc()
 
     const handleReject = () => {
-        setDocument('Offers', {entriesCounter: increment(-1)}, offerUid)
-        setDocument(`Offers/${offerUid}/entries/`, {rejected: true}, entry.uid).then(() => (
+        setDocument('Offers', {entriesCounter: increment(-1)}, offer.uid)
+        setDocument(`Offers/${offer.uid}/entries/`, {rejected: true}, entry.uid).then(() => (
             toast.success(`${entry.name} ${entry.surname} apply has been rejected.`)
         )).catch((error) => (
             toast.error("Error has occured during setting rejection. ", error)
@@ -34,6 +36,10 @@ export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offerUid,
         setOpenRejectDialog(false)
     }
 
+    const handleAproveDialogSubmit = () => {
+        setOpenSalaryDialog(true)
+        setOpenAproveDialog(false)
+    }
 
     return (
         <>
@@ -51,9 +57,6 @@ export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offerUid,
                 <TableCell>{entry.surname}</TableCell>
                 <TableCell>{moment(entry.createdAt.toDate()).calendar()}</TableCell>
                 <TableCell>
-                    {/* <Button variant="contained" color="primary" size="small" onClick={() => navigate(`/profile/${entry.userUid}`)}>
-                        Profile
-                    </Button> */}
                     <Tooltip title="Show profile">
                         <IconButton color="secondary" onClick={() => navigate(`/profile/${entry.userUid}`)}>
                             <AccountBoxOutlined />
@@ -105,7 +108,7 @@ export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offerUid,
                 dialogDescription={`The ${entry.name} ${entry.surname} entry status will be aproved and other entries status will be changed to rejected. Job offer will deactivate.`}
                 dialogTitle="Are you sure?"
                 handleClose={() => setOpenAproveDialog(false)}
-                onSubmit={() => handleAprove(entry)}
+                onSubmit={() => handleAproveDialogSubmit()}
             />
             <EntriesDialog 
                 open={openRejectDialog}
@@ -113,6 +116,15 @@ export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offerUid,
                 dialogTitle="Are you sure?"
                 handleClose={() => setOpenRejectDialog(false)}
                 onSubmit={handleReject}
+            />
+            <SalaryDialog 
+                open={openSalaryDialog}
+                handleClose={() => setOpenSalaryDialog(false)}
+                entry={entry}
+                onSubmit={handleAprove}
+                maxSalary={offer.maxSalary}
+                minSalary={offer.minSalary}
+
             />
         </>
         

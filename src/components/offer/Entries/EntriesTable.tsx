@@ -71,7 +71,7 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries, offer}) => {
       setPage(0)
   }
 
-  const handleAprove = (entry: firestoreEntry) => {
+  const handleAprove = (entry: firestoreEntry, salary: number) => {
     // set entry status as aproved
     setDocument(`Offers/${offer.uid}/entries/`, {approved: true}, entry.uid)
 
@@ -81,7 +81,7 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries, offer}) => {
     const { title, companyName, companyUid } = offer
     const jobInfo:baseJobInfo = {
         current: true,
-        salary: '0',
+        salary,
         title,
         companyName,
         companyUid,
@@ -150,7 +150,7 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries, offer}) => {
            entries.slice().sort(getComparator(order, orderBy))
            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
            .map((entry, index) => (
-              <EntriesTableRow entry={entry} handleAprove={handleAprove} offerUid={offer.uid} key={entry.createdAt + index} />
+              <EntriesTableRow entry={entry} handleAprove={handleAprove} offer={offer} key={entry.createdAt + index} />
            ))
           }
         </TableBody>

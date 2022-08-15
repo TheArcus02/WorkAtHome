@@ -78,10 +78,9 @@ const App:React.FC = () => {
 
 export default App
 
-// ! created company employees working page with pagination and sorting
+// TODO add firebase rules
+// TODO add working project on netlify
 // TODO create popup when new employee is aproved with salary
-// TODO add company employees page 
-// TODO add your job entries page
 // TODO add mobile view to timline in profile 
 // TODO offers with sorting filtering page
 // TODO implement rich text editor
