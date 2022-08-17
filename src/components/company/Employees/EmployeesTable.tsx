@@ -1,13 +1,15 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Paper, TableContainer, Table, TableHead, Alert, Button, TableRow, TableCell, TableBody, TableFooter, TableSortLabel, TablePagination } from "@mui/material"
-import { where } from "firebase/firestore"
+import { arrayRemove, arrayUnion, where } from "firebase/firestore"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { useQuery } from "../../../hooks/useQuery"
+import { useRealtimeCollection } from "../../../hooks/useRealtimeCollection"
+import { useSetDoc } from "../../../hooks/useSetDoc"
 import { primary } from "../../../utils/colors"
-import { firestoreUser, Order } from "../../../utils/interfaces"
+import { baseJobInfo, firestoreUser, Order } from "../../../utils/interfaces"
 import { getComparator } from "../../../utils/utils"
 import { Loader } from "../../Loader"
 import { EmployeeTableRow } from "./EmployeeTableRow"
@@ -15,7 +17,7 @@ import { EmployeeTableRow } from "./EmployeeTableRow"
 interface Data {
     name: string;
     role: string;
-    salary: string;
+    salary: number;
     startedWork: string;
     uid: string;
 }
@@ -43,7 +45,9 @@ const headCells: readonly headCell[] = [
         label: 'Started Work'
     }
 ]
-
+interface IfullJobInfo extends baseJobInfo {
+    userUid: string
+}
 type EmployeesTableProps = {
     employees: string[],
     companyUid: string;
@@ -58,41 +62,45 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
     const [page, setPage] = useState(0)
 
     const [employeesDetails, setEmployeesDetails] = useState<Data[]>([])
+    const [fullJobsInfo, setFullJobsInfo] = useState<IfullJobInfo[]>([])
 
     const navigate = useNavigate()
-    const { getQuery, queryResult, unsubscribe } = useQuery()
+    const { setDocument } = useSetDoc()
+    // const { getQuery, queryResult, unsubscribe } = useQuery()
+    const { getRealtime, realtimeCollection, unsubscribe } = useRealtimeCollection()
 
     useEffect(() => {
         if (employees.length > 0) {
-            getQuery('', 'Users', where('uid', 'in', employees))
+            // getQuery('', 'Users', where('uid', 'in', employees))
+            getRealtime('Users', where('uid', 'in', employees))
         }
     }, [employees])
 
     useEffect(() => {
-        if (queryResult && employeesDetails.length === 0) {
-            queryResult.forEach((res: any) => {
-                const {name, surname, displayName, uid, jobs} = res.data() as firestoreUser
+        if (realtimeCollection && employeesDetails.length === 0 && fullJobsInfo.length === 0) {
+            realtimeCollection.forEach((res: any) => {
+                const { name, surname, displayName, uid, jobs } = res.data() as firestoreUser
                 const tableName = name && surname ? name + " " + surname : displayName
                 const job = jobs.find((job) => job.companyUid === companyUid && job.current === true)
-                if(job){
-                    // moment(entryDetails.createdAt.toDate()).calendar()
-                    const tableObject:Data = {
+                if (job) {
+                    const tableObject: Data = {
                         name: tableName,
                         role: job.title,
                         salary: job.salary,
                         startedWork: moment(job.startedAt.toDate()).calendar(),
                         uid
                     }
+                    setFullJobsInfo((prev) => [...prev, { ...job, userUid: uid }])
                     setEmployeesDetails((prev) => [...prev, tableObject])
-                } else {
-                    toast.warning(`Cannot find ${tableName} job info.`)
                 }
-                
-                
             })
         }
-    }, [queryResult])
-
+        if(employeesDetails.length !== 0 && fullJobsInfo.length !== 0)
+        return () => {
+            setEmployeesDetails([])
+            setFullJobsInfo([])
+        }
+    }, [realtimeCollection, employeesDetails, fullJobsInfo])
 
     useEffect(() => {
         if (unsubscribe)
@@ -112,6 +120,19 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
     const handleRowsPerPage = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setRowsPerPage(parseInt(e.target.value, 10))
         setPage(0)
+    }
+
+    const handleSalaryChange = (newSalary: number, userUid: string) => {
+        const job: IfullJobInfo | undefined = fullJobsInfo.find((job) => job.userUid === userUid)
+        if (job) {
+            const { userUid, ...baseInfo } = job
+            const newObj: baseJobInfo = {
+                ...baseInfo,
+                salary: newSalary
+            }
+            setDocument("Users", { jobs: arrayRemove(baseInfo) }, userUid)
+            setDocument("Users", { jobs: arrayUnion(newObj) }, userUid)
+        }
     }
 
     return employees.length > 0 ? (
@@ -143,7 +164,7 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
                             employeesDetails.slice().sort(getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((emp, index) => (
-                                    <EmployeeTableRow employee={emp} key={emp.uid + index} />
+                                    <EmployeeTableRow employee={emp} onSalaryChange={handleSalaryChange} key={emp.uid + index} />
                                 ))
                         }
                     </TableBody>

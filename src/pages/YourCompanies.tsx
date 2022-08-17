@@ -1,4 +1,4 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Container, Tooltip, Typography } from "@mui/material"
+import { Badge, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Container, Tooltip, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useAuth } from "../contexts/AuthContext"
 import { useQuery } from "../hooks/useQuery"
@@ -6,6 +6,7 @@ import { AuthContextItf, firestoreCompany } from "../utils/interfaces"
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { useNavigate } from "react-router-dom"
 import { where } from "firebase/firestore"
+import { Person } from "@mui/icons-material"
 
 export const YourCompanies = () => {
 
@@ -60,9 +61,20 @@ export const YourCompanies = () => {
                       </Typography>
                     </CardContent>
                     <CardActions>
-                      <Button onClick={() => navigate(`/company/${company.uid}`)} color="secondary">Details</Button>
-                      <Button onClick={() => navigate(`/company/${company.uid}/employees`)} color="secondary">Employees</Button>
-                      {/* TODO add employees link when component ready ⬆ */}
+                      <Button 
+                        onClick={() => navigate(`/company/${company.uid}`)} 
+                        color="secondary"
+                      >
+                        Details
+                      </Button>
+                      <Button 
+                        onClick={() => navigate(`/company/${company.uid}/employees`)} 
+                        color="secondary" 
+                        endIcon={<Badge color="info" max={100} badgeContent={company.employees.length}><Person /></Badge>}
+                        variant="outlined"
+                      >
+                        Employees
+                      </Button>
                     </CardActions>
                 </Card>
               ))}

@@ -25,10 +25,10 @@ export const Navbar:React.FC = () => {
 
   useEffect(() => {
     if(userInfo){
-
-      if(menu.includes('Your Companies') ||
-       menu.includes('Create Company') || 
-       menu.includes('Your Job Applications')) return //! delete on prod
+      // TODO handle showing many times solution with return probalby
+      // if(menu.includes('Your Companies') ||
+      //  menu.includes('Create Company') || 
+      //  menu.includes('Your Job Applications')) return //! delete on prod
 
       userInfo.jobApplications.length > 0 && 
       setMenu((prev) => ([...prev, 'Your Job Applications']))

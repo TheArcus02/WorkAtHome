@@ -103,7 +103,7 @@ export const EntriesTable:React.FC<entriesTableProps> = ({entries, offer}) => {
     setDocument("Companies", {employees: arrayUnion(entry.userUid), size: increment(1)}, offer.companyUid)
     
     toast.success(`${entry.name} ${entry.surname} entry has beed aproved! Welcome your new employee. 🙋‍♂️`)
-    navigate(`/profile/${entry.userUid}`)
+    navigate(`/company/${offer.companyUid}/employees`)
   }
 
   const removeJobsApplies = () => {

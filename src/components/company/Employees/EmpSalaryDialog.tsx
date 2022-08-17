@@ -1,41 +1,41 @@
 import { Dialog, DialogTitle, DialogContent, Box, TextField, Button } from "@mui/material"
 import { useEffect, useState } from "react";
-import { firestoreEntry } from "../../../utils/interfaces";
+import { toast } from "react-toastify";
 
 type SalaryDialogProps = {
     open: boolean;
     handleClose: () => void;
-    onSubmit: (entry: firestoreEntry, salary: number) => void;
-    minSalary: number;
-    maxSalary: number;
-    entry: firestoreEntry;
+    onSubmit: (newSalary: number, userUid: string) => void;
+    currentSalary: number;
+    userUid: string;
 }
 
-
-export const SalaryDialog: React.FC<SalaryDialogProps> = ({ open, handleClose, onSubmit, minSalary, maxSalary, entry }) => {
-
-    const [salary, setSalary] = useState<number>(maxSalary)
+export const EmpSalaryDialog: React.FC<SalaryDialogProps> = ({ open, handleClose, onSubmit, currentSalary, userUid }) => {
+    const [salary, setSalary] = useState<number>(currentSalary)
     const [error, setError] = useState<string>('')
 
     useEffect(() => {
-        if(salary){
-            if (salary < minSalary) {
-                setError('Salary is lower than provided in offer.')
-            } else if (salary > maxSalary) {
-                setError('Salary is higher than provided in offer.')
+        if (salary) {
+            if (salary < 1) {
+                setError("Provieded salary is too small. 💸")
             } else {
                 setError('')
             }
         } else {
             setError("Provide salary.")
         }
-        
+
     }, [salary])
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        if(salary && error.length === 0){
-            onSubmit(entry, salary)
+        if(salary){
+            if(salary === currentSalary){
+                toast.warning("Salary hasn't changed.")
+                setError("Salary hasn't changed.")
+            } else if( error.length === 0){
+                onSubmit(salary, userUid)
+            }
         }
     }
 
@@ -46,7 +46,7 @@ export const SalaryDialog: React.FC<SalaryDialogProps> = ({ open, handleClose, o
             PaperProps={{ elevation: 1 }}
         >
             <DialogTitle>
-                Set Salary ( In your offer salary range is {minSalary + ' - ' + maxSalary} )
+                💰 Change Salary (current: {currentSalary} PLN)
             </DialogTitle>
             <DialogContent>
                 <Box component="form" noValidate onSubmit={handleSubmit} mt={2} sx={{ display: 'flex', flexDirection: 'column', }}>
