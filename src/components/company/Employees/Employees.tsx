@@ -1,9 +1,11 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Alert, Button, Container } from "@mui/material"
+import { where } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { useAuth } from "../../../contexts/AuthContext"
 import { useGetDoc } from "../../../hooks/useGetDoc"
+import { useRealtimeCollection } from "../../../hooks/useRealtimeCollection"
 import { AuthContextItf, firestoreCompany } from "../../../utils/interfaces"
 import { Loader } from "../../Loader"
 import { EmployeesTable } from "./EmployeesTable"
@@ -16,20 +18,29 @@ export const Employees = () => {
     const { currentUser } = useAuth() as AuthContextItf
     const params = useParams()
     const {uid} = params
-    const {getDocument, document} = useGetDoc()
+    // const {getDocument, document} = useGetDoc()
+    const { getRealtime, realtimeCollection, unsubscribe} = useRealtimeCollection()
     const navigate = useNavigate()
 
     useEffect(() => {
       if(uid){
-        getDocument("Companies", uid)
+        // getDocument("Companies", uid)
+        getRealtime("Companies", where("uid", "==", uid))
       }
     }, [uid])
 
+    // useEffect(() => {
+    //     if(document){
+    //         setCompanyDetails(document as firestoreCompany)
+    //     }
+    // }, [document])
+
     useEffect(() => {
-        if(document){
-            setCompanyDetails(document as firestoreCompany)
-        }
-    }, [document])
+      if(realtimeCollection){
+        realtimeCollection.forEach((doc) => setCompanyDetails(doc.data() as firestoreCompany))
+      }
+    }, [realtimeCollection])
+    
 
     useEffect(() => {
       if(companyDetails && currentUser){
@@ -40,6 +51,11 @@ export const Employees = () => {
         }
       }
     }, [companyDetails, currentUser])
+
+    useEffect(() => {
+        if (unsubscribe)
+            return () => unsubscribe()
+    }, [unsubscribe])
     
     
     return (

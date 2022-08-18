@@ -1,6 +1,6 @@
 import { ArrowBack } from "@mui/icons-material"
 import { Paper, TableContainer, Table, TableHead, Alert, Button, TableRow, TableCell, TableBody, TableFooter, TableSortLabel, TablePagination } from "@mui/material"
-import { arrayRemove, arrayUnion, where } from "firebase/firestore"
+import { arrayRemove, arrayUnion, setDoc, where } from "firebase/firestore"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -66,12 +66,10 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
 
     const navigate = useNavigate()
     const { setDocument } = useSetDoc()
-    // const { getQuery, queryResult, unsubscribe } = useQuery()
     const { getRealtime, realtimeCollection, unsubscribe } = useRealtimeCollection()
 
     useEffect(() => {
         if (employees.length > 0) {
-            // getQuery('', 'Users', where('uid', 'in', employees))
             getRealtime('Users', where('uid', 'in', employees))
         }
     }, [employees])
@@ -122,8 +120,12 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
         setPage(0)
     }
 
-    const handleSalaryChange = (newSalary: number, userUid: string) => {
+    const findUserJob = (userUid: string) => {
         const job: IfullJobInfo | undefined = fullJobsInfo.find((job) => job.userUid === userUid)
+        return job
+    }
+    const handleSalaryChange = (newSalary: number, userUid: string) => {
+        const job = findUserJob(userUid)
         if (job) {
             const { userUid, ...baseInfo } = job
             const newObj: baseJobInfo = {
@@ -133,6 +135,31 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
             setDocument("Users", { jobs: arrayRemove(baseInfo) }, userUid)
             setDocument("Users", { jobs: arrayUnion(newObj) }, userUid)
         }
+    }
+
+    const handleFire = (empUid: string) => {
+        
+        const job = findUserJob(empUid)
+        if(job){
+
+            // set job current status as false and add ended at prop
+            const { userUid, ...baseInfo} = job
+            const newObj: baseJobInfo = {
+                ...baseInfo,
+                current: false,
+                endedAt: new Date()
+            }
+            setDocument("Users", {jobs: arrayRemove(baseInfo)}, empUid)
+            setDocument("Users", {jobs: arrayUnion(newObj)}, empUid)
+            
+            // remove employee from company
+            setDocument("Companies", {employees: arrayRemove(empUid)} , companyUid)
+            toast.success("Employee has been fired.")
+        } else {
+            toast.error("Cannot find user job.")
+        }
+        
+
     }
 
     return employees.length > 0 ? (
@@ -164,7 +191,12 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
                             employeesDetails.slice().sort(getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((emp, index) => (
-                                    <EmployeeTableRow employee={emp} onSalaryChange={handleSalaryChange} key={emp.uid + index} />
+                                    <EmployeeTableRow 
+                                        employee={emp} 
+                                        onSalaryChange={handleSalaryChange} 
+                                        onFire={handleFire}    
+                                        key={emp.uid + index} 
+                                    />
                                 ))
                         }
                     </TableBody>

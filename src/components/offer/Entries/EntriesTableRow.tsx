@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { useSetDoc } from "../../../hooks/useSetDoc"
 import {firestoreEntry, firestoreJobOffer} from "../../../utils/interfaces"
-import { EntriesDialog } from "./EntriesDialog"
+import { CustomDialog } from "../../CustomDialog"
 import { SalaryDialog } from "./SalaryDialog"
 
 type entriesTableRowProps = {
@@ -103,14 +103,14 @@ export const EntriesTableRow:React.FC<entriesTableRowProps> = ({entry, offer, ha
                     </Collapse>
                 </TableCell>
             </TableRow>
-            <EntriesDialog 
+            <CustomDialog 
                 open={openAproveDialog} 
                 dialogDescription={`The ${entry.name} ${entry.surname} entry status will be aproved and other entries status will be changed to rejected. Job offer will deactivate.`}
                 dialogTitle="Are you sure?"
                 handleClose={() => setOpenAproveDialog(false)}
                 onSubmit={() => handleAproveDialogSubmit()}
             />
-            <EntriesDialog 
+            <CustomDialog 
                 open={openRejectDialog}
                 dialogDescription={`The ${entry.name} ${entry.surname} entry will be set to rejected.`}
                 dialogTitle="Are you sure?"

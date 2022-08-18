@@ -2,8 +2,8 @@ import { AccountBoxOutlined, AttachMoney, PersonOff } from "@mui/icons-material"
 import { Button, IconButton, TableCell, TableRow, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSetDoc } from "../../../hooks/useSetDoc";
 import { EmpSalaryDialog } from "./EmpSalaryDialog";
+import { CustomDialog } from "../../CustomDialog"
 
 type EmployeeTableRowProps = {
     employee: {
@@ -14,10 +14,14 @@ type EmployeeTableRowProps = {
         uid: string;
     }
     onSalaryChange: (newSalary: number, userUid: string) => void
+    onFire: (empUid: string) => void
 }
 
-export const EmployeeTableRow: React.FC<EmployeeTableRowProps> = ({ employee, onSalaryChange }) => {
+export const EmployeeTableRow: React.FC<EmployeeTableRowProps> = ({ employee, onSalaryChange, onFire }) => {
+    
     const [openSalaryDialog, setOpenSalaryDialog] = useState(false)
+    const [openFireDialog, setOpenFireDialog] = useState(false)
+    
     const navigate = useNavigate()
     
     return (
@@ -50,7 +54,7 @@ export const EmployeeTableRow: React.FC<EmployeeTableRowProps> = ({ employee, on
                         color="error"
                         size="small"
                         endIcon={<PersonOff />}
-                    // onClick={() => }
+                        onClick={() => setOpenFireDialog(true)}
                     >
                         Fire
                     </Button>
@@ -62,6 +66,13 @@ export const EmployeeTableRow: React.FC<EmployeeTableRowProps> = ({ employee, on
                 onSubmit={onSalaryChange}
                 open={openSalaryDialog}
                 userUid={employee.uid}
+            />
+            <CustomDialog 
+                open={openFireDialog}
+                dialogTitle={"Are you sure ?"}
+                dialogDescription={`Do you want to fire ${employee.name} ?`}
+                handleClose={() => setOpenFireDialog(false)}
+                onSubmit={() => onFire(employee.uid)}
             />
         </>
     )

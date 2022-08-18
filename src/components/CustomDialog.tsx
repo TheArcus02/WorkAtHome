@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
-import { secondaryLight } from "../../../utils/colors";
+import { secondaryLight } from "../utils/colors";
 
-type EntriesDialogProps = {
+type CustomDialogProps = {
     open: boolean;
     handleClose: () => void;
     dialogTitle: string;
@@ -9,7 +9,7 @@ type EntriesDialogProps = {
     onSubmit: () => void;
 }
 
-export const EntriesDialog:React.FC<EntriesDialogProps> = ({open, handleClose, dialogTitle, dialogDescription, onSubmit}) => {
+export const CustomDialog:React.FC<CustomDialogProps> = ({open, handleClose, dialogTitle, dialogDescription, onSubmit}) => {
   return (
     <Dialog
         open={open}
