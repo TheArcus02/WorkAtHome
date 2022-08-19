@@ -1,6 +1,6 @@
 import { DescriptionOutlined } from "@mui/icons-material"
-import { Box, Button, CircularProgress, Container, Divider, Paper, Typography } from "@mui/material"
-import { styled } from "@mui/styles"
+import { Box, Button, CircularProgress, Container, Divider, Paper, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { styled,  } from "@mui/styles"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Experience } from "../components/profile/Experience"
@@ -9,6 +9,7 @@ import { ProfileHeader } from "../components/profile/ProfileHeader"
 import { useAuth } from "../contexts/AuthContext"
 import { useGetDoc } from "../hooks/useGetDoc"
 import { AuthContextItf, firestoreUser, userInfo } from "../utils/interfaces"
+import { getComparator } from "../utils/utils"
 
 export const Profile = () => {
 
@@ -16,6 +17,8 @@ export const Profile = () => {
     const [editable, setEditable] = useState(false)
     const [user, setUser] = useState<userInfo>(null)
 
+    const theme = useTheme()
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
     const { currentUser, userInfo } = useAuth() as AuthContextItf
     const { getDocument, document } = useGetDoc()
     const params = useParams()
@@ -110,7 +113,10 @@ export const Profile = () => {
                                         {user.description}
                                     </Typography>
                                 </Paper>
-                                {user.jobs.length > 0 && <Experience jobs={user.jobs.slice().reverse()} />}
+                                {user.jobs.length > 0 && <Experience 
+                                                            jobs={user.jobs.slice().sort(getComparator("desc", "startedAt"))} 
+                                                            isMobile={isMobile}    
+                                                        />}
 
                             </Box>
                         </>
