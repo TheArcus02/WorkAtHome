@@ -18,22 +18,15 @@ export const Employees = () => {
     const { currentUser } = useAuth() as AuthContextItf
     const params = useParams()
     const {uid} = params
-    // const {getDocument, document} = useGetDoc()
     const { getRealtime, realtimeCollection, unsubscribe} = useRealtimeCollection()
     const navigate = useNavigate()
 
     useEffect(() => {
       if(uid){
-        // getDocument("Companies", uid)
         getRealtime("Companies", where("uid", "==", uid))
       }
     }, [uid])
 
-    // useEffect(() => {
-    //     if(document){
-    //         setCompanyDetails(document as firestoreCompany)
-    //     }
-    // }, [document])
 
     useEffect(() => {
       if(realtimeCollection){

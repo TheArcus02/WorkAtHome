@@ -1,26 +1,28 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { CssBaseline } from '@mui/material'
 import { Routes, Route } from "react-router-dom";
+import { background, paper, primary, secondary } from './utils/colors';
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
 
 //Pages & Components
 import { Home } from './pages/Home';
 import { Signup } from './pages/Singup';
 import { Navbar } from './components/Navbar'
 import { Login } from './pages/Login';
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from 'react-toastify';
 import { Profile } from './pages/Profile';
 import { RequireAuth } from './components/RequireAuth';
 import { YourCompanies } from './pages/YourCompanies';
 import { CreateCompany } from './pages/CreateCompany';
 import { CompanyDetails } from './components/company/CompanyDetails';
-import { background, paper, primary, secondary } from './utils/colors';
 import { AddOffer } from './pages/AddOffer';
 import { OfferDetails } from './components/offer/Details/OfferDetails';
 import { YourJobOffers } from './pages/YourJobOffers';
 import { Entries } from './components/offer/Entries/Entries';
 import { YourJobApplications } from './pages/YourJobApplications';
 import { Employees } from './components/company/Employees/Employees';
+import { Offers } from './pages/Offers';
 
 
 const Darktheme = createTheme({
@@ -64,11 +66,12 @@ const App:React.FC = () => {
               <Route path="/company/:uid" element={<CompanyDetails />} />
               <Route path="/offer/:uid" element={<OfferDetails />} />
               <Route path="/profile/:uid" element={<Profile />} />
+              <Route path="/offers" element={<Offers />} />
             </Routes>
             <ToastContainer 
-            autoClose={2000} 
-            theme="dark" 
-            position="bottom-left"
+              autoClose={2000} 
+              theme="dark" 
+              position="bottom-left"
             />
         </CssBaseline>
       </ThemeProvider>

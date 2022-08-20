@@ -105,9 +105,18 @@ export const Navbar: React.FC = () => {
             }}
           >
             {pages.map((page) => (
-              <MenuItem key={page} onClick={() => setAnchorElNav(null)}>
-                <Typography textAlign="center">{page}</Typography>
-              </MenuItem>
+              <MuiLink
+                key={page}
+                component={Link}
+                to={slugify(page.toLowerCase())}
+                textAlign="center"
+                underline='none'
+                color="inherit"
+              >
+                <MenuItem key={page} onClick={() => setAnchorElNav(null)}>
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
+              </MuiLink>
             ))}
           </Menu>
         </Box>
@@ -123,13 +132,22 @@ export const Navbar: React.FC = () => {
         </Typography>
         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
           {pages.map((page) => (
-            <Button
+            <MuiLink
               key={page}
-              onClick={() => setAnchorElNav(null)}
-              sx={{ my: 2, color: 'white', display: 'block' }}
+              component={Link}
+              to={slugify(page.toLowerCase())}
+              textAlign="center"
+              underline='none'
+              color="inherit"
             >
-              {page}
-            </Button>
+              <Button
+                key={page}
+                onClick={() => setAnchorElNav(null)}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                {page}
+              </Button>
+            </MuiLink>
           ))}
         </Box>
         <Box sx={{ display: { xs: "none", md: 'inherit' }, mr: 3 }}>

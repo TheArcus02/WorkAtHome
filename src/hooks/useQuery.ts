@@ -20,6 +20,7 @@ export const useQuery = () => {
             setQueryResult(doc)
         }).catch((error) => {
             toast.error("Error ocurred while getting document from database.", error)
+            console.error(error)
         })
         setUnsubscribe(() => unsub)
     }
