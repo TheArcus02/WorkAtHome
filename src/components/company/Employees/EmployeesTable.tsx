@@ -93,16 +93,17 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
                 }
             })
         }
-        if(employeesDetails.length !== 0 && fullJobsInfo.length !== 0)
-        return () => {
-            setEmployeesDetails([])
-            setFullJobsInfo([])
-        }
+        if (employeesDetails.length !== 0 && fullJobsInfo.length !== 0)
+            return () => {
+                setEmployeesDetails([])
+                setFullJobsInfo([])
+            }
     }, [realtimeCollection, employeesDetails, fullJobsInfo])
 
     useEffect(() => {
-        if (unsubscribe)
-            return () => unsubscribe()
+        return () => {
+            if (unsubscribe) unsubscribe()
+        }
     }, [unsubscribe])
 
     const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
@@ -138,27 +139,27 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
     }
 
     const handleFire = (empUid: string) => {
-        
+
         const job = findUserJob(empUid)
-        if(job){
+        if (job) {
 
             // set job current status as false and add ended at prop
-            const { userUid, ...baseInfo} = job
+            const { userUid, ...baseInfo } = job
             const newObj: baseJobInfo = {
                 ...baseInfo,
                 current: false,
                 endedAt: new Date()
             }
-            setDocument("Users", {jobs: arrayRemove(baseInfo)}, empUid)
-            setDocument("Users", {jobs: arrayUnion(newObj)}, empUid)
-            
+            setDocument("Users", { jobs: arrayRemove(baseInfo) }, empUid)
+            setDocument("Users", { jobs: arrayUnion(newObj) }, empUid)
+
             // remove employee from company
-            setDocument("Companies", {employees: arrayRemove(empUid)} , companyUid)
+            setDocument("Companies", { employees: arrayRemove(empUid) }, companyUid)
             toast.success("Employee has been fired.")
         } else {
             toast.error("Cannot find user job.")
         }
-        
+
 
     }
 
@@ -191,11 +192,11 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
                             employeesDetails.slice().sort(getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((emp, index) => (
-                                    <EmployeeTableRow 
-                                        employee={emp} 
-                                        onSalaryChange={handleSalaryChange} 
-                                        onFire={handleFire}    
-                                        key={emp.uid + index} 
+                                    <EmployeeTableRow
+                                        employee={emp}
+                                        onSalaryChange={handleSalaryChange}
+                                        onFire={handleFire}
+                                        key={emp.uid + index}
                                     />
                                 ))
                         }

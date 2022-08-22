@@ -2,7 +2,7 @@ import { SearchOutlined } from "@mui/icons-material"
 import { Button, IconButton, InputAdornment, OutlinedInput, Paper, Typography } from "@mui/material"
 import { Box, Container } from "@mui/system"
 import { DocumentData, limit, orderBy, QueryDocumentSnapshot, startAfter, where } from "firebase/firestore"
-import { useEffect, useState } from "react"
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react"
 import { OfferCard } from "../components/offer/OfferCard"
 import { useQuery } from "../hooks/useQuery"
 import { firestoreJobOffer, Order } from "../utils/interfaces"
@@ -12,10 +12,22 @@ export const Offers = () => {
     const [offers, setOffers] = useState<firestoreJobOffer[]>([])
     const [sortField, setSortField] = useState("createdAt")
     const [order, setOrder] = useState<Order>("desc")
-    const [pageSize, setPageSize] = useState(1)
+    const [pageSize, setPageSize] = useState(2)
     const [last, setLast] = useState<QueryDocumentSnapshot<DocumentData> | null>(null)
 
-    const { getQuery, queryRef, queryResult, unsubscribe } = useQuery()
+    const { getQuery, queryResult, unsubscribe } = useQuery()
+
+    const observer: MutableRefObject<IntersectionObserver> | MutableRefObject<undefined> = useRef()
+
+    const lastElementRef = useCallback(node => {
+        if (observer.current) observer.current.disconnect()
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && last) {
+                nextPage()
+            }
+        })
+        if (node) observer.current.observe(node)
+    }, [last])
 
     useEffect(() => {
         getQuery("",
@@ -36,17 +48,19 @@ export const Offers = () => {
             }
         }
 
-        if (offers.length !== 0)
-            return () => {
+        return () => {
+            if (offers.length !== 0 && last) {
                 setLast(null)
             }
-    }, [queryResult, offers])
+        }
+    }, [queryResult, offers, last])
 
     useEffect(() => {
-        if (offers.length !== 0)
-            console.log({ offers, last })
-    }, [offers])
 
+        return () => {
+         if (unsubscribe) unsubscribe()
+        }
+    }, [unsubscribe])
 
     const nextPage = () => {
         getQuery("",
@@ -57,9 +71,9 @@ export const Offers = () => {
             limit(pageSize)
         )
     }
-    // TODO implement search params
+
     return (
-        <Container maxWidth="lg" sx={{ my: 5 }}>
+        <Container maxWidth="md" sx={{ my: 5 }}>
             <Paper sx={{ p: 6, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }} >
                 <OutlinedInput
                     id="job-search"
@@ -78,22 +92,24 @@ export const Offers = () => {
                     }}
                 />
             </Paper>
-            <Box sx={{display:'flex', mt: 3, gap:3 }}>
-                {/* // TODO add maxHeight refering to max content implement sort form */}
-                <Paper sx={{width:300}}>
-                </Paper>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3}}>
-                    {/* put search param if exists here ⬇ */}
-                    {/* <Typography variant="h4">React Job Offers</Typography> */}
-                    {offers.map((offer, index) => (
+            <Typography variant="h4" my={3}>Recent job offers</Typography>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 3
+                }}
+            >
+                {offers.map((offer, index) => (
+                    <div ref={offers.length === index + 1 ? lastElementRef : undefined} key={offer.uid + index}>
                         <OfferCard
                             offer={offer}
                             elevation={1}
                             maxWidth={'100%'}
-                            key={offer.uid + index}
                         />
-                    ))}
-                </Box>
+                    </div>
+
+                ))}
             </Box>
             <Button disabled={!last} onClick={() => nextPage()}>
                 nextPage

@@ -11,46 +11,47 @@ import { Loader } from "../../Loader"
 import { EmployeesTable } from "./EmployeesTable"
 
 export const Employees = () => {
-    
+
     const [companyDetails, setCompanyDetails] = useState<null | firestoreCompany>(null)
     const [allowed, setAllowed] = useState<undefined | boolean>(undefined)
 
     const { currentUser } = useAuth() as AuthContextItf
     const params = useParams()
-    const {uid} = params
-    const { getRealtime, realtimeCollection, unsubscribe} = useRealtimeCollection()
+    const { uid } = params
+    const { getRealtime, realtimeCollection, unsubscribe } = useRealtimeCollection()
     const navigate = useNavigate()
 
     useEffect(() => {
-      if(uid){
-        getRealtime("Companies", where("uid", "==", uid))
-      }
+        if (uid) {
+            getRealtime("Companies", where("uid", "==", uid))
+        }
     }, [uid])
 
 
     useEffect(() => {
-      if(realtimeCollection){
-        realtimeCollection.forEach((doc) => setCompanyDetails(doc.data() as firestoreCompany))
-      }
+        if (realtimeCollection) {
+            realtimeCollection.forEach((doc) => setCompanyDetails(doc.data() as firestoreCompany))
+        }
     }, [realtimeCollection])
-    
+
 
     useEffect(() => {
-      if(companyDetails && currentUser){
-        if(companyDetails.createdBy === currentUser.uid){
-            setAllowed(true)
-        } else {
-            setAllowed(false)
+        if (companyDetails && currentUser) {
+            if (companyDetails.createdBy === currentUser.uid) {
+                setAllowed(true)
+            } else {
+                setAllowed(false)
+            }
         }
-      }
     }, [companyDetails, currentUser])
 
     useEffect(() => {
-        if (unsubscribe)
-            return () => unsubscribe()
+        return () => {
+            if (unsubscribe) unsubscribe()
+        }
     }, [unsubscribe])
-    
-    
+
+
     return (
         <Container maxWidth="lg" sx={{ mt: 5 }}>
             {allowed !== undefined && companyDetails && uid ? (

@@ -1,4 +1,4 @@
-import { Box, Container, Paper, Button} from "@mui/material"
+import { Box, Container, Paper, Button } from "@mui/material"
 import { useEffect, useState } from "react"
 import { Navigate, useParams } from "react-router-dom"
 import { useAuth } from "../../../contexts/AuthContext"
@@ -14,7 +14,7 @@ type OfferDetailsProps = {
   initialEditMode?: boolean
 }
 
-export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
+export const OfferDetails: React.FC<OfferDetailsProps> = ({ initialEditMode }) => {
 
   const [offer, setOffer] = useState<firestoreJobOffer | null>(null)
   const [editable, setEditable] = useState(false)
@@ -22,7 +22,7 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
   const [loading, setLoading] = useState(true)
 
   const { currentUser, userInfo } = useAuth() as AuthContextItf
-  const { getRealtime, realtimeCollection , unsubscribe} = useRealtimeCollection()
+  const { getRealtime, realtimeCollection, unsubscribe } = useRealtimeCollection()
   const params = useParams()
   const { uid } = params
 
@@ -35,7 +35,7 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
 
   useEffect(() => {
     if (realtimeCollection) {
-      if(!realtimeCollection.empty){
+      if (!realtimeCollection.empty) {
         realtimeCollection.forEach((doc: any) => (
           setOffer(doc.data())
         ))
@@ -51,12 +51,10 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
   }, [offer, currentUser])
 
   useEffect(() => {
-      
-    if(unsubscribe)
     return () => {
-        unsubscribe()
+      if (unsubscribe) unsubscribe()
     }
-}, [unsubscribe])
+  }, [unsubscribe])
 
   const StyledButton = styled(Button)(({ theme }: any) => ({
     textTransform: 'none'
@@ -108,11 +106,11 @@ export const OfferDetails:React.FC<OfferDetailsProps> = ({initialEditMode}) => {
           </Paper>
         </Box>
       }
-      <Paper sx={editable ? { py: 5, borderTopLeftRadius: 0 } : { py:5 }}>
+      <Paper sx={editable ? { py: 5, borderTopLeftRadius: 0 } : { py: 5 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'justify' }} mx={5}>
           {!editMode ? (
-            <OfferPreview editable={editable} offer={offer} userLogged={currentUser ? true : false}/>
-          ): userInfo ? <OfferEditMode offer={offer} userInfo={userInfo} /> : <Navigate to="/login" state={{from: location}} replace />}
+            <OfferPreview editable={editable} offer={offer} userLogged={currentUser ? true : false} />
+          ) : userInfo ? <OfferEditMode offer={offer} userInfo={userInfo} /> : <Navigate to="/login" state={{ from: location }} replace />}
         </Box>
       </Paper>
 

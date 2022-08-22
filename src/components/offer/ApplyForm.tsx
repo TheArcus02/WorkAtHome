@@ -17,7 +17,7 @@ type formDataType = {
 type applyFormProps = {
     offerUid: string;
 }
-export const ApplyForm:React.FC<applyFormProps> = ({ offerUid }) => {
+export const ApplyForm: React.FC<applyFormProps> = ({ offerUid }) => {
 
     const [formData, setFormData] = useState<formDataType | null>(null)
     const [alreadyApplied, setAlreadyApplied] = useState(false)
@@ -34,61 +34,59 @@ export const ApplyForm:React.FC<applyFormProps> = ({ offerUid }) => {
                 name, surname, introduce: ''
             }
             setFormData(data)
-            getQuery("", `Offers/${offerUid}/entries`,where('userUid', '==', currentUser.uid))
+            getQuery("", `Offers/${offerUid}/entries`, where('userUid', '==', currentUser.uid))
         }
 
     }, [userInfo, currentUser])
 
     useEffect(() => {
-      if(queryResult){
-        if(!queryResult.empty){
-            setAlreadyApplied(true)
+        if (queryResult) {
+            if (!queryResult.empty) {
+                setAlreadyApplied(true)
+            }
         }
-      }
     }, [queryResult])
 
     useEffect(() => {
-      if(validated && currentUser && formData && !alreadyApplied){
-        if(errors) return
-        const data:firestoreEntry = {
-            ...formData,
-            userUid: currentUser.uid,
-            createdAt: new Date(),
-            approved: false,
-            rejected: false,
-            uid:'',
-            active: true,
-        }
-        setDocument('Offers', {entriesCounter:increment(1)}, offerUid)
-        setDocument(`Offers/${offerUid}/entries`, data, undefined, "Entries")
-        setAlreadyApplied(true)
-      }
-    }, [errors, validated, currentUser, formData, alreadyApplied])
-    
-    useEffect(() => {
-      if(doc && currentUser && docRef){
-        if(docRef === "Entries"){
-            const jobApplicationObj:jobApplication = {
-                entryUid: doc.id,
-                offerUid
+        if (validated && currentUser && formData && !alreadyApplied) {
+            if (errors) return
+            const data: firestoreEntry = {
+                ...formData,
+                userUid: currentUser.uid,
+                createdAt: new Date(),
+                approved: false,
+                rejected: false,
+                uid: '',
+                active: true,
             }
-            setDocument("Users", {jobApplications: arrayUnion(jobApplicationObj)}, currentUser.uid)
-            setDocument(`Offers/${offerUid}/entries`, {uid:doc.id}, doc.id).then(() => (
-                toast.success(`Your apply has been send. 🎉`)
-            ))
+            setDocument('Offers', { entriesCounter: increment(1) }, offerUid)
+            setDocument(`Offers/${offerUid}/entries`, data, undefined, "Entries")
+            setAlreadyApplied(true)
         }
-      }
+    }, [errors, validated, currentUser, formData, alreadyApplied])
+
+    useEffect(() => {
+        if (doc && currentUser && docRef) {
+            if (docRef === "Entries") {
+                const jobApplicationObj: jobApplication = {
+                    entryUid: doc.id,
+                    offerUid
+                }
+                setDocument("Users", { jobApplications: arrayUnion(jobApplicationObj) }, currentUser.uid)
+                setDocument(`Offers/${offerUid}/entries`, { uid: doc.id }, doc.id).then(() => (
+                    toast.success(`Your apply has been send. 🎉`)
+                ))
+            }
+        }
     }, [doc, currentUser, docRef])
 
     useEffect(() => {
-      
-        if(unsubscribe)
-        return () => (
-            unsubscribe()
-        )
+        return () => {
+            if (unsubscribe) unsubscribe()
+        }
     }, [unsubscribe])
-    
-    
+
+
 
     const handleChange = (name: string, value: string) => {
         setFormData((prev: any) => (
@@ -101,7 +99,7 @@ export const ApplyForm:React.FC<applyFormProps> = ({ offerUid }) => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if(formData){
+        if (formData) {
             validateData(formData)
         }
     }
@@ -171,6 +169,6 @@ export const ApplyForm:React.FC<applyFormProps> = ({ offerUid }) => {
                 </Box>
             ) : (<Loader />)
         ) : (<Typography align="center" mt={2}>You already applied for this job</Typography>)
-        
+
     )
 }

@@ -33,13 +33,11 @@ export const YourJobOffers = () => {
     }, [queryResult, offers])
 
     useEffect(() => {
-      
-        if(unsubscribe)
         return () => {
-            unsubscribe()
+            if (unsubscribe) unsubscribe()
         }
     }, [unsubscribe])
-    
+
 
 
     return (

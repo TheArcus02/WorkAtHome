@@ -66,10 +66,9 @@ export const Entries = () => {
     }, [realtimeCollection])
 
     useEffect(() => {
-        if (unsubscribe)
-            return () => (
-                unsubscribe()
-            )
+        return () => {
+            if (unsubscribe) unsubscribe()
+        }
     }, [unsubscribe])
 
     return (
