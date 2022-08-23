@@ -83,6 +83,6 @@ export default App
 
 // TODO add firebase rules
 // TODO add working project on netlify
-// TODO offers with sorting filtering page
-// TODO implement rich text editor
+// ? implement notifications
+// ? implement rich text editor
 // ? change location/address fields to objects with lat an lon to interact with google maps api

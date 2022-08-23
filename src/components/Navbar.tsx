@@ -11,7 +11,7 @@ import { Edit, Logout, NotificationsOutlined } from '@mui/icons-material';
 export const Navbar: React.FC = () => {
 
   const initialPages = ['Offers', 'Pricing', 'Blog'];
-  const initialMenu = ['Profile', 'Account']
+  const initialMenu = ['Profile']
 
 
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -167,7 +167,6 @@ export const Navbar: React.FC = () => {
             </IconButton>
           </Tooltip>
         </Box>
-        {/* // TODO integrate with Notifications system when ready */}
         <Box sx={{ flexGrow: 0 }}>
           {currentUser && userInfo ? (
             <>

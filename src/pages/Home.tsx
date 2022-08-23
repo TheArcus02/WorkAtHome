@@ -7,34 +7,32 @@ import { limit, orderBy, where } from "firebase/firestore";
 import { OfferSkeleton } from "../components/offer/OfferSkeleton";
 import { OfferCard } from "../components/offer/OfferCard";
 import { ArrowForward } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 export const Home: React.FC = () => {
 
     const [recentOffers, setRecentOffers] = useState<firestoreJobOffer[]>([])
 
     const { getQuery, queryResult, queryRef, unsubscribe } = useQuery()
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (recentOffers.length === 0) {
-            getQuery('recent', "Offers", where("active", "==", true), orderBy("createdAt", "desc"), limit(6))
+            getQuery('', "Offers", where("active", "==", true), orderBy("createdAt", "desc"), limit(6))
         }
     }, [recentOffers])
 
     useEffect(() => {
-        if (queryResult && queryRef && recentOffers.length === 0) {
+        if (queryResult && recentOffers.length === 0) {
             queryResult.forEach((doc: any) => {
-                switch (queryRef) {
-                    case 'recent': setRecentOffers((prev) => (
-                        [...prev, doc.data()]
-                    ))
-                    default: return
-                }
+                setRecentOffers((prev) => (
+                    [...prev, doc.data()]
+                ))
             })
         }
     }, [queryResult, queryRef, recentOffers])
 
     useEffect(() => {
-
         if (unsubscribe)
             return () => {
                 unsubscribe()
@@ -60,18 +58,16 @@ export const Home: React.FC = () => {
                             </InputAdornment>
                         }
                         fullWidth
-                        placeholder="Look for remote job"
+                        placeholder="Look for remote job (dosen't work, firestore free version dosen't suppor search)"
                         sx={{
                             width: '75%'
                         }}
                     />
                 </Paper>
             </Container>
-
-            <Container maxWidth="xl">
-
-                <Paper elevation={1}>
-                    <Typography variant="h4" textAlign="center" sx={{ py: 5 }}>Recent Job Offers</Typography>
+            <Paper elevation={1} sx={{py: 5}}>
+                <Container maxWidth="xl">
+                    <Typography variant="h4" textAlign="center" sx={{ pb: 5 }}>Recent Job Offers</Typography>
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap', px: { xs: 2, md: 0 } }}>
                         {recentOffers.length > 0 ? (
                             recentOffers.map((offer, index) => (
@@ -82,14 +78,18 @@ export const Home: React.FC = () => {
                         )))}
                         { }
                     </Box>
-                    <Box mt={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <Button variant="contained" endIcon={<ArrowForward />}>Show more</Button>
-                        {/* // TODO add navigate to offersSection when ready */}
+                    <Box mt={5} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Button
+                            variant="contained"
+                            endIcon={<ArrowForward />}
+                            onClick={() => navigate('offers')}
+                        >
+                            Show more
+                        </Button>
                     </Box>
-                </Paper>
+                </Container>
+            </Paper>
 
-
-            </Container>
         </>
     )
 }

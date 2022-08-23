@@ -242,8 +242,6 @@ export const ProfileEditMode: React.FC<ProfileEditModeProps> = ({ userInfo, user
                 />
               </Grid>
             ))}
-            {/* TODO add icons to inputs */}
-
           </Grid>
         </Grid>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>

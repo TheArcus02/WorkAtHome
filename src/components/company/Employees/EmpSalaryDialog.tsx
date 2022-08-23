@@ -29,11 +29,11 @@ export const EmpSalaryDialog: React.FC<SalaryDialogProps> = ({ open, handleClose
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        if(salary){
-            if(salary === currentSalary){
+        if (salary) {
+            if (salary === currentSalary) {
                 toast.warning("Salary hasn't changed.")
                 setError("Salary hasn't changed.")
-            } else if( error.length === 0){
+            } else if (error.length === 0) {
                 onSubmit(salary, userUid)
             }
         }
@@ -60,12 +60,19 @@ export const EmpSalaryDialog: React.FC<SalaryDialogProps> = ({ open, handleClose
                         InputProps={{ inputProps: { min: 1 } }}
                         helperText={error}
                     />
-
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+                        <Button
+                            variant="contained"
+                            sx={{ color: '#fff' }}
+                            color="warning"
+                            onClick={() => handleClose()}
+                        >
+                            Cancel
+                        </Button>
                         <Button
                             variant="contained"
                             type="submit"
-                            sx={{ mt: 3, ml: 1, color: '#fff' }}
+                            sx={{ color: '#fff' }}
                             color="success"
                         >
                             Save

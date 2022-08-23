@@ -28,8 +28,6 @@ export const CompanyDetails = () => {
     const params = useParams()
     const { uid } = params
 
-    // TODO edit mode logic
-
     useEffect(() => {
         if (uid) {
             getDocument('Companies', uid);

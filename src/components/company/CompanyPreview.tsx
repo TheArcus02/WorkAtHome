@@ -68,7 +68,7 @@ export const CompanyPreview: React.FC<CompanyPreviewProps> = ({ companyInfo, off
             maxWidth="lg"
             sx={{ mt: 5, display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}
           >
-            {companyInfo.employees.map((emp) => (
+            {companyInfo.employees.slice(0,5).map((emp) => (
               <EmployeeCard empUid={emp} key={emp} />
             ))}
           </Container>

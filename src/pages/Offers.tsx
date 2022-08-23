@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@mui/icons-material"
-import { Button, IconButton, InputAdornment, OutlinedInput, Paper, Typography } from "@mui/material"
+import { IconButton, InputAdornment, OutlinedInput, Paper, Typography } from "@mui/material"
 import { Box, Container } from "@mui/system"
 import { DocumentData, limit, orderBy, QueryDocumentSnapshot, startAfter, where } from "firebase/firestore"
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react"
@@ -86,7 +86,7 @@ export const Offers = () => {
                         </InputAdornment>
                     }
                     fullWidth
-                    placeholder="Look for remote job"
+                    placeholder="Look for remote job (dosen't work, firestore free version dosen't suppor search)"
                     sx={{
                         width: '75%'
                     }}
@@ -111,9 +111,6 @@ export const Offers = () => {
 
                 ))}
             </Box>
-            <Button disabled={!last} onClick={() => nextPage()}>
-                nextPage
-            </Button>
         </Container>
     )
 }
