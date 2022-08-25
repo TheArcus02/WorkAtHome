@@ -23,7 +23,6 @@ const EmployeeCard: React.FC<EmpCardProps> = ({ empUid }) => {
             setEmp(document as firestoreUser)
         }
     }, [document])
-    console.log(emp)
 
     return (
         <Card sx={{ maxWidth: 345 }} elevation={3}>

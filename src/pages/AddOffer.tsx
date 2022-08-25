@@ -54,7 +54,6 @@ export const AddOffer = () => {
                 maxSalary: parseInt(formData.maxSalary),
                 createdBy: currentUser.uid,
                 createdAt: new Date(),
-                lastEdit: new Date(),
                 technologies: tags,
                 entriesCounter: 0,
                 uid: '',

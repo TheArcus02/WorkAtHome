@@ -6,11 +6,13 @@ import { useAuth } from '../contexts/AuthContext';
 import { AuthContextItf } from '../utils/interfaces';
 import slugify from 'react-slugify';
 import { Edit, Logout, NotificationsOutlined } from '@mui/icons-material';
+// import { fakeJobOffer, saveToDatabase } from '../utils/fakeData';
+import { toast } from 'react-toastify';
 
 
 export const Navbar: React.FC = () => {
 
-  const initialPages = ['Offers', 'Pricing', 'Blog'];
+  const initialPages = ['Offers'];
   const initialMenu = ['Profile']
 
 
@@ -21,7 +23,7 @@ export const Navbar: React.FC = () => {
 
   const { currentUser, userInfo, logout } = useAuth() as AuthContextItf
 
-  console.log({ currentUser, userInfo });
+  // console.log({ currentUser, userInfo });
 
   useEffect(() => {
     if (userInfo) {
@@ -56,9 +58,21 @@ export const Navbar: React.FC = () => {
     try {
       logout()
     } catch (error) {
-      console.log(error)
+      toast.error(`Error occured during logout. ${error}`)
     }
   }
+
+
+  // ** fake data generator 
+  // const fakeData = (num: number) => {
+  //   let data = []
+  //   for(let i=0; i<num; i++) {
+  //     // data.push(fakeCompany(currentUser!.uid))
+  //     data.push(fakeJobOffer())
+  //   }
+  //   // saveToDatabase(data, 'Companies')
+  //   saveToDatabase(data, 'Offers')
+  // }
 
   return (
     <AppBar position="static" enableColorOnDark color="primary">
@@ -150,6 +164,18 @@ export const Navbar: React.FC = () => {
             </MuiLink>
           ))}
         </Box>
+
+        {/* <Box sx={{ display: { xs: "none", md: 'inherit' }, mr: 3 }}>
+            <Button 
+              color="secondary" 
+              variant='contained' 
+              size="small" 
+              onClick={() => fakeData(5)}
+            >
+              Fake Data
+            </Button>
+        </Box> */}
+
         <Box sx={{ display: { xs: "none", md: 'inherit' }, mr: 3 }}>
           <MuiLink component={Link} to="/add-offer" underline='none' color="inherit">
             <Button color="secondary" variant='contained' size="small" startIcon={<Edit />}>

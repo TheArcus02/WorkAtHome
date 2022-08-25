@@ -58,12 +58,6 @@ export const JobApplicationTableRow: React.FC<ComponentProps> = ({ entryUid, off
         },
     }));
 
-    useEffect(() => {
-        console.log({ entryDetails, offerDetails, docRef })
-    }, [entryDetails, offerDetails, docRef])
-
-
-
     return offerDetails && entryDetails ? (
         <>
             <StyledTableRow>

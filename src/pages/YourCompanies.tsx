@@ -52,7 +52,12 @@ export const YourCompanies = () => {
             alt={company.name}
           />
           <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
+            <Typography 
+              gutterBottom 
+              variant="h5" 
+              component="div"
+              sx={{ overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical" }}
+            >
               {company.name}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 345, overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical" }}>

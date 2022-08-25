@@ -86,7 +86,6 @@ export interface firestoreJobOffer{
     title: string;
     entriesCounter: number;
     uid: string;
-    lastEdit: any; // Timestamp in firebase / save Date obj
 }
 
 export interface firestoreEntry{
