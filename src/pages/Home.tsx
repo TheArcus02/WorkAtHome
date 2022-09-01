@@ -58,7 +58,7 @@ export const Home: React.FC = () => {
                             </InputAdornment>
                         }
                         fullWidth
-                        placeholder="Look for remote job (dosen't work, firestore free version dosen't suppor search)"
+                        placeholder="Look for remote job (dosen't work, firestore free version dosen't support search)"
                         sx={{
                             width: '75%'
                         }}
