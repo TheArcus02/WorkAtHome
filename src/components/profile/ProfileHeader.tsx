@@ -1,5 +1,5 @@
-import { ShareOutlined } from "@mui/icons-material"
-import { Box, Avatar, Typography, Link as MuiLink, Paper, Divider } from "@mui/material"
+import { ShareOutlined, WorkOutlineOutlined, LocationCityOutlined } from "@mui/icons-material"
+import { Box, Avatar, Typography, Link as MuiLink, Paper, Divider, Chip } from "@mui/material"
 import { Link } from "react-router-dom"
 import { useTransitionStyles } from "../../hooks/useTransitionStyles"
 import { primaryLight } from "../../utils/colors"
@@ -22,6 +22,8 @@ export const ProfileHeader:React.FC<ProfileHeaderProps> = ({ user }) => {
             <Box sx={{width:'100%', display:'flex', justifyContent:'space-between', alignItems:'center', flexDirection:{xs:'column', md:'row'}}}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign:{xs:'center', md:'inherit'}, p: { xs: 3, md: 0 }, mr: { md: 3 } }}>
                             <Typography variant="h5" component="h1" gutterBottom fontWeight="bold">{user.name.length > 0 && user.surname.length > 0 ? user.name + " " + user.surname : user.displayName}</Typography>
+                            <Box sx={{display: 'flex', gap:0.5}}>
+                            <WorkOutlineOutlined /> 
                             {user.jobs.length > 0 ? (
                                 user.jobs.find((job) => job.current === true) ?
                                     user.jobs.map((job) => (
@@ -32,21 +34,28 @@ export const ProfileHeader:React.FC<ProfileHeaderProps> = ({ user }) => {
                                     :
                                     <Typography variant="subtitle1" gutterBottom>Currently unemployed</Typography>
                             ) : <Typography variant="subtitle1" gutterBottom>Unemployed</Typography>}
+                            </Box>
                             {user.companies.length > 0 ? (
-                                <Typography variant="subtitle1" gutterBottom>
-                                    Owner of
-                                    {user.companies.map((company) => (
-                                        <MuiLink
-                                            key={company.uid}
-                                            component={Link}
-                                            to={`/company/${company.uid}`}
-                                            underline="none"
-                                            className={transitionStyles.primaryLight}
-                                        >
-                                            {" " + company.name}
-                                        </MuiLink>
-                                    ))}
-                                </Typography>
+                                <Box>
+                                    <Box sx={{display: 'flex', alignItems:'center', gap:0.5}}>
+                                        <LocationCityOutlined />
+                                        <Typography> Owner of </Typography>
+                                   
+                                        <Box sx={{display: 'flex', gap:1, ml:0.5}}> 
+                                            {user.companies.map((company) => (
+                                                <MuiLink
+                                                    key={company.uid}
+                                                    component={Link}
+                                                    to={`/company/${company.uid}`}
+                                                    underline="none"
+                                                    className={transitionStyles.primaryLight}
+                                                >
+                                                    <Chip  sx={{cursor: 'pointer'}} label={company.name} color="primary" />
+                                                </MuiLink>
+                                            ))}
+                                        </Box>
+                                        </Box>
+                                </Box>
                             ) : ("")}
                             
                 </Box>

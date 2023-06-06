@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 
 export const Navbar: React.FC = () => {
 
-  const initialPages = ['Offers'];
+  const initialPages = ['Home', 'Offers'];
   const initialMenu = ['Profile']
 
 
@@ -122,7 +122,7 @@ export const Navbar: React.FC = () => {
               <MuiLink
                 key={page}
                 component={Link}
-                to={slugify(page.toLowerCase())}
+                to={page === 'Home' ? '/' : slugify(page.toLowerCase())}
                 textAlign="center"
                 underline='none'
                 color="inherit"
@@ -149,7 +149,7 @@ export const Navbar: React.FC = () => {
             <MuiLink
               key={page}
               component={Link}
-              to={slugify(page.toLowerCase())}
+              to={page === 'Home' ? '/' : slugify(page.toLowerCase())}
               textAlign="center"
               underline='none'
               color="inherit"

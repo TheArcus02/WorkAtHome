@@ -107,7 +107,7 @@ export const OfferDetails: React.FC<OfferDetailsProps> = ({ initialEditMode }) =
         </Box>
       }
       <Paper sx={editable ? { py: 5, borderTopLeftRadius: 0 } : { py: 5 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'justify' }} mx={5}>
+        <Box sx={{  display: 'flex', flexDirection: 'column', textAlign: 'justify' }} mx={5}>
           {!editMode ? (
             <OfferPreview editable={editable} offer={offer} userLogged={currentUser ? true : false} />
           ) : userInfo ? <OfferEditMode offer={offer} userInfo={userInfo} /> : <Navigate to="/login" state={{ from: location }} replace />}
