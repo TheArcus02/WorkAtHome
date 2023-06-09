@@ -1,21 +1,20 @@
-import { faker } from "@faker-js/faker";
-import { addDoc, collection, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase.config";
-import { collections, firestoreCompany, firestoreJobOffer, seniority } from "./interfaces";
+import { faker } from '@faker-js/faker'
+import { addDoc, collection, updateDoc } from 'firebase/firestore'
+import { db } from '../firebase/firebase.config'
+import { collections, firestoreCompany, firestoreJobOffer, seniority } from './interfaces'
 
 type Tcompanies = {
-    [key: string] : {
-        name: string;
-        ownerUid: string;
+    [key: string]: {
+        name: string
+        ownerUid: string
     }
 }
 
-const companies:Tcompanies = {
-    
+const companies: Tcompanies = {
     // '3TIniKUW5xFBQzDXKxL1': {
     //     name: 'Adidas',
-    //     ownerUid: 'tenUdRfNaah68EvZCbR4gdzhvsJ3' 
-    // } 
+    //     ownerUid: 'tenUdRfNaah68EvZCbR4gdzhvsJ3'
+    // }
     // ,
     // '8nVWAZky12185QdBhpF6':{
     //     name: 'Microsoft',
@@ -35,33 +34,32 @@ const companies:Tcompanies = {
     // },
     // 'oCTmLrpKJjCcY0uCHwo1':{
     //     name: 'Reebok',
-    //     ownerUid: 'tenUdRfNaah68EvZCbR4gdzhvsJ3' 
-    // } 
+    //     ownerUid: 'tenUdRfNaah68EvZCbR4gdzhvsJ3'
+    // }
     // test account companies 🔽
-    'XlBnzPe0b789mJl8MO3X': {
+    XlBnzPe0b789mJl8MO3X: {
         name: 'Luettgen - Rogahn',
-        ownerUid: '5WMWWaJb78cOMfj3YrzcjllGzug2'
+        ownerUid: '5WMWWaJb78cOMfj3YrzcjllGzug2',
     },
-    'cDDPRlScKtJhfPneCo9A': {
+    cDDPRlScKtJhfPneCo9A: {
         name: 'Jenkins, Conroy and Roberts',
-        ownerUid: '5WMWWaJb78cOMfj3YrzcjllGzug2'
+        ownerUid: '5WMWWaJb78cOMfj3YrzcjllGzug2',
     },
-    'MuIC8FIoXspgJ1kHeN4o': {
+    MuIC8FIoXspgJ1kHeN4o: {
         name: 'Armstrong Group',
-        ownerUid: '5WMWWaJb78cOMfj3YrzcjllGzug2'
-    }
+        ownerUid: '5WMWWaJb78cOMfj3YrzcjllGzug2',
+    },
 }
 
 export const fakeJobOffer = () => {
-
-    const seniorities:seniority[] = ['Junior', 'Mid', 'Senior']
+    const seniorities: seniority[] = ['Junior', 'Mid', 'Senior']
     const techOptions = {
         'React Developer': ['React', 'Redux', 'Javascript', 'Typescript'],
         'Node.js Developer': ['Node.js', 'Javascript', 'AWS'],
-        'React Native Engineer': ['React Native','Javascript', 'Typescript', 'Apollo'],
+        'React Native Engineer': ['React Native', 'Javascript', 'Typescript', 'Apollo'],
         'Python Django Developer': ['Python', 'Django', 'Docker', 'SQL'],
         'Java Engineer': ['Java', 'OOP', 'Spring', 'Jenkins'],
-        'PHP developer': ['PHP', 'MySQL', 'Docker', 'RESTful API']
+        'PHP developer': ['PHP', 'MySQL', 'Docker', 'RESTful API'],
     }
 
     const companyUid = faker.helpers.objectKey(companies) as string
@@ -70,15 +68,14 @@ export const fakeJobOffer = () => {
 
     const location = faker.address.country() + ', ' + faker.address.cityName() + ', ' + faker.address.streetAddress()
     const maxSalary = Math.ceil(parseInt(faker.finance.amount(5000, 20000, 0)) / 100) * 100
-    const minSalary = Math.ceil(parseInt(faker.finance.amount(5000, maxSalary)) /100) * 100
+    const minSalary = Math.ceil(parseInt(faker.finance.amount(5000, maxSalary)) / 100) * 100
     const seniority = faker.helpers.arrayElement(seniorities)
     const randomTechOptionTitle = faker.helpers.objectKey(techOptions)
-    const technologies = techOptions[randomTechOptionTitle] 
+    const technologies = techOptions[randomTechOptionTitle]
 
-    const title = seniority + ' ' + randomTechOptionTitle 
+    const title = seniority + ' ' + randomTechOptionTitle
 
-
-    const offerObj:firestoreJobOffer = {
+    const offerObj: firestoreJobOffer = {
         active: true,
         companyName,
         companyUid,
@@ -92,13 +89,12 @@ export const fakeJobOffer = () => {
         seniority,
         technologies,
         title,
-        uid:'',
+        uid: '',
     }
     return offerObj
 }
 
 export const fakeCompany = (userId: string) => {
-
     const address = faker.address.country() + ', ' + faker.address.cityName() + ', ' + faker.address.streetAddress()
     const name = faker.company.name()
 
@@ -111,19 +107,20 @@ export const fakeCompany = (userId: string) => {
         size: 0,
         websiteUrl: faker.internet.url(),
         employees: [],
-        photoUrl: 'https://firebasestorage.googleapis.com/v0/b/workathome-1389e.appspot.com/o/placeholders%2Fcompany_placeholder.jpg?alt=media&token=542aa3b0-4e6a-4b84-9813-f62364e0a12e',
+        photoUrl:
+            'https://firebasestorage.googleapis.com/v0/b/workathome-1389e.appspot.com/o/placeholders%2Fcompany_placeholder.jpg?alt=media&token=542aa3b0-4e6a-4b84-9813-f62364e0a12e',
         uid: '',
-        createdBy: userId
+        createdBy: userId,
     }
 
     return companyObj
 }
 
 export const saveToDatabase = async (data: Array<any>, c: collections | string) => {
-    data.forEach((data) => (
-        addDoc(collection(db, c), data).then(doc => {
-            updateDoc(doc, {uid: doc.id})
+    data.forEach((data) =>
+        addDoc(collection(db, c), data).then((doc) => {
+            updateDoc(doc, { uid: doc.id })
             console.log(doc.id)
-          })
-    ))
+        })
+    )
 }

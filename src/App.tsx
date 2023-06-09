@@ -74,7 +74,9 @@ const App: React.FC = () => {
 export default App
 
 // TODO add firebase rules
-// TODO add working project on netlify
+// TODO add logo field to company
+// * make separete component for image upload
+// TODO add algolia
 // ? implement notifications
 // ? implement rich text editor
 // ? change location/address fields to objects with lat an lon to interact with google maps api
