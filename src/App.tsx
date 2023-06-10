@@ -22,6 +22,7 @@ import { Entries } from './components/offer/Entries/Entries'
 import { YourJobApplications } from './pages/YourJobApplications'
 import { Employees } from './components/company/Employees/Employees'
 import { Offers } from './pages/Offers'
+import { OffersAlgolia } from './pages/OffersAlgolia'
 
 const Darktheme = createTheme({
     palette: {
@@ -64,6 +65,7 @@ const App: React.FC = () => {
                     <Route path="/offer/:uid" element={<OfferDetails />} />
                     <Route path="/profile/:uid" element={<Profile />} />
                     <Route path="/offers" element={<Offers />} />
+                    <Route path="/offersA" element={<OffersAlgolia />} />
                 </Routes>
                 <ToastContainer autoClose={2000} theme="dark" position="bottom-left" />
             </CssBaseline>
@@ -74,9 +76,6 @@ const App: React.FC = () => {
 export default App
 
 // TODO add firebase rules
-// TODO add logo field to company
-// * make separete component for image upload
-// TODO add algolia
 // ? implement notifications
 // ? implement rich text editor
 // ? change location/address fields to objects with lat an lon to interact with google maps api

@@ -10,7 +10,7 @@ import { searchClient } from './firebase/firebase.config'
 ReactDOM.render(
     <React.StrictMode>
         <AuthProvider>
-            <InstantSearch searchClient={searchClient} indexName="instant_search">
+            <InstantSearch searchClient={searchClient} indexName="Offers">
                 <BrowserRouter>
                     <App />
                 </BrowserRouter>

@@ -22,5 +22,5 @@ export const db = initializeFirestore(app, {
 export const storage = getStorage(app)
 export const searchClient = algoliasearch(
     import.meta.env.VITE_ALGOLIA_APP_ID as string,
-    import.meta.env.VITE_ALGOLIA_SEARCH_KEY as string
+    import.meta.env.VITE_SEARCH_ONLY_API_KEY as string
 )
