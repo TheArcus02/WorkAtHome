@@ -104,6 +104,7 @@ export const Offers = () => {
                         ...offer,
                         objectID: offer.uid,
                         path: `/offer/${offer.uid}`,
+                        __position: index,
                     }
                     return (
                         <div ref={offers.length === index + 1 ? lastElementRef : undefined} key={offer.uid + index}>
