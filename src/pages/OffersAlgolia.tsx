@@ -1,11 +1,13 @@
 import { Paper, Typography } from '@mui/material'
 import { Box, Container } from '@mui/system'
 import { OfferCard } from '../components/offer/OfferCard'
-import { RefinementList, useInfiniteHits } from 'react-instantsearch-hooks-web'
+import { useInfiniteHits } from 'react-instantsearch-hooks-web'
 import { algoliaJobOffer } from '../utils/interfaces'
 import { MutableRefObject, useCallback, useRef } from 'react'
-import SearchInput from '../components/SearchInput'
-import TechnologiesList from '../components/TechnologiesList'
+import SearchInput from '../components/search/SearchInput'
+import RefinementList from '../components/search/RefinamentList'
+import RefinementMenu from '../components/search/RefinamentMenu'
+import { RangeSlider } from '../components/search/RangeSlider'
 
 export const OffersAlgolia = () => {
     const { hits: offers, isLastPage, showMore } = useInfiniteHits<algoliaJobOffer>()
@@ -37,7 +39,12 @@ export const OffersAlgolia = () => {
                     <Typography variant="h6" mb={1}>
                         Technologies
                     </Typography>
-                    <TechnologiesList attribute="technologies" operator="and" limit={5} showMore={true} />
+                    <RefinementList attribute="technologies" operator="and" limit={5} showMore={true} />
+                    <Typography variant="h6" mb={1}>
+                        Seniority
+                    </Typography>
+                    <RefinementMenu attribute="seniority" />
+                    <RangeSlider attribute="salary" />
                 </Paper>
                 <Box
                     sx={{

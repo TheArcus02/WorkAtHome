@@ -2,8 +2,8 @@ import { SearchOutlined } from '@mui/icons-material'
 import { Box, Button, Checkbox, FormControlLabel, Input, InputAdornment, Typography } from '@mui/material'
 import { UseRefinementListProps, useRefinementList } from 'react-instantsearch-hooks-web'
 
-const TechnologiesList = (props: UseRefinementListProps) => {
-    const { items, refine, searchForItems, toggleShowMore, isShowingMore } = useRefinementList(props)
+const RefinementList = (props: UseRefinementListProps) => {
+    const { items, refine, searchForItems, toggleShowMore, isShowingMore, canToggleShowMore } = useRefinementList(props)
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value
@@ -36,7 +36,6 @@ const TechnologiesList = (props: UseRefinementListProps) => {
                                     fontSize: '0.8rem',
                                     color: 'gray',
                                 }}
-                                // color="info.main"
                             >
                                 ({item.count})
                             </Typography>
@@ -44,16 +43,18 @@ const TechnologiesList = (props: UseRefinementListProps) => {
                     }
                 />
             ))}
-            <Button
-                onClick={(e) => {
-                    e.preventDefault()
-                    toggleShowMore()
-                }}
-            >
-                {isShowingMore ? 'Show less' : 'Show more'}
-            </Button>
+            {canToggleShowMore && (
+                <Button
+                    onClick={(e) => {
+                        e.preventDefault()
+                        toggleShowMore()
+                    }}
+                >
+                    {isShowingMore ? 'Show less' : 'Show more'}
+                </Button>
+            )}
         </Box>
     )
 }
 
-export default TechnologiesList
+export default RefinementList
