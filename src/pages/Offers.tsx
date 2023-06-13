@@ -1,20 +1,17 @@
-import { SearchOutlined } from '@mui/icons-material'
-import { IconButton, InputAdornment, OutlinedInput, Paper, Typography } from '@mui/material'
+import { Paper, Typography } from '@mui/material'
 import { Box, Container } from '@mui/system'
-import { DocumentData, limit, orderBy, QueryDocumentSnapshot, startAfter, where } from 'firebase/firestore'
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react'
 import { OfferCard } from '../components/offer/OfferCard'
-import { useQuery } from '../hooks/useQuery'
-import { algoliaJobOffer, firestoreJobOffer, Order } from '../utils/interfaces'
+import { useInfiniteHits } from 'react-instantsearch-hooks-web'
+import { algoliaJobOffer } from '../utils/interfaces'
+import { MutableRefObject, useCallback, useRef } from 'react'
+import SearchInput from '../components/search/SearchInput'
+import RefinementList from '../components/search/RefinamentList'
+import RefinementMenu from '../components/search/RefinamentMenu'
+import AppliedRefinements from '../components/search/AppliedRefinements'
+import { CodeOutlined, TimelineOutlined } from '@mui/icons-material'
 
 export const Offers = () => {
-    const [offers, setOffers] = useState<firestoreJobOffer[]>([])
-    const [sortField, setSortField] = useState('createdAt')
-    const [order, setOrder] = useState<Order>('desc')
-    const [pageSize, setPageSize] = useState(2)
-    const [last, setLast] = useState<QueryDocumentSnapshot<DocumentData> | null>(null)
-
-    const { getQuery, queryResult, unsubscribe } = useQuery()
+    const { hits: offers, isLastPage, showMore } = useInfiniteHits<algoliaJobOffer>()
 
     const observer: MutableRefObject<IntersectionObserver> | MutableRefObject<undefined> = useRef()
 
@@ -22,96 +19,55 @@ export const Offers = () => {
         (node) => {
             if (observer.current) observer.current.disconnect()
             observer.current = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting && last) {
-                    nextPage()
+                if (entries[0].isIntersecting && !isLastPage) {
+                    showMore()
                 }
             })
             if (node) observer.current.observe(node)
         },
-        [last]
+        [isLastPage]
     )
 
-    useEffect(() => {
-        getQuery('', 'Offers', where('active', '==', true), orderBy(sortField, order), limit(pageSize))
-    }, [pageSize, sortField])
-
-    useEffect(() => {
-        if (queryResult && !last) {
-            if (!queryResult.empty) {
-                queryResult.forEach((res) => setOffers((prev) => [...prev, res.data() as firestoreJobOffer]))
-                setLast(queryResult.docs[queryResult.docs.length - 1])
-            }
-        }
-
-        return () => {
-            if (offers.length !== 0 && last) {
-                setLast(null)
-            }
-        }
-    }, [queryResult, offers, last])
-
-    useEffect(() => {
-        return () => {
-            if (unsubscribe) unsubscribe()
-        }
-    }, [unsubscribe])
-
-    const nextPage = () => {
-        getQuery(
-            '',
-            'Offers',
-            where('active', '==', true),
-            orderBy(sortField, order),
-            startAfter(last),
-            limit(pageSize)
-        )
-    }
-
     return (
-        <Container maxWidth="md" sx={{ my: 5 }}>
+        <Container maxWidth="lg" sx={{ my: 5 }}>
             <Paper
-                sx={{ p: 6, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
+                sx={{ p: 4, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
             >
-                <OutlinedInput
-                    id="job-search"
-                    type="text"
-                    endAdornment={
-                        <InputAdornment position="end">
-                            <IconButton edge="end">
-                                <SearchOutlined color="primary" />
-                            </IconButton>
-                        </InputAdornment>
-                    }
-                    fullWidth
-                    placeholder="Look for remote job (dosen't work, firestore free version dosen't support search)"
-                    sx={{
-                        width: '75%',
-                    }}
-                />
+                <SearchInput />
+                <Box sx={{ mt: 2, width: '75%' }}>
+                    <AppliedRefinements />
+                </Box>
             </Paper>
-            <Typography variant="h4" my={3}>
-                Recent job offers
-            </Typography>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 3,
-                }}
-            >
-                {offers.map((offer, index) => {
-                    const algoliaOffer: algoliaJobOffer = {
-                        ...offer,
-                        objectID: offer.uid,
-                        path: `/offer/${offer.uid}`,
-                        __position: index,
-                    }
-                    return (
-                        <div ref={offers.length === index + 1 ? lastElementRef : undefined} key={offer.uid + index}>
-                            <OfferCard offer={algoliaOffer} elevation={1} maxWidth={'100%'} />
+            <Box sx={{ display: 'flex', gap: 5, mt: 5 }}>
+                <Paper sx={{ p: 4 }} elevation={0}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
+                        <CodeOutlined />
+                        <Typography variant="h6">Technologies</Typography>
+                    </Box>
+                    <RefinementList attribute="technologies" operator="and" limit={5} showMore={true} />
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
+                        <TimelineOutlined />
+                        <Typography variant="h6">Seniority</Typography>
+                    </Box>
+                    <RefinementMenu attribute="seniority" />
+                </Paper>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 3,
+                        width: '100%',
+                    }}
+                >
+                    {offers.map((offer, index) => (
+                        <div
+                            ref={offers.length === index + 1 ? lastElementRef : undefined}
+                            key={offer.objectID + index}
+                        >
+                            <OfferCard offer={offer as algoliaJobOffer} elevation={1} maxWidth={'100%'} />
                         </div>
-                    )
-                })}
+                    ))}
+                </Box>
             </Box>
         </Container>
     )

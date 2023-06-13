@@ -31,7 +31,7 @@ const SearchInput = () => {
                 </InputAdornment>
             }
             fullWidth
-            placeholder="Look for remote job"
+            placeholder="Look for a remote job"
             sx={{
                 width: '75%',
             }}

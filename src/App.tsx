@@ -22,7 +22,6 @@ import { Entries } from './components/offer/Entries/Entries'
 import { YourJobApplications } from './pages/YourJobApplications'
 import { Employees } from './components/company/Employees/Employees'
 import { Offers } from './pages/Offers'
-import { OffersAlgolia } from './pages/OffersAlgolia'
 
 const Darktheme = createTheme({
     palette: {
@@ -65,7 +64,6 @@ const App: React.FC = () => {
                     <Route path="/offer/:uid" element={<OfferDetails />} />
                     <Route path="/profile/:uid" element={<Profile />} />
                     <Route path="/offers" element={<Offers />} />
-                    <Route path="/offersA" element={<OffersAlgolia />} />
                 </Routes>
                 <ToastContainer autoClose={2000} theme="dark" position="bottom-left" />
             </CssBaseline>
