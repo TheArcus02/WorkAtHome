@@ -24,6 +24,7 @@ const AppliedRefinements = (props: UseCurrentRefinementsProps) => {
                     console.log(refinement)
                     return (
                         <Chip
+                            color="primary"
                             icon={getIcon(refinement.attribute)}
                             label={refinement.label}
                             onDelete={() => refine(refinement)}

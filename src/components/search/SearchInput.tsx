@@ -32,9 +32,6 @@ const SearchInput = () => {
             }
             fullWidth
             placeholder="Look for a remote job"
-            sx={{
-                width: '75%',
-            }}
             value={query}
             onChange={handleInputChange}
             onFocus={() => setIsFocused(true)}

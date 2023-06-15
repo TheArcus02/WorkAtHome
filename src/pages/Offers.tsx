@@ -31,16 +31,7 @@ export const Offers = () => {
 
     return (
         <Container maxWidth="xl" sx={{ my: 5 }}>
-            <Paper
-                sx={{ p: 4, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
-                // elevation={2}
-            >
-                <Typography variant="h4" component="h2" mb={2}>
-                    Search over 10k job offers from the entire world.
-                </Typography>
-                <SearchInput />
-            </Paper>
-            <Box sx={{ display: 'flex', gap: 3, mt: 5 }}>
+            <Box sx={{ display: 'flex', gap: 3, mt: 3 }}>
                 <Paper sx={{ p: 4 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
                         <TimelineOutlined />
@@ -61,19 +52,36 @@ export const Offers = () => {
                         width: '100%',
                     }}
                 >
-                    <Paper sx={{ display: 'flex', p: 2 }}>
-                        <AppliedRefinements />
+                    <Paper sx={{ p: 3 }}>
+                        <Box
+                            sx={{
+                                p: 1,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Typography variant="h4" component="h2" mb={2}>
+                                Search over 10k job offers from the entire world.
+                            </Typography>
+                            <SearchInput />
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', p: 1 }}>
+                            <AppliedRefinements />
 
-                        <Box sx={{ marginLeft: 'auto' }}>
-                            <Sorting
-                                items={[
-                                    { label: 'Featured', value: 'Offers' },
-                                    { label: 'Salary (asc)', value: 'Offers_minSalary_asc' },
-                                    { label: 'Salary (desc)', value: 'Offers_maxSalary_desc' },
-                                ]}
-                            />
+                            <Box sx={{ marginLeft: 'auto' }}>
+                                <Sorting
+                                    items={[
+                                        { label: 'Latest', value: 'Offers' },
+                                        { label: 'Salary (asc)', value: 'Offers_minSalary_asc' },
+                                        { label: 'Salary (desc)', value: 'Offers_maxSalary_desc' },
+                                    ]}
+                                />
+                            </Box>
                         </Box>
                     </Paper>
+
                     {offers.map((offer, index) => (
                         <div
                             ref={offers.length === index + 1 ? lastElementRef : undefined}
