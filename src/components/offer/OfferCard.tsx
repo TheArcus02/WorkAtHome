@@ -29,7 +29,7 @@ export const OfferCard: React.FC<offerCardProps> = ({ offer, elevation, maxWidth
                         <Box sx={{ display: 'flex', alignItems: 'center' }} color="text.secondary">
                             <BusinessOutlined color="inherit" />
                             <Typography ml={1} color="inherit">
-                                {offer.companyName}
+                                <Highlight attribute="companyName" hit={offer} />
                             </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center' }} color="text.secondary">

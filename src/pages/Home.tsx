@@ -1,41 +1,15 @@
 import { Box, Button, Container, IconButton, InputAdornment, OutlinedInput, Paper, Typography } from '@mui/material'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
-import { useEffect, useState } from 'react'
-import { firestoreJobOffer } from '../utils/interfaces'
-import { useQuery } from '../hooks/useQuery'
-import { limit, orderBy, where } from 'firebase/firestore'
+import { useState } from 'react'
+import { algoliaJobOffer, firestoreJobOffer } from '../utils/interfaces'
 import { OfferSkeleton } from '../components/offer/OfferSkeleton'
 import { OfferCard } from '../components/offer/OfferCard'
 import { ArrowForward } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
-import { SearchBox, Hits } from 'react-instantsearch-hooks-web'
-
+import { useHits, UseHitsProps } from 'react-instantsearch-hooks-web'
 export const Home: React.FC = () => {
-    const [recentOffers, setRecentOffers] = useState<firestoreJobOffer[]>([])
-
-    const { getQuery, queryResult, queryRef, unsubscribe } = useQuery()
     const navigate = useNavigate()
-
-    useEffect(() => {
-        if (recentOffers.length === 0) {
-            getQuery('', 'Offers', where('active', '==', true), orderBy('createdAt', 'desc'), limit(6))
-        }
-    }, [recentOffers])
-
-    useEffect(() => {
-        if (queryResult && recentOffers.length === 0) {
-            queryResult.forEach((doc: any) => {
-                setRecentOffers((prev) => [...prev, doc.data()])
-            })
-        }
-    }, [queryResult, queryRef, recentOffers])
-
-    useEffect(() => {
-        if (unsubscribe)
-            return () => {
-                unsubscribe()
-            }
-    }, [unsubscribe])
+    const { hits: offers } = useHits<algoliaJobOffer>()
 
     return (
         <>
@@ -84,8 +58,8 @@ export const Home: React.FC = () => {
                             px: { xs: 2, md: 0 },
                         }}
                     >
-                        {recentOffers.length > 0
-                            ? recentOffers.map((offer, index) => (
+                        {offers.length > 0
+                            ? offers.map((offer, index) => (
                                   <OfferCard offer={offer} elevation={0} key={offer.uid + index} />
                               ))
                             : [...Array(6)].map((_, index) => <OfferSkeleton elevation={0} key={index} />)}
