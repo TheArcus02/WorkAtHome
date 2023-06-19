@@ -1,11 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useConnector } from 'react-instantsearch-hooks-web'
 import { OutlinedInput, InputAdornment, IconButton } from '@mui/material'
 import { SearchOutlined } from '@mui/icons-material'
 import { connectSearchBox } from 'instantsearch.js/es/connectors'
 
-const SearchInput = () => {
-    const [query, setQuery] = useState('')
+interface SearchInputProps {
+    initialQuery: string
+}
+
+const SearchInput: React.FC<SearchInputProps> = ({ initialQuery }) => {
+    const [query, setQuery] = useState(initialQuery)
     const [isFocused, setIsFocused] = useState(false)
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,6 +19,12 @@ const SearchInput = () => {
     const handleSearch = () => {
         refine(query)
     }
+
+    useEffect(() => {
+        if (query) {
+            refine(query)
+        }
+    }, [])
 
     // @ts-ignore
     const { refine } = useConnector(connectSearchBox, {}, { $$widgetType: 'my-custom.searchBox' })

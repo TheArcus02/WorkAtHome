@@ -1,15 +1,22 @@
 import { Box, Button, Container, IconButton, InputAdornment, OutlinedInput, Paper, Typography } from '@mui/material'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import { useState } from 'react'
-import { algoliaJobOffer, firestoreJobOffer } from '../utils/interfaces'
+import { algoliaJobOffer } from '../utils/interfaces'
 import { OfferSkeleton } from '../components/offer/OfferSkeleton'
 import { OfferCard } from '../components/offer/OfferCard'
 import { ArrowForward } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
-import { useHits, UseHitsProps } from 'react-instantsearch-hooks-web'
+import { useHits } from 'react-instantsearch-hooks-web'
 export const Home: React.FC = () => {
+    const [query, setQuery] = useState('')
+    const [isFocused, setIsFocused] = useState(false)
+
     const navigate = useNavigate()
     const { hits: offers } = useHits<algoliaJobOffer>()
+
+    const handleSearch = () => {
+        navigate(`offers`, { state: { query } })
+    }
 
     return (
         <>
@@ -37,9 +44,18 @@ export const Home: React.FC = () => {
                             </InputAdornment>
                         }
                         fullWidth
-                        placeholder="Look for remote job (dosen't work, firestore free version dosen't support search)"
+                        placeholder="Look for remote job"
                         sx={{
                             width: '75%',
+                        }}
+                        onChange={(event) => setQuery(event.currentTarget.value)}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        onKeyDown={(event) => {
+                            if (isFocused && event.key === 'Enter') {
+                                event.preventDefault()
+                                handleSearch()
+                            }
                         }}
                     />
                 </Paper>

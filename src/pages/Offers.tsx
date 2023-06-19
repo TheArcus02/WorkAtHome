@@ -10,10 +10,11 @@ import RefinementList from '../components/search/RefinamentList'
 import RefinementMenu from '../components/search/RefinamentMenu'
 import AppliedRefinements from '../components/search/AppliedRefinements'
 import Sorting from '../components/search/Sorting'
+import { useLocation } from 'react-router-dom'
 
 export const Offers = () => {
     const { hits: offers, isLastPage, showMore } = useInfiniteHits<algoliaJobOffer>()
-
+    const location = useLocation()
     const observer: MutableRefObject<IntersectionObserver> | MutableRefObject<undefined> = useRef()
 
     const lastElementRef = useCallback(
@@ -65,7 +66,8 @@ export const Offers = () => {
                             <Typography variant="h4" component="h2" mb={2}>
                                 Search over 10k job offers from the entire world.
                             </Typography>
-                            <SearchInput />
+                            {/* @ts-ignore */}
+                            <SearchInput initialQuery={location?.state?.query} />
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', p: 1 }}>
                             <AppliedRefinements />
