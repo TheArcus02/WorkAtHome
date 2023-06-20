@@ -1,29 +1,26 @@
-import { Cancel, Check, Edit, Pending } from "@mui/icons-material";
-import { Box, Button, styled, TableCell, TableRow, Typography } from "@mui/material";
-import moment from "moment";
-import { useEffect, useState } from "react";
-import { useGetDoc } from "../../hooks/useGetDoc";
+import { Cancel, Check, Edit } from '@mui/icons-material'
+import { Box, Button, styled, TableCell, TableRow, Typography } from '@mui/material'
+import moment from 'moment'
+import { useEffect, useState } from 'react'
+import { useGetDoc } from '../../hooks/useGetDoc'
 import { firestoreEntry, firestoreJobOffer } from '../../utils/interfaces'
-import { ApplyEditDialog } from "./ApplyEditDialog";
+import { ApplyEditDialog } from './ApplyEditDialog'
 
 type ComponentProps = {
-    entryUid: string;
-    offerUid: string;
+    entryUid: string
+    offerUid: string
     handleCancel: (offerUid: string, entryUid: string) => void
 }
 
 export const JobApplicationTableRow: React.FC<ComponentProps> = ({ entryUid, offerUid, handleCancel }) => {
-
     const [entryDetails, setEntryDetails] = useState<firestoreEntry | null>(null)
     const [offerDetails, setOfferDetails] = useState<firestoreJobOffer | null>(null)
     const [openEditDialog, setOpenEditDialog] = useState(false)
 
     const { getDocument, document, docRef } = useGetDoc()
 
-
-
     useEffect(() => {
-        if (!offerDetails) getDocument("Offers", offerUid, "offerDetails")
+        if (!offerDetails) getDocument('Offers', offerUid, 'offerDetails')
     }, [offerUid, entryUid, offerDetails])
 
     useEffect(() => {
@@ -37,15 +34,15 @@ export const JobApplicationTableRow: React.FC<ComponentProps> = ({ entryUid, off
                     setEntryDetails(document as firestoreEntry)
                     break
                 }
-                default: return
+                default:
+                    return
             }
         }
-
     }, [document, docRef])
 
     useEffect(() => {
         if (offerDetails && !entryDetails) {
-            getDocument(`Offers/${offerUid}/entries`, entryUid, "entryDetails")
+            getDocument(`Offers/${offerUid}/entries`, entryUid, 'entryDetails')
         }
     }, [entryUid, offerUid, offerDetails, entryDetails])
 
@@ -56,7 +53,7 @@ export const JobApplicationTableRow: React.FC<ComponentProps> = ({ entryUid, off
         '&:last-child td, &:last-child th': {
             border: 0,
         },
-    }));
+    }))
 
     return offerDetails && entryDetails ? (
         <>
@@ -77,17 +74,32 @@ export const JobApplicationTableRow: React.FC<ComponentProps> = ({ entryUid, off
                     )}
                 </TableCell>
                 <TableCell align="center">
-                    <Button variant="contained" color="primary" startIcon={<Edit />} onClick={() => setOpenEditDialog(true)}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<Edit />}
+                        onClick={() => setOpenEditDialog(true)}
+                    >
                         Edit
                     </Button>
                 </TableCell>
                 <TableCell align="center">
-                    <Button variant="contained" color="warning" startIcon={<Cancel />} onClick={() => handleCancel(offerDetails.uid, entryDetails.uid)}>
+                    <Button
+                        variant="contained"
+                        color="warning"
+                        startIcon={<Cancel />}
+                        onClick={() => handleCancel(offerDetails.uid, entryDetails.uid)}
+                    >
                         Cancel
                     </Button>
                 </TableCell>
             </StyledTableRow>
-            <ApplyEditDialog open={openEditDialog} handleClose={() => setOpenEditDialog(false)} entry={entryDetails} offerUid={offerDetails.uid} />
+            <ApplyEditDialog
+                open={openEditDialog}
+                handleClose={() => setOpenEditDialog(false)}
+                entry={entryDetails}
+                offerUid={offerDetails.uid}
+            />
         </>
     ) : null
 }

@@ -1,26 +1,23 @@
-import { Container, Paper, Button } from "@mui/material"
-import { Box } from "@mui/system"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { useAuth } from "../../contexts/AuthContext"
-import { useGetDoc } from "../../hooks/useGetDoc"
-import { AuthContextItf, firestoreCompany, firestoreJobOffer } from "../../utils/interfaces"
-import { Loader } from "../Loader"
-import { paper } from "../../utils/colors"
-import { useQuery } from "../../hooks/useQuery"
-import { where } from "firebase/firestore"
-import { styled } from "@mui/styles"
-import { CompanyPreview } from "./CompanyPreview"
-import { CompanyEditMode } from "./CompanyEditMode"
-
-
+import { Container, Paper, Button } from '@mui/material'
+import { Box } from '@mui/system'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
+import { useGetDoc } from '../../hooks/useGetDoc'
+import { AuthContextItf, algoliaJobOffer, firestoreCompany, firestoreJobOffer } from '../../utils/interfaces'
+import { Loader } from '../Loader'
+import { paper } from '../../utils/colors'
+import { useQuery } from '../../hooks/useQuery'
+import { DocumentSnapshot, where } from 'firebase/firestore'
+import { styled } from '@mui/styles'
+import { CompanyPreview } from './CompanyPreview'
+import { CompanyEditMode } from './CompanyEditMode'
 
 export const CompanyDetails = () => {
-
     const [companyInfo, setCompanyInfo] = useState<firestoreCompany | null>(null)
     const [editable, setEditable] = useState<Boolean>(false)
     const [editMode, setEditMode] = useState<Boolean>(false)
-    const [offers, setOffers] = useState<firestoreJobOffer[]>([])
+    const [offers, setOffers] = useState<algoliaJobOffer[]>([])
 
     const { currentUser } = useAuth() as AuthContextItf
     const { getDocument, document } = useGetDoc()
@@ -30,21 +27,26 @@ export const CompanyDetails = () => {
 
     useEffect(() => {
         if (uid) {
-            getDocument('Companies', uid);
-            getQuery('', "Offers", where("companyUid", "==", uid))
+            getDocument('Companies', uid)
+            getQuery('', 'Offers', where('companyUid', '==', uid))
         }
     }, [uid])
 
     useEffect(() => {
         if (queryResult && offers.length === 0) {
-            queryResult.forEach((doc: any) => {
-                setOffers((prev) => (
-                    [...prev, doc.data()]
-                ))
+            queryResult.forEach((doc: DocumentSnapshot) => {
+                setOffers((prev) => [
+                    ...prev,
+                    {
+                        ...(doc.data() as firestoreJobOffer),
+                        objectID: doc.id,
+                        path: `/offers/${doc.id}`,
+                        __position: -1,
+                    },
+                ])
             })
         }
     }, [queryResult])
-
 
     useEffect(() => {
         if (document) {
@@ -58,25 +60,21 @@ export const CompanyDetails = () => {
         }
     }, [companyInfo, currentUser])
 
-
     useEffect(() => {
-
         return () => {
-            if (unsubscribe) unsubscribe()  
+            if (unsubscribe) unsubscribe()
         }
-}, [unsubscribe])
+    }, [unsubscribe])
 
+    const StyledButton = styled(Button)(({ theme }: any) => ({
+        textTransform: 'none',
+        '&:hover': {
+            backgroundColor: paper,
+            filter: 'brightness(1.1)',
+        },
+    }))
 
-const StyledButton = styled(Button)(({ theme }: any) => ({
-    textTransform: 'none',
-    '&:hover': {
-        backgroundColor: paper,
-        filter: 'brightness(1.1)'
-    }
-}))
-
-return (
-    companyInfo ? (
+    return companyInfo ? (
         <Container maxWidth="xl" sx={{ mt: 5 }}>
             <Paper sx={{ pb: 5 }}>
                 <Box sx={editable ? { position: 'relative' } : undefined}>
@@ -85,22 +83,22 @@ return (
                         component="img"
                         sx={{
                             maxHeight: 250,
-                            width: "100%",
+                            width: '100%',
                             objectFit: 'cover',
                         }}
                         alt={companyInfo.name}
                         src={companyInfo.photoUrl}
                     />
-                    {editable &&
+                    {editable && (
                         <Box sx={{ position: 'absolute', bottom: 0, left: 0, display: 'flex', width: '100%' }}>
                             <Paper
                                 component={editMode ? StyledButton : Paper}
-                                variant={editMode ? "outlined" : "elevation"}
+                                variant={editMode ? 'outlined' : 'elevation'}
                                 elevation={editMode ? 0 : 1}
                                 sx={{
                                     boxShadow: 0,
                                     height: 45,
-                                    borderRadius: "20px 20px 0 0",
+                                    borderRadius: '20px 20px 0 0',
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
@@ -114,12 +112,12 @@ return (
                             </Paper>
                             <Paper
                                 component={!editMode ? StyledButton : Paper}
-                                variant={!editMode ? "outlined" : "elevation"}
+                                variant={!editMode ? 'outlined' : 'elevation'}
                                 elevation={!editMode ? 0 : 1}
                                 sx={{
                                     boxShadow: 0,
                                     height: 45,
-                                    borderRadius: "20px 20px 0 0",
+                                    borderRadius: '20px 20px 0 0',
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
@@ -133,7 +131,7 @@ return (
                                 Edit
                             </Paper>
                         </Box>
-                    }
+                    )}
                 </Box>
                 {!editMode ? (
                     <CompanyPreview companyInfo={companyInfo} offers={offers} />
@@ -145,6 +143,4 @@ return (
     ) : (
         <Loader />
     )
-
-)
 }

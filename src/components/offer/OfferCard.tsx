@@ -13,12 +13,12 @@ type offerCardProps = {
 
 export const OfferCard: React.FC<offerCardProps> = ({ offer, elevation, maxWidth }) => {
     const navigate = useNavigate()
-
     return (
         <Card sx={!maxWidth ? { maxWidth: 385 } : { maxWidth: maxWidth }} elevation={elevation}>
             <CardActionArea onClick={() => navigate(`/offer/${offer.objectID}`)}>
                 <CardContent>
                     <Typography variant="h5" mb={0.5}>
+                        {offer.__position === -1 && offer.title}
                         <Highlight attribute="title" hit={offer} />
                     </Typography>
                     <Typography variant="subtitle1" sx={{ color: primaryLight }} mb={1}>
@@ -29,6 +29,8 @@ export const OfferCard: React.FC<offerCardProps> = ({ offer, elevation, maxWidth
                         <Box sx={{ display: 'flex', alignItems: 'center' }} color="text.secondary">
                             <BusinessOutlined color="inherit" />
                             <Typography ml={1} color="inherit">
+                                {offer.__position === -1 && offer.companyName}
+
                                 <Highlight attribute="companyName" hit={offer} />
                             </Typography>
                         </Box>
@@ -46,6 +48,9 @@ export const OfferCard: React.FC<offerCardProps> = ({ offer, elevation, maxWidth
                         sx={offer.technologies.length > 0 ? { my: 1 } : { mt: 1 }}
                     >
                         <Snippet attribute="description" hit={offer} />
+                        {offer.__position === -1 &&
+                            offer.description.length > 150 &&
+                            offer.description.slice(0, 100) + '...'}
                     </Typography>
 
                     {offer.technologies.length > 0 && (
