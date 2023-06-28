@@ -1,9 +1,9 @@
-import { Paper, Typography } from '@mui/material'
+import { Button, Paper, Typography } from '@mui/material'
 import { Box, Container } from '@mui/system'
 import { OfferCard } from '../components/offer/OfferCard'
 import { useInfiniteHits } from 'react-instantsearch-hooks-web'
 import { algoliaJobOffer } from '../utils/interfaces'
-import { MutableRefObject, useCallback, useRef } from 'react'
+import { MutableRefObject, useCallback, useRef, useState } from 'react'
 import { CodeOutlined, TimelineOutlined } from '@mui/icons-material'
 import SearchInput from '../components/search/SearchInput'
 import RefinementList from '../components/search/RefinamentList'
@@ -11,8 +11,11 @@ import RefinementMenu from '../components/search/RefinamentMenu'
 import AppliedRefinements from '../components/search/AppliedRefinements'
 import Sorting from '../components/search/Sorting'
 import { useLocation } from 'react-router-dom'
+import FiltersModal from '../components/search/FiltersModal'
 
 export const Offers = () => {
+    const [openModal, setOpenModal] = useState(false)
+
     const { hits: offers, isLastPage, showMore } = useInfiniteHits<algoliaJobOffer>()
     const location = useLocation()
     const observer: MutableRefObject<IntersectionObserver> | MutableRefObject<undefined> = useRef()
@@ -33,7 +36,7 @@ export const Offers = () => {
     return (
         <Container maxWidth="xl" sx={{ my: 5 }}>
             <Box sx={{ display: 'flex', gap: 3, mt: 3 }}>
-                <Paper sx={{ p: 4 }}>
+                <Paper sx={{ p: 4, display: { xs: 'none', md: 'block' } }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
                         <TimelineOutlined />
                         <Typography variant="h6">Seniority</Typography>
@@ -70,6 +73,15 @@ export const Offers = () => {
                             <SearchInput initialQuery={location?.state?.query} />
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', p: 1 }}>
+                            <Button
+                                onClick={() => setOpenModal(true)}
+                                sx={{ display: { sx: 'block', md: 'none' } }}
+                                variant="outlined"
+                                color="info"
+                            >
+                                Filters
+                            </Button>
+                            <FiltersModal open={openModal} handleClose={() => setOpenModal(false)} />
                             <AppliedRefinements />
 
                             <Box sx={{ marginLeft: 'auto' }}>
