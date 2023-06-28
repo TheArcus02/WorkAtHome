@@ -38,13 +38,14 @@ export const Home: React.FC = () => {
                         type="text"
                         endAdornment={
                             <InputAdornment position="end">
-                                <IconButton edge="end">
+                                <IconButton edge="end" onClick={handleSearch}>
                                     <SearchOutlinedIcon color="primary" />
                                 </IconButton>
                             </InputAdornment>
                         }
                         fullWidth
                         placeholder="Look for remote job"
+                        value={query}
                         sx={{
                             width: '75%',
                         }}
@@ -76,7 +77,7 @@ export const Home: React.FC = () => {
                     >
                         {offers.length > 0
                             ? offers.map((offer, index) => (
-                                  <OfferCard offer={offer} elevation={0} key={offer.uid + index} />
+                                  <OfferCard offer={offer} elevation={0} key={offer.objectID + index} />
                               ))
                             : [...Array(6)].map((_, index) => <OfferSkeleton elevation={0} key={index} />)}
                         {}

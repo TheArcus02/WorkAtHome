@@ -11,8 +11,10 @@ const Sorting = (props: UseSortByProps) => {
 
     return (
         <Select value={currentRefinement} onChange={(e) => handleChange(e)} variant="standard">
-            {options.map((option) => (
-                <MenuItem value={option.value}>{option.label}</MenuItem>
+            {options.map((option, index) => (
+                <MenuItem value={option.value} key={option.value + index}>
+                    {option.label}
+                </MenuItem>
             ))}
         </Select>
     )
