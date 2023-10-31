@@ -1,30 +1,43 @@
-import { ArrowBack } from "@mui/icons-material"
-import { Paper, TableContainer, Table, TableHead, Alert, Button, TableRow, TableCell, TableBody, TableFooter, TableSortLabel, TablePagination } from "@mui/material"
-import { arrayRemove, arrayUnion, setDoc, where } from "firebase/firestore"
-import moment from "moment"
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { toast } from "react-toastify"
-import { useQuery } from "../../../hooks/useQuery"
-import { useRealtimeCollection } from "../../../hooks/useRealtimeCollection"
-import { useSetDoc } from "../../../hooks/useSetDoc"
-import { primary } from "../../../utils/colors"
-import { baseJobInfo, firestoreUser, Order } from "../../../utils/interfaces"
-import { getComparator } from "../../../utils/utils"
-import { Loader } from "../../Loader"
-import { EmployeeTableRow } from "./EmployeeTableRow"
+import { ArrowBack } from '@mui/icons-material'
+import {
+    Paper,
+    TableContainer,
+    Table,
+    TableHead,
+    Alert,
+    Button,
+    TableRow,
+    TableCell,
+    TableBody,
+    TableFooter,
+    TableSortLabel,
+    TablePagination,
+} from '@mui/material'
+import { arrayRemove, arrayUnion, setDoc, where } from 'firebase/firestore'
+import moment from 'moment'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { useQuery } from '../../../hooks/useQuery'
+import { useRealtimeCollection } from '../../../hooks/useRealtimeCollection'
+import { useSetDoc } from '../../../hooks/useSetDoc'
+import { primary } from '../../../utils/colors'
+import { baseJobInfo, firestoreUser, Order } from '../../../utils/interfaces'
+import { getComparator } from '../../../utils/utils'
+import { Loader } from '../../Loader'
+import { EmployeeTableRow } from './EmployeeTableRow'
 
 interface Data {
-    name: string;
-    role: string;
-    salary: number;
-    startedWork: string;
-    uid: string;
+    name: string
+    role: string
+    salary: number
+    startedWork: string
+    uid: string
 }
 
 interface headCell {
-    id: keyof Data;
-    label: string;
+    id: keyof Data
+    label: string
 }
 
 const headCells: readonly headCell[] = [
@@ -42,20 +55,18 @@ const headCells: readonly headCell[] = [
     },
     {
         id: 'startedWork',
-        label: 'Started Work'
-    }
+        label: 'Started Work',
+    },
 ]
 interface IfullJobInfo extends baseJobInfo {
     userUid: string
 }
 type EmployeesTableProps = {
-    employees: string[],
-    companyUid: string;
+    employees: string[]
+    companyUid: string
 }
 
-
 export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, companyUid }) => {
-
     const [order, setOrder] = useState<Order>('desc')
     const [orderBy, setOrderBy] = useState<keyof Data>('salary')
     const [rowsPerPage, setRowsPerPage] = useState(25)
@@ -78,7 +89,7 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
         if (realtimeCollection && employeesDetails.length === 0 && fullJobsInfo.length === 0) {
             realtimeCollection.forEach((res: any) => {
                 const { name, surname, displayName, uid, jobs } = res.data() as firestoreUser
-                const tableName = name && surname ? name + " " + surname : displayName
+                const tableName = name && surname ? name + ' ' + surname : displayName
                 const job = jobs.find((job) => job.companyUid === companyUid && job.current === true)
                 if (job) {
                     const tableObject: Data = {
@@ -86,7 +97,7 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
                         role: job.title,
                         salary: job.salary,
                         startedWork: moment(job.startedAt.toDate()).calendar(),
-                        uid
+                        uid,
                     }
                     setFullJobsInfo((prev) => [...prev, { ...job, userUid: uid }])
                     setEmployeesDetails((prev) => [...prev, tableObject])
@@ -131,36 +142,32 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
             const { userUid, ...baseInfo } = job
             const newObj: baseJobInfo = {
                 ...baseInfo,
-                salary: newSalary
+                salary: newSalary,
             }
-            setDocument("Users", { jobs: arrayRemove(baseInfo) }, userUid)
-            setDocument("Users", { jobs: arrayUnion(newObj) }, userUid)
+            setDocument('Users', { jobs: arrayRemove(baseInfo) }, userUid)
+            setDocument('Users', { jobs: arrayUnion(newObj) }, userUid)
         }
     }
 
     const handleFire = (empUid: string) => {
-
         const job = findUserJob(empUid)
         if (job) {
-
             // set job current status as false and add ended at prop
             const { userUid, ...baseInfo } = job
             const newObj: baseJobInfo = {
                 ...baseInfo,
                 current: false,
-                endedAt: new Date()
+                endedAt: new Date(),
             }
-            setDocument("Users", { jobs: arrayRemove(baseInfo) }, empUid)
-            setDocument("Users", { jobs: arrayUnion(newObj) }, empUid)
+            setDocument('Users', { jobs: arrayRemove(baseInfo) }, empUid)
+            setDocument('Users', { jobs: arrayUnion(newObj) }, empUid)
 
             // remove employee from company
-            setDocument("Companies", { employees: arrayRemove(empUid) }, companyUid)
-            toast.success("Employee has been fired.")
+            setDocument('Companies', { employees: arrayRemove(empUid) }, companyUid)
+            toast.success('Employee has been fired.')
         } else {
-            toast.error("Cannot find user job.")
+            toast.error('Cannot find user job.')
         }
-
-
     }
 
     return employees.length > 0 ? (
@@ -170,10 +177,7 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
                     <TableHead sx={{ background: primary }}>
                         <TableRow>
                             {headCells.map((headCell) => (
-                                <TableCell
-                                    key={headCell.id}
-                                    sortDirection={orderBy === headCell.id ? order : false}
-                                >
+                                <TableCell key={headCell.id} sortDirection={orderBy === headCell.id ? order : false}>
                                     <TableSortLabel
                                         active={orderBy === headCell.id}
                                         direction={orderBy === headCell.id ? order : 'asc'}
@@ -188,18 +192,18 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {
-                            employeesDetails.slice().sort(getComparator(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((emp, index) => (
-                                    <EmployeeTableRow
-                                        employee={emp}
-                                        onSalaryChange={handleSalaryChange}
-                                        onFire={handleFire}
-                                        key={emp.uid + index}
-                                    />
-                                ))
-                        }
+                        {employeesDetails
+                            .slice()
+                            .sort(getComparator(order, orderBy))
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map((emp, index) => (
+                                <EmployeeTableRow
+                                    employee={emp}
+                                    onSalaryChange={handleSalaryChange}
+                                    onFire={handleFire}
+                                    key={emp.uid + index}
+                                />
+                            ))}
                     </TableBody>
                     <TableFooter>
                         <TableRow>
@@ -215,12 +219,13 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({ employees, compa
                         </TableRow>
                     </TableFooter>
                 </Table>
-            </TableContainer>) : (
+            </TableContainer>
+        ) : (
             <Loader />
         )
     ) : (
         <Alert
-            severity='info'
+            severity="info"
             sx={{ mt: 2, p: 2 }}
             action={
                 <Button

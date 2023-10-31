@@ -11,7 +11,7 @@ import RefinementMenu from '../components/search/RefinamentMenu'
 import AppliedRefinements from '../components/search/AppliedRefinements'
 import Sorting from '../components/search/Sorting'
 import { useLocation } from 'react-router-dom'
-import FiltersModal from '../components/search/FiltersModal'
+import FiltersDialog from '../components/search/FiltersDialog'
 
 export const Offers = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -36,7 +36,12 @@ export const Offers = () => {
     return (
         <Container maxWidth="xl" sx={{ my: 5 }}>
             <Box sx={{ display: 'flex', gap: 3, mt: 3 }}>
-                <Paper sx={{ p: 4, display: { xs: 'none', md: 'block' } }}>
+                <Paper
+                    sx={{
+                        p: 4,
+                        display: { xs: 'none', md: 'block' },
+                    }}
+                >
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
                         <TimelineOutlined />
                         <Typography variant="h6">Seniority</Typography>
@@ -75,13 +80,13 @@ export const Offers = () => {
                         <Box sx={{ display: 'flex', alignItems: 'center', p: 1 }}>
                             <Button
                                 onClick={() => setOpenModal(true)}
-                                sx={{ display: { sx: 'block', md: 'none' } }}
+                                sx={{ display: { xs: 'block', md: 'none' } }}
                                 variant="outlined"
                                 color="info"
                             >
                                 Filters
                             </Button>
-                            <FiltersModal open={openModal} handleClose={() => setOpenModal(false)} />
+                            <FiltersDialog open={openModal} handleClose={() => setOpenModal(false)} />
                             <AppliedRefinements />
 
                             <Box sx={{ marginLeft: 'auto' }}>

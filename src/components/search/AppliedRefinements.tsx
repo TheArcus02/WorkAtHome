@@ -21,7 +21,6 @@ const AppliedRefinements = (props: UseCurrentRefinementsProps) => {
         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
             {items.map((item) =>
                 item.refinements.map((refinement) => {
-                    console.log(refinement)
                     return (
                         <Chip
                             color="primary"
